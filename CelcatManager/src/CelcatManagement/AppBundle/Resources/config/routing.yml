@@ -1,0 +1,7 @@
+celcat_management_app_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: CelcatManagementAppBundle:Default:index }
+
+celcat_management_app_index:
+    path:     /
+    defaults: { _controller: CelcatManagementAppBundle:Default:index2 }

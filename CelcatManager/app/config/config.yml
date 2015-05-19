@@ -75,4 +75,3 @@ swiftmailer:
     
 mopa_bootstrap:
     form: ~  # Adds twig form theme  support
-    menu: ~  # enables twig helpers for menu

@@ -1,0 +1,4 @@
+services:
+#    celcat_management_app.example:
+#        class: CelcatManagement\AppBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
