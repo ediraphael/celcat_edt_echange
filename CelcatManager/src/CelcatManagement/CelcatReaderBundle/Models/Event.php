@@ -8,7 +8,8 @@ class Event
     private $id, 
             $colour, 
             $start_time, 
-            $end_time, 
+            $end_time,
+            $time,
             $room, 
             $category, 
             $day, 
@@ -33,9 +34,19 @@ class Event
         $this->professor = ""; 
         $this->group = ""; 
         $this->note = ""; 
+        $this->time = "";
+    }
+    
+    
+    public function getTime() {
+        return $this->time;
     }
 
-    public function getId() {
+    public function setTime($time) {
+        $this->time = $time;
+    }
+
+        public function getId() {
         return $this->id;
     }
 
