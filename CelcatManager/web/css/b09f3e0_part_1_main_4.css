@@ -1,0 +1,19 @@
+* {
+	cursor: default;
+}
+
+html {
+	background: url('../../images/background.png');
+	height: 100%;
+}
+
+body {
+	position: relative;
+	height: 100%;
+}
+
+section {
+	/* 2*50px pour les barres de navigation, +10px de marge +4px de border */
+	height: calc(100% - 114px);
+	position: relative;
+}

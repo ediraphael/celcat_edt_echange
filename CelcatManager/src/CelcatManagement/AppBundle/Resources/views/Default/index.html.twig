@@ -1,1 +1,7 @@
-Hello {{ name }}!
+{% extends 'base.html.twig' %}
+{% block titre %}
+    <h1>Page de base</h1>
+{% endblock %}
+{% block body %}
+    Bonjour {{ name }}
+{% endblock %}

@@ -1,13 +1,77 @@
-<!DOCTYPE html>
+
+<!DOCTYPE HTML>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width"/>
+        <title>{% block title %}Celcat manager{% endblock %}</title>
+        {% stylesheets 
+			'%kernel.root_dir%/Resources/public/css/*' 
+			filter='cssrewrite' 
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        {% endstylesheets %}
+        {% javascripts  
+			'%kernel.root_dir%/Resources/public/js/jquery-2.1.3.min.js' 
+			'%kernel.root_dir%/Resources/public/js/jquery-ui.js' 
+			'%kernel.root_dir%/Resources/public/js/bootstrap.js' 
+			'@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+        %}
+        <script src="{{ asset_url }}" type="text/javascript" ></script>
+        {% endjavascripts  %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <header>
+            {% block header %}
+                <div class="navbar navbar-default" role="navigation">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand ajax-link menu-navigation" href="">Accueil</a>
+                        </div>
+                        <div class="collapse navbar-collapse">
+
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href=""  class="dropdown-toggle" data-toggle="dropdown">
+                                       faux menu
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+            {#			{{ render(controller("LemonnMenuBundle:Navigation:menu")) }}#}
+        </header>
+        <section id="sectionPrincipale">
+            <div id="container" class="container container-principal">
+                {% block titre %}
+                {% endblock %}
+                {% for key, messages in app.session.flashbag.all() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ key }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% block body %}
+                {% endblock %}
+            </div>
+
+        </section>
+        <footer>
+            {% block footer %}
+            {% endblock %}
+        </footer>
     </body>
+    {% block foot_script_assetic %}
+    {% endblock %}
 </html>
