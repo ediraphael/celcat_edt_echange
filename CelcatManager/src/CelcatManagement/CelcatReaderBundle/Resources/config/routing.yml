@@ -1,7 +1,7 @@
-celcat_management_celcat_reader_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:index }
-
 celcat_management_celcat_reader_index:
     path:     /
     defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:index }
+    
+celcat_management_celcat_reader_parse:
+    path:     /parse/{file_name}
+    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:parse }

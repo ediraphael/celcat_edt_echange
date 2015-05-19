@@ -1,0 +1,9 @@
+{% extends 'CelcatManagementCelcatReaderBundle::layout.html.twig' %}
+{% block body %}
+    <p>Taille du tableau: {{ return_value|length }}</p>
+    {% for value in return_value %}
+        {% for node in value.attributes  %}
+            <p> {{ dump(node) }} </p>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
