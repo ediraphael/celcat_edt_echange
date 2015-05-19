@@ -1,0 +1,7 @@
+
+parameters:
+    ldap.hostname: ldap.univ-angers.fr
+    ldap.dc: 'dc=univ-angers,dc=fr'
+    ldap.ou: 'ou=people'
+    ldap.user: 
+    ldap.password: 
