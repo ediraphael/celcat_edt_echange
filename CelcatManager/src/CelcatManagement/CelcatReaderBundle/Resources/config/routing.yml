@@ -1,0 +1,3 @@
+celcat_management_celcat_reader_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:index }

@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
             new CelcatManagement\AppBundle\CelcatManagementAppBundle(),
+            new CelcatManagement\CelcatReaderBundle\CelcatManagementCelcatReaderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
