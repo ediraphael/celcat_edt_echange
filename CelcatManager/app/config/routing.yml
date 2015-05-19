@@ -1,3 +1,11 @@
+celcat_management_ldap_manager:
+    resource: "@CelcatManagementLDAPManagerBundle/Resources/config/routing.yml"
+    prefix:   /LDAP
+
+celcat_management_celcat_reader:
+    resource: "@CelcatManagementCelcatReaderBundle/Resources/config/routing.yml"
+    prefix:   /CELCAT
+
 celcat_management_app:
     resource: "@CelcatManagementAppBundle/Resources/config/routing.yml"
     prefix:   /
