@@ -1,0 +1,3 @@
+celcat_management_ldap_manager_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: CelcatManagementLDAPManagerBundle:Default:index }

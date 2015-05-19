@@ -1,0 +1,4 @@
+services:
+#    celcat_management_ldap_manager.example:
+#        class: CelcatManagement\LDAPManagerBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
