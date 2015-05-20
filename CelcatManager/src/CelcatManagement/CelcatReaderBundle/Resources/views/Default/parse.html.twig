@@ -1,5 +1,6 @@
 {% extends 'CelcatManagementCelcatReaderBundle::layout.html.twig' %}
 {% block body %}
+    
     <h3><b><u>Liste des créneaux:</u></b></h3>
     <p>Nombre des créneaux: {{ tab_events|length }}</p>
     
@@ -7,9 +8,9 @@
         <p> {{ dump(node) }} </p>
     {% endfor %}
     
-    {#{% for value in return_value %}
-        {% for node in value.attributes  %}
-            <p> {{ dump(node) }} </p>
-        {% endfor %}
-    {% endfor %}#}
+    
+    {#{{ dump(event) }}#}
+    
+    
+    
 {% endblock %}

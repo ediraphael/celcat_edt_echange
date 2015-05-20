@@ -5,3 +5,11 @@ celcat_management_celcat_reader_index:
 celcat_management_celcat_reader_parse:
     path:     /parse/{file_name}
     defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:parse }
+
+celcat_management_celcat_reader_getEventById:
+    path:     /parse/event/{file_name}/{event_id}
+    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:getEventById }
+
+celcat_management_celcat_reader_getEventsByWeek:
+    path:     /parse/week/{file_name}/{week_id}
+    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:getEventsByWeek }
