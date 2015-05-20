@@ -16,7 +16,6 @@ class DefaultController extends Controller
         return $this->render('CelcatManagementLDAPManagerBundle:Default:index.html.twig', 
                 array(
                     'name' => $name,
-                    'manager' => $ldapManager,
                     'recherche' => $recherche
                 )
             );
