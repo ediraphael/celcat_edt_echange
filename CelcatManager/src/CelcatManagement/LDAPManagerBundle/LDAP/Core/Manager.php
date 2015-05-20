@@ -264,7 +264,6 @@ class Manager
         $scope = $inDepth?SearchInterface::SCOPE_ALL:SearchInterface::SCOPE_ONE;
 
         try {
-            echo $scope . ' ' . $baseDn . ' ' . $filter;
             $search = $this->connection->search($scope, $baseDn, $filter, $attributes);
         } catch (NoResultException $e) {
             return $result;
