@@ -5,6 +5,9 @@ namespace CelcatManagement\CelcatReaderBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DomCrawler\Crawler;
 use CelcatManagement\CelcatReaderBundle\Models\Event;
+use CelcatManagement\CelcatReaderBundle\Models\Week;
+use CelcatManagement\CelcatReaderBundle\Models\Day;
+use CelcatManagement\CelcatReaderBundle\Models\ScheduleManager;
 
 class DefaultController extends Controller
 {
@@ -121,6 +124,12 @@ class DefaultController extends Controller
     }
     
     
+    public function parseAllScheduleAction($file_name = "")
+    {
+        $scheduleManager = new ScheduleManager();
+        $scheduleManager->parseAllSchedule($file_name);
+        return $this->render('CelcatManagementCelcatReaderBundle:Default:parse.html.twig', array('scheduleManager' => $scheduleManager));
+    }
     
     
 }

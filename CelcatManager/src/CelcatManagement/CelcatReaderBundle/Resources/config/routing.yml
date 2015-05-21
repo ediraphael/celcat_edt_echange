@@ -13,3 +13,7 @@ celcat_management_celcat_reader_getEventById:
 celcat_management_celcat_reader_getEventsByWeek:
     path:     /parse/week/{file_name}/{week_id}
     defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:getEventsByWeek }
+
+celcat_management_celcat_reader_parseAllSchedule:
+    path:     /parse/schedule/{file_name}
+    defaults: { _controller: CelcatManagementCelcatReaderBundle:Default:parseAllSchedule }

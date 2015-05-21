@@ -40,9 +40,19 @@ class Day
         $this->name = $name;
     }
     
-    public function addEvent(Event $event)
+    public function addEvent($event)
     {
         $this->tab_events[] = $event;
+    }
+    
+    public function canAddEvent($start_time, $end_time)
+    {
+        foreach ($this->tab_events as $event)
+        {
+            if(($start_time >= $event->getStart_time() && $start_time <= $event->getEnd_time()) || ($end_time >= $event->getStart_time() && $end_time <= $event->getEnd_time()))
+                return false;
+        }
+        return true;
     }
 
 
