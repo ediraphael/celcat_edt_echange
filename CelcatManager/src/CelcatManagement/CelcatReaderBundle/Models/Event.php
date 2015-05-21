@@ -17,7 +17,8 @@ class Event
             $module,
             $professor, 
             $group, 
-            $note;
+            $note,
+            $formation;
     
 
     function __construct() 
@@ -35,8 +36,17 @@ class Event
         $this->group = ""; 
         $this->note = ""; 
         $this->time = "";
+        $this->formation = "";
     }
     
+    
+    public function getFormation() {
+        return $this->formation;
+    }
+
+    public function setFormation($formation) {
+        $this->formation = $formation;
+    }
     
     public function getTime() {
         return $this->time;

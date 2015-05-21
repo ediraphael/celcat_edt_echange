@@ -42,17 +42,42 @@ class Day
     
     public function addEvent($event)
     {
-        $this->tab_events[] = $event;
+//        le créneau est ajouté dans un tableau via un index qui représente l'd de la formation
+        if(!isset($this->tab_events[$event->getFormation()]))
+            $this->tab_events[$event->getFormation()] = array();
+        array_push($this->tab_events[$event->getFormation()], $event);
     }
     
-    public function canAddEvent($start_time, $end_time)
+    public function canAddEvent($start_time, $end_time, $formation_id)
     {
-        foreach ($this->tab_events as $event)
+        foreach ($this->tab_events[$formation_id] as $event)
         {
-            if(($start_time >= $event->getStart_time() && $start_time <= $event->getEnd_time()) || ($end_time >= $event->getStart_time() && $end_time <= $event->getEnd_time()))
-                return false;
+            if(($start_time >= $event->getStart_time() && $start_time <= $event->getEnd_time()) || 
+                        ($end_time >= $event->getStart_time() && $end_time <= $event->getEnd_time()))
+                return false;   
         }
         return true;
+    }
+    
+    
+    public function getFreeEventsList($start_time, $end_time, $formation_id)
+    {
+        $tab_free_events = array();
+        foreach ($this->tab_events[$formation_id] as $index => $event)
+        {
+            if(count($this->tab_events[$formation_id])-1 > index)
+            {
+                $next_event = $this->tab_events[$formation_id][index + 1];
+                if($start_time >= $event->getEnd_time() && $end_time <= $next_event->getStart_time())
+                {
+                    $free_event = new Event();
+                    $free_event->setStart_time($start_time);
+                    $free_event->setEnd_time($end_time);
+                    $tab_free_events[] = $free_event;
+                }
+            }    
+        }
+        return $tab_free_events;
     }
 
 
