@@ -125,10 +125,15 @@ class DefaultController extends Controller
     
     
     public function parseAllScheduleAction($file_name = "")
-    {
+    {       
         $scheduleManager = new ScheduleManager();
         $scheduleManager->parseAllSchedule($file_name);
-        return $this->render('CelcatManagementCelcatReaderBundle:Default:parse.html.twig', array('scheduleManager' => $scheduleManager));
+        
+        $event_source = $scheduleManager->getWeekById(21)->getDayById(0)->getEventByIdAndByFormation("275130", "g200864");
+        $event_destination = $scheduleManager->getWeekById(21)->getDayById(0)->getEventByIdAndByFormation("275317", "g200864");
+        $tab_test = $scheduleManager->getFreeEventsList($event_source, $event_destination);
+        
+        return $this->render('CelcatManagementCelcatReaderBundle:Default:parse.html.twig', array('test' => $tab_test, 'scheduleManager' => $scheduleManager));
     }
     
     

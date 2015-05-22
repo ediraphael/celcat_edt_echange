@@ -141,8 +141,10 @@ class ScheduleManager
     public function getFreeEventsList($event_source, $event_destination)
     {
         $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
-                ->getDayById($event_destination->getDay())->getFreeEventsList($event_source, $event_destination);
-        
+                ->getDayById($event_destination->getDay())
+                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
+                        ->getEnd_time(), $event_destination->getFormation());
+        return $tab_free_events;
     }
     
 //    tester si un créneau peut etre changer vers un autre
