@@ -140,12 +140,16 @@ class ScheduleManager
 //    recupere la liste des possibilités
     public function getFreeEventsList($event_source, $event_destination)
     {
-        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
-                ->getDayById($event_destination->getDay())
-                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
-                        ->getEnd_time(), $event_destination->getFormation());
+//        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
+//                ->getDayById($event_destination->getDay())
+//                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
+//                        ->getEnd_time(), $event_destination->getFormation());
+        $tab_free_events = $this->getWeekByTag($event_source->getWeek())
+                ->getWeekFreeEventsList($event_source
+                        ->getStart_time(), $event_source->getEnd_time(), $event_source->getFormation());
         return $tab_free_events;
     }
+    
     
 //    tester si un créneau peut etre changer vers un autre
     public function canSwapEvent($event_source, $event_destination)

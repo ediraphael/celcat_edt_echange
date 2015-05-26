@@ -128,9 +128,13 @@ class DefaultController extends Controller
     {       
         $scheduleManager = new ScheduleManager();
         $scheduleManager->parseAllSchedule($file_name);
+        //var_dump($scheduleManager->getTab_weeks());
+//        $event_source = $scheduleManager->getWeekById(22)->getDayById(3)->getEventByIdAndByFormation("238656", "g200872");
+//        $event_destination = $scheduleManager->getWeekById(22)->getDayById(3)->getEventByIdAndByFormation("238656", "g200872");
         
-        $event_source = $scheduleManager->getWeekById(21)->getDayById(0)->getEventByIdAndByFormation("275130", "g200864");
-        $event_destination = $scheduleManager->getWeekById(21)->getDayById(0)->getEventByIdAndByFormation("275317", "g200864");
+        $event_source = $scheduleManager->getWeekById(23)->getDayById(3)->getEventByIdAndByFormation("269741", "g200872");
+        $event_destination = $scheduleManager->getWeekById(23)->getDayById(3)->getEventByIdAndByFormation("269741", "g200872");
+        
         $tab_test = $scheduleManager->getFreeEventsList($event_source, $event_destination);
         
         return $this->render('CelcatManagementCelcatReaderBundle:Default:parse.html.twig', array('test' => $tab_test, 'scheduleManager' => $scheduleManager));

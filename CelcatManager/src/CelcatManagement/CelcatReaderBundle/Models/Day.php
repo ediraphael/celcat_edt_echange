@@ -83,52 +83,123 @@ class Day
         $tab_free_events = array();
         foreach ($this->tab_events[$formation_id] as $index => $event)
         {
-//            if(count($this->tab_events[$formation_id])-1 > index)
-//            {
-//                $next_event = $this->tab_events[$formation_id][index + 1];
-//                if($start_time >= $event->getEnd_time() && $end_time <= $next_event->getStart_time())
-//                {
-//                    $free_event = new Event();
-//                    $free_event->setStart_time($start_time);
-//                    $free_event->setEnd_time($end_time);
-//                    $tab_free_events[] = $free_event;
-//                }
-//            }  
             $tab_temp = array();
             $tab_temp[] = $event->getStart_time();
             $tab_temp[] = $event->getEnd_time();
             $tab_busy_events[] = $tab_temp;
         }
-//        return $tab_busy_events;
-        foreach ($tab_busy_events as $index => $tab_time)
+        if(count($tab_busy_events) == 0)
         {
-            $free_duration_between_two_events = $this->getDifferenceOfTime($tab_time[0], $tab_time[1]);
-            $wanted_duration = $this->getDifferenceOfTime($start_time, $end_time);
-            if(count($tab_busy_events)-1 > $index)
+            $temp_tab_free_duration = array();
+            $temp_tab_free_duration[] = "08:00";
+            $temp_tab_free_duration[] = "20:00";
+            $tab_free_events[] = $temp_tab_free_duration;
+        }
+        else
+        {
+    //        return $tab_busy_events;
+            foreach ($tab_busy_events as $index => $tab_time)
             {
-                $next_tab_time = $tab_busy_events[$index + 1];
-                $free_duration_between_two_events = $this->getDifferenceOfTime($tab_time[1], $next_tab_time[0]);
-                if($free_duration_between_two_events >= $wanted_duration)
+                $var_start_time =null;
+                $var_end_time = null;
+                $free_duration_between_two_events = $this->getDifferenceOfTime($tab_time[0], $tab_time[1]);
+                $wanted_duration = $this->getDifferenceOfTime($start_time, $end_time);
+                if($index == 0 && $this->getDifferenceOfTime("08:00", $tab_time[0]) >= $wanted_duration)
                 {
-                    $temp_tab_free_duration = array();
-                    $temp_tab_free_duration[] = $tab_time[1];
-                    $temp_tab_free_duration[] = $next_tab_time[0];
+                    $var_start_time = "08:00";
+                    $var_end_time = $tab_time[0];
+                    $this->insertFreeEvent($tab_free_events, $var_start_time, $var_end_time, $wanted_duration);
+                }
+                if(count($tab_busy_events)-1 > $index)
+                {
+                    $next_tab_time = $tab_busy_events[$index + 1];
+    //                dans le cas ou les créneaux se chevauche (plusieurs créneaux en même temps)
+                    if($tab_time[1] >= $next_tab_time[0] || $this->getDifferenceOfTime($tab_time[1], "20:00") < $wanted_duration)
+                        continue;
+                    $free_duration_between_two_events = $this->getDifferenceOfTime($tab_time[1], $next_tab_time[0]);
+                    if($free_duration_between_two_events >= $wanted_duration)
+                    {
+                        $var_start_time = $tab_time[1];
+                        $var_end_time = $next_tab_time[0];
+                    }
+                }
+                else
+                {
+                    if($this->getDifferenceOfTime($tab_time[1], "20:00") >= $wanted_duration)
+                    {
+                        $var_start_time = $tab_time[1];
+                        $var_end_time = "20:00";
+                    }
+                }
+                $this->insertFreeEvent($tab_free_events, $var_start_time, $var_end_time, $wanted_duration);
+            }
+        }
+        $this->getSubEvents($tab_free_events, $wanted_duration);
+        return $tab_free_events;
+    }
+    
+    
+    private function getSubEvents(&$tab_free_events, $wanted_duration)
+    {
+        $temp_tab_free_events = array();
+        foreach ($tab_free_events as $interval)
+        {
+            if($this->getDifferenceOfTime($interval[0], $interval[1]) > $wanted_duration)
+            {
+                $tab_temp = array();
+                $hours = explode(":", $wanted_duration)[0];
+                $minutes = explode(":", $wanted_duration)[1];
+                $convert = strtotime("+$hours hours", strtotime($interval[0]));
+                $convert = strtotime("+$minutes minutes", $convert);
+                $calculated = date('H:i', $convert);
+                $this->insertFreeEvent($temp_tab_free_events, $interval[0], $calculated, $wanted_duration);
+                $calculated = date('H:i', strtotime("+1 hours", strtotime($interval[0])));
+                while($calculated < $interval[1])
+                {
+                    $old_calculated = $calculated;
+                    $hours = explode(":", $wanted_duration)[0];
+                    $minutes = explode(":", $wanted_duration)[1];
+                    $convert = strtotime("+$hours hours", strtotime($calculated));
+                    $convert = strtotime("+$minutes minutes", $convert);
+                    $calculated = date('H:i', $convert);
+                    $this->insertFreeEvent($temp_tab_free_events, $old_calculated, $calculated, $wanted_duration);
+                    $calculated = date('H:i', strtotime("+1 hours", strtotime($old_calculated)));
+                }
+            }
+            else
+                $this->insertFreeEvent($temp_tab_free_events, $interval[0], $interval[1], $wanted_duration);
+        }
+        $tab_free_events = $temp_tab_free_events;
+    }
+    
+    
+    private function insertFreeEvent(&$tab_free_events, $var_start_time, $var_end_time, $wanted_duration)
+    {
+        if($var_start_time != null && $var_end_time != null)
+        {
+            $temp_tab_free_duration = array();
+            if($var_end_time > "12:30" && $var_start_time < "12:30")
+            {
+                if($this->getDifferenceOfTime($var_start_time, "12:30") >= $wanted_duration)
+                {
+                    $temp_tab_free_duration[] = $var_start_time;
+                    $temp_tab_free_duration[] = "12:30";
+                    $tab_free_events[] = $temp_tab_free_duration;
+                }
+                if($this->getDifferenceOfTime("13:30", $var_end_time) >= $wanted_duration && $var_end_time > "13:30")
+                {
+                    $temp_tab_free_duration[] = "13:30";
+                    $temp_tab_free_duration[] = $var_end_time;
                     $tab_free_events[] = $temp_tab_free_duration;
                 }
             }
             else
             {
-                if($tab_time[1] < "20h")
-                {
-                    $temp_tab_free_duration = array();
-                    $temp_tab_free_duration[] = $tab_time[1];
-                    $temp_tab_free_duration[] = "20:00";
-                    $tab_free_events[] = $temp_tab_free_duration;
-                }
+                $temp_tab_free_duration[] = $var_start_time;
+                $temp_tab_free_duration[] = $var_end_time;
+                $tab_free_events[] = $temp_tab_free_duration;
             }
         }
-        
-        return $tab_free_events;
     }
 
 
