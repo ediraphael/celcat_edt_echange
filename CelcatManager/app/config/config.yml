@@ -76,3 +76,14 @@ swiftmailer:
     
 mopa_bootstrap:
     form: ~  # Adds twig form theme  support
+
+be_simple_sso_auth:
+    admin_sso:
+        protocol:
+            id: cas
+            version: 2
+        server:
+            id: cas
+            login_url: https://cas.univ-angers.fr/cas/login
+            logout_url: https://cas.univ-angers.fr/cas/logout
+            validation_url: https://cas.univ-angers.fr/cas/serviceValidate
