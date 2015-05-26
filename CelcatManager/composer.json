@@ -26,8 +26,7 @@
         "mopa/bootstrap-bundle": "v3.0.0-beta4",
         "twbs/bootstrap": "dev-master",
         "tiesa/ldap": "dev-master",
-        "besimple/sso-auth-bundle": "dev-master",
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "besimple/sso-auth-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
