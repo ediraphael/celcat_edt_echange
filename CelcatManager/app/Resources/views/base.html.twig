@@ -39,19 +39,33 @@
                             <ul class="nav navbar-nav">
                                 <li>
                                     <a href="{{ path('celcat_management_celcat_reader_index') }}"  >
-                                       CELCAT
+                                        CELCAT
                                     </a>
                                 </li>
-                                 <li>
+                                <li>
                                     <a href="{{ path('celcat_management_ldap_manager_index') }}"  >
-                                       LDAP
+                                        LDAP
                                     </a>
                                 </li>
 
                             </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" role="button" aria-expanded="false"><span> {{ app.user.username|capitalize }} </span><span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a class="ajax-link menu-navigation" href="#">Profil</a>
+                                        </li>
+                                        <li>
+                                            <a class="menu-navigation" href="{{ path('logout') }}">Déconnexion</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
 
                         </div>
                     </div>
+
                 </div>
             {% endblock %}
             {#			{{ render(controller("LemonnMenuBundle:Navigation:menu")) }}#}
