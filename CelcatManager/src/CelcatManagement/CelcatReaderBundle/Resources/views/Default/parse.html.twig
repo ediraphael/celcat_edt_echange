@@ -1,0 +1,21 @@
+{% extends 'CelcatManagementCelcatReaderBundle::layout.html.twig' %}
+{% block body %}
+    
+    {#<h3><b><u>Liste des créneaux:</u></b></h3>
+    <p>Nombre des créneaux: {{ tab_events|length }}</p>
+    
+    {% for node in tab_events %}
+        <p> {{ dump(node) }} </p>
+    {% endfor %}#}
+    
+    
+    {#{{ dump(event) }}#}
+    
+    {{ dump(test) }}
+    
+    <h3><b><u>Objet scheduleManager:</u></b></h3>
+    
+    {{ dump(scheduleManager) }}
+    
+    
+{% endblock %}
