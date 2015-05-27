@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new CelcatManagement\AppBundle\CelcatManagementAppBundle(),
             new CelcatManagement\CelcatReaderBundle\CelcatManagementCelcatReaderBundle(),
             new CelcatManagement\LDAPManagerBundle\CelcatManagementLDAPManagerBundle(),
+            new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

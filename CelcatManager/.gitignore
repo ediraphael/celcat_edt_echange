@@ -2,6 +2,7 @@
 /app/cache/*
 !app/cache/.gitkeep
 /app/config/parameters.yml
+/app/config/parameters_ldap.yml
 /app/logs/*
 !app/logs/.gitkeep
 /app/phpunit.xml
@@ -9,3 +10,5 @@
 /composer.phar
 /vendor/
 /web/bundles/
+/web/css/
+/web/js/
