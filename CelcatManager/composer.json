@@ -25,7 +25,9 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "mopa/bootstrap-bundle": "v3.0.0-beta4",
         "twbs/bootstrap": "dev-master",
-        "besimple/sso-auth-bundle": "dev-master"
+        "besimple/sso-auth-bundle": "dev-master",
+        "friendsofsymfony/jsrouting-bundle": "^1.5",
+        "adesigns/calendar-bundle": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
