@@ -1,0 +1,5 @@
+
+parameters:
+    celcat.url: http://celcat.univ-angers.fr/web/publi/
+    celcat.pathEtudiant: etu/
+    celcat.pathEnseignant: prof/
