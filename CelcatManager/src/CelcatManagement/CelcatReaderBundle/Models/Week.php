@@ -99,6 +99,11 @@ class Week
         return null;
     }
     
+    /**
+     * 
+     * @param type $day_name
+     * @return type
+     */
     public function getDayByName($day_name)
     {
         foreach ($this->tab_days as $day)
@@ -109,12 +114,19 @@ class Week
         return null;
     }
     
+    /**
+     * 
+     * @param type $start_time
+     * @param type $end_time
+     * @param type $formation_id
+     * @return type
+     */
     public function getWeekFreeEventsList($start_time, $end_time, $formation_id)
     {
         $tab_free_events = array();
         foreach ($this->tab_days as $day)
         {
-            if(count($day->getTab_events()) > 0)
+            //if(count($day->getTab_events()) > 0)
                 $tab_free_events[$day->getName()] = $day->getFreeEventsList($start_time, $end_time, $formation_id);
         }
         return $tab_free_events;
