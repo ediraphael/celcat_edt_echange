@@ -77,6 +77,13 @@ class LDAPManager {
         }
     }
     
+    function searchUser($username = "") {
+        if($username == "" || $username == null) {
+            return null;
+        }
+        return $this->search("(uid=$username)");
+    }
+    
     function search($filter = "") {
         return $this->manager->search($this->ou . ',' . $this->dc, $filter);
     }
