@@ -12,6 +12,11 @@ class User implements UserInterface {
     private $password;
     private $salt;
     private $roles;
+    
+    private $mail;
+    private $fullName;
+    private $group;
+    private $groupName;
 
     public function __construct($username, $password, $salt, array $roles) {
         $this->username = $username;
@@ -51,6 +56,38 @@ class User implements UserInterface {
     public function setUsername($username) {
         $this->username = $username;
     }
+    
+    public function getMail() {
+        return $this->mail;
+    }
+
+    public function getFullName() {
+        return $this->fullName;
+    }
+
+    public function getGroup() {
+        return $this->group;
+    }
+
+    public function getGroupName() {
+        return $this->groupName;
+    }
+
+    public function setMail($mail) {
+        $this->mail = $mail;
+    }
+
+    public function setFullName($fullName) {
+        $this->fullName = $fullName;
+    }
+
+    public function setGroup($group) {
+        $this->group = $group;
+    }
+
+    public function setGroupName($groupName) {
+        $this->groupName = $groupName;
+    }
 
     public function eraseCredentials() {
         
@@ -71,5 +108,13 @@ class User implements UserInterface {
         }
         return true;
     }
-
+    
+    public function hydrateWithLDAP(\CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult $userLDAP) {
+        if($userLDAP != null) {
+            $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
+            $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
+            $this->setGroup($userLDAP->current()->get('auaPopulation')->getValues()[0]);
+            $this->setGroupName($userLDAP->current()->get('title')->getValues()[0]);
+        }
+    }
 }
