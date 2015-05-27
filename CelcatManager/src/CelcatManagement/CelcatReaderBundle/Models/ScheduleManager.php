@@ -140,7 +140,7 @@ class ScheduleManager {
                     $event->setProfessor($this->parseEventNodeItems($crawler, "//staff/item"));
                 }
                 if ($crawler->filterXPath("//prettytimes/item")->count() > 0) {
-                    $event->setTime($this->parseEventNodeItems($crawler, "//prettytimes/item"));
+                    $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes/item"));
                 }
                 $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
             }
