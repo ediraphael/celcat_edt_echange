@@ -1,0 +1,48 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+{% block titre %}
+    <h1>Profil</h1>
+{% endblock %}
+{% block body %}
+    <div class="table-responsive">
+        <table class="record_properties table table-striped table-hover">
+            <tbody>
+                <tr>
+                    <th>{{ 'profile.show.username'|trans }}</th>
+                    <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.fullname'|trans }}</th>
+                    <td>{{ user.fullname }}</td>
+                </tr>
+                {#<tr>
+                    <th>{{ 'profile.show.prenom'|trans }}</th>
+                    <td>{{ user.prenom }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.date.naissance'|trans }}</th>
+                    <td>{{ user.datenaissance|date("d/m/Y") }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.email'|trans }}</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.last_login'|trans }}</th>
+                    <td>{{ user.lastLogin|date('d/m/Y H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.enable'|trans }}</th>
+                    <td>{{ user.enabled ? 'Oui' : 'Non' }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.groups'|trans }}</th>
+                    <td>
+                        {% for groupe in user.groupes %}
+                            <p>{{ groupe.name }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>#}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
