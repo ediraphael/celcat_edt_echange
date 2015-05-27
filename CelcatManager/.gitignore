@@ -3,6 +3,7 @@
 !app/cache/.gitkeep
 /app/config/parameters.yml
 /app/config/parameters_ldap.yml
+/app/config/parameters_celcat.yml
 /app/logs/*
 !app/logs/.gitkeep
 /app/phpunit.xml
