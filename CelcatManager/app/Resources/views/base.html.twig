@@ -54,7 +54,7 @@
                                     <a href="#" class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" role="button" aria-expanded="false"><span> {{ app.user.username|capitalize }} </span><span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
-                                            <a class="ajax-link menu-navigation" href="#">Profil</a>
+                                            <a class="ajax-link menu-navigation" href="{{ path('profil') }}">Profil</a>
                                         </li>
                                         <li>
                                             <a class="menu-navigation" href="{{ path('logout') }}">Déconnexion</a>
