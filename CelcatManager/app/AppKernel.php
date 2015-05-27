@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new CelcatManagement\LDAPManagerBundle\CelcatManagementLDAPManagerBundle(),
             new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
