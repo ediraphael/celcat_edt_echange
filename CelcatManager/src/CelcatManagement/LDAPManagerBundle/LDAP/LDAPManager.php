@@ -77,6 +77,11 @@ class LDAPManager {
         }
     }
     
+    /**
+     * Fonction de recherche d'utilisateur LDAP
+     * @param type $username
+     * @return null|Core\SearchResult
+     */
     function searchUser($username = "") {
         if($username == "" || $username == null) {
             return null;
@@ -84,6 +89,11 @@ class LDAPManager {
         return $this->search("(uid=$username)");
     }
     
+    /**
+     * Fonction de recherche LDAP
+     * @param string $filter Filtre de recherche LDAP
+     * @return Core\SearchResult
+     */
     function search($filter = "") {
         return $this->manager->search($this->ou . ',' . $this->dc, $filter);
     }
