@@ -7,12 +7,24 @@
         <table class="record_properties table table-striped table-hover">
             <tbody>
                 <tr>
+                    <th>{{ 'profile.show.fullname'|trans }}</th>
+                    <td>{{ user.fullname }}</td>
+                </tr>
+                <tr>
                     <th>{{ 'profile.show.username'|trans }}</th>
                     <td>{{ user.username }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'profile.show.fullname'|trans }}</th>
-                    <td>{{ user.fullname }}</td>
+                    <th>{{ 'profile.show.mail'|trans }}</th>
+                    <td>{{ user.mail }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.group'|trans }}</th>
+                    <td>{{ user.group }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'profile.show.groupname'|trans }}</th>
+                    <td>{{ user.groupname }}</td>
                 </tr>
                 {#<tr>
                     <th>{{ 'profile.show.prenom'|trans }}</th>
