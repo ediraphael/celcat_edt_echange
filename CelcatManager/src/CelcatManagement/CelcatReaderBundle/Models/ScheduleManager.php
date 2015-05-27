@@ -91,6 +91,25 @@ class ScheduleManager
     
     /**
      * 
+     * @param type $crawlter
+     * @param type $node_name
+     * @return string
+     */
+    private function parseEventNodeItems(&$crawler, $node_name)
+    {
+        $variable_value = "";
+        for($i=0; $i<$crawler->filterXPath($node_name)->count(); $i++)
+        {
+            if($i == $crawler->filterXPath($node_name)->count()-1)
+                $variable_value .=  $crawler->filterXPath($node_name)->getNode($i)->textContent;
+            else
+                $variable_value .=  $crawler->filterXPath($node_name)->getNode($i)->textContent."; ";
+        }
+        return $variable_value;
+    }
+    
+    /**
+     * 
      * @param type $file_contents
      * @param type $formation_id
      */
@@ -111,22 +130,21 @@ class ScheduleManager
                 $event->setColour($crawler->attr("colour"));
                 $event->setWeek($crawler->filterXPath("//rawweeks")->text());
                 if($crawler->filterXPath("//room/item")->count() > 0)
-                    $event->setRoom($crawler->filterXPath("//room/item")->text());
+                    $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
                 $event->setCategory($crawler->filterXPath("//category")->text());
                 $event->setDay($crawler->filterXPath("//day")->text());
                 $event->setStart_time($crawler->filterXPath("//starttime")->text());
                 $event->setEnd_time($crawler->filterXPath("//endtime")->text());
                 if($crawler->filterXPath("//group/item")->count() > 0)
-                    $event->setGroup($crawler->filterXPath("//group/item")->text());
+                    $event->setGroup($this->parseEventNodeItems($crawler, "//group/item"));
                 if($crawler->filterXPath("//module/item")->count() > 0)
-                    $event->setModule($crawler->filterXPath("//module/item")->text());
-                if($crawler->filterXPath("//notes")->count() > 0)
-                    $event->setNote($crawler->filterXPath("//notes")->text());
+                    $event->setModule($this->parseEventNodeItems($crawler, "//module/item"));
+                if($crawler->filterXPath("//notes/item")->count() > 0)
+                    $event->setNote($this->parseEventNodeItems($crawler, "//notes/item"));
                 if($crawler->filterXPath("//staff/item")->count() > 0)
-                    $event->setProfessor($crawler->filterXPath("//staff/item")->text());
-                if($crawler->filterXPath("//prettytimes")->count() > 0)
-                    $event->setTime($crawler->filterXPath("//prettytimes")->text());
-
+                    $event->setProfessor($this->parseEventNodeItems($crawler, "//staff/item"));
+                if($crawler->filterXPath("//prettytimes/item")->count() > 0)
+                    $event->setTime($this->parseEventNodeItems($crawler, "//prettytimes/item"));
                 $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
             }
         } catch(Exception $e)
