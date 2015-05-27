@@ -5,3 +5,7 @@ celcat_management_app_homepage:
 celcat_management_app_index:
     path:     /
     defaults: { _controller: CelcatManagementAppBundle:Default:index2 }
+
+celcat_management_app_bundle_login:
+    resource: "@CelcatManagementAppBundle/Resources/config/routing/login.yml"
+    prefix:   /

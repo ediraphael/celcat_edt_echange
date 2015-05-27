@@ -10,11 +10,3 @@ celcat_management_app:
     resource: "@CelcatManagementAppBundle/Resources/config/routing.yml"
     prefix:   /
 
-login:
-    pattern: /login
-    defaults: { _controller: CelcatManagementAppBundle:Default:login }
-logout:
-    pattern: /logout
-login_check:
-    pattern: /login_check
-    defaults: { _controller: CelcatManagementAppBundle:Default:login }

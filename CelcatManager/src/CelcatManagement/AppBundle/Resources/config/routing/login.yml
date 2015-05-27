@@ -1,0 +1,8 @@
+login:
+    pattern: /login
+    defaults: { _controller: CelcatManagementAppBundle:Login:login }
+logout:
+    pattern: /logout
+login_check:
+    pattern: /login_check
+    defaults: { _controller: CelcatManagementAppBundle:Login:login }
