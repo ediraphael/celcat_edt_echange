@@ -157,12 +157,14 @@ class ScheduleManager
 //    passage d'un fichier XML
     /**
      * 
-     * @param type $file_name
+     * @param type $url
      */
-    public function parseAllSchedule($file_name)
+    public function parseAllSchedule($url)
     {
-        $formation_id = explode(".", $file_name)[0];
-        $file_contents = file_get_contents("http://celcat.univ-angers.fr/web/publi/etu/".$file_name);
+        $matches =array();
+        preg_match("/([^.\/]*)\.xml/", $url, $matches);
+        $formation_id = $matches[1];
+        $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);
     }
