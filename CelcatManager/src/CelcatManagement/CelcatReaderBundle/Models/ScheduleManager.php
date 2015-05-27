@@ -57,6 +57,10 @@ class ScheduleManager
         return null;
     }
     
+    /**
+     * 
+     * @param type $file_contents
+     */
     public function parseWeeks($file_contents)
     {
         try 
@@ -85,7 +89,11 @@ class ScheduleManager
         }
     }
     
-    
+    /**
+     * 
+     * @param type $file_contents
+     * @param type $formation_id
+     */
     public function parseEvents($file_contents, $formation_id)
     {
         try 
@@ -127,7 +135,12 @@ class ScheduleManager
         }
     }
     
+    
 //    passage d'un fichier XML
+    /**
+     * 
+     * @param type $file_name
+     */
     public function parseAllSchedule($file_name)
     {
         $formation_id = explode(".", $file_name)[0];
@@ -138,20 +151,31 @@ class ScheduleManager
     
     
 //    recupere la liste des possibilités
+    /**
+     * 
+     * @param type $event_source
+     * @param type $event_destination
+     * @return type
+     */
     public function getFreeEventsList($event_source, $event_destination)
     {
 //        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
 //                ->getDayById($event_destination->getDay())
 //                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
 //                        ->getEnd_time(), $event_destination->getFormation());
-        $tab_free_events = $this->getWeekByTag($event_source->getWeek())
-                ->getWeekFreeEventsList($event_source
-                        ->getStart_time(), $event_source->getEnd_time(), $event_source->getFormation());
+        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
+                ->getWeekFreeEventsList($event_destination
+                        ->getStart_time(), $event_destination->getEnd_time(), $event_destination->getFormation());
         return $tab_free_events;
     }
     
     
 //    tester si un créneau peut etre changer vers un autre
+    /**
+     * 
+     * @param type $event_source
+     * @param type $event_destination
+     */
     public function canSwapEvent($event_source, $event_destination)
     {
         if($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
