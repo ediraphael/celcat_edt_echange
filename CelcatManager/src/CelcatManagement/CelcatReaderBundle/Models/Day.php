@@ -92,8 +92,8 @@ class Day
     {
         foreach ($this->tab_events[$formation_id] as $event)
         {
-            if(($start_time >= $event->getStart_time() && $start_time <= $event->getEnd_time()) || 
-                        ($end_time >= $event->getStart_time() && $end_time <= $event->getEnd_time()))
+            if(($start_time >= $event->getStartTime() && $start_time <= $event->getEndTime()) || 
+                        ($end_time >= $event->getStartTime() && $end_time <= $event->getEndTime()))
                 return false;   
         }
         return true;
@@ -116,8 +116,8 @@ class Day
             foreach ($this->tab_events[$formation_id] as $index => $event)
             {
                 $tab_temp = array();
-                $tab_temp[] = $event->getStart_time();
-                $tab_temp[] = $event->getEnd_time();
+                $tab_temp[] = $event->getStartTime();
+                $tab_temp[] = $event->getEndTime();
                 $tab_busy_events[] = $tab_temp;
             }
         }
