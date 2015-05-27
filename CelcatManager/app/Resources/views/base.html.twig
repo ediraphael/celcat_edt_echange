@@ -7,6 +7,7 @@
         <title>{% block title %}Celcat manager{% endblock %}</title>
         {% stylesheets 
 			'%kernel.root_dir%/Resources/public/css/*' 
+                        '@ADesignsCalendarBundle/Resources/public/css/fullcalendar/fullcalendar.css'
 			filter='cssrewrite' 
         %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
@@ -16,9 +17,13 @@
 			'%kernel.root_dir%/Resources/public/js/jquery-ui.js' 
 			'%kernel.root_dir%/Resources/public/js/bootstrap.js' 
 			'@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+                        '@FOSJsRoutingBundle/Resources/public/js/router.js'
+                        '@ADesignsCalendarBundle/Resources/public/js/fullcalendar/jquery.fullcalendar.min.js'
+                        '@ADesignsCalendarBundle/Resources/public/js/calendar-settings.js'
         %}
         <script src="{{ asset_url }}" type="text/javascript" ></script>
         {% endjavascripts  %}
+        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
     </head>
     <body>
         <header>
