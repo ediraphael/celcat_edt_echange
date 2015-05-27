@@ -2,44 +2,36 @@
 
 namespace CelcatManagement\CelcatReaderBundle\Models;
 
-class Event
-{
+class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
-    private $id, 
-            $colour, 
-            $start_time, 
-            $end_time,
+    private $colour,
             $time,
-            $room, 
-            $category, 
-            $day, 
-            $week, 
+            $room,
+            $category,
+            $day,
+            $week,
             $module,
-            $professor, 
-            $group, 
+            $professor,
+            $group,
             $note,
             $formation;
-    
 
-    function __construct() 
-    {
-        $this->id = ""; 
-        $this->colour = ""; 
-        $this->start_time = ""; 
-        $this->end_time = ""; 
-        $this->room = ""; 
-        $this->category = ""; 
-        $this->day = ""; 
-        $this->week = ""; 
-        $this->module = ""; 
-        $this->professor = ""; 
-        $this->group = ""; 
-        $this->note = ""; 
+    function __construct() {
+        parent::__construct("", new \DateTime(), new \DateTime());
+        $this->id = "";
+        $this->colour = "";
+        $this->room = "";
+        $this->category = "";
+        $this->day = "";
+        $this->week = "";
+        $this->module = "";
+        $this->professor = "";
+        $this->group = "";
+        $this->note = "";
         $this->time = "";
         $this->formation = "";
     }
-    
-    
+
     public function getFormation() {
         return $this->formation;
     }
@@ -47,7 +39,7 @@ class Event
     public function setFormation($formation) {
         $this->formation = $formation;
     }
-    
+
     public function getTime() {
         return $this->time;
     }
@@ -56,7 +48,7 @@ class Event
         $this->time = $time;
     }
 
-        public function getId() {
+    public function getId() {
         return $this->id;
     }
 
@@ -64,12 +56,12 @@ class Event
         return $this->colour;
     }
 
-    public function getStart_time() {
-        return $this->start_time;
+    public function getStartTime() {
+        return $this->getStartDatetime()->format("H:i");
     }
 
-    public function getEnd_time() {
-        return $this->end_time;
+    public function getEndTime() {
+        return $this->getEndDatetime()->format("H:i");
     }
 
     public function getRoom() {
@@ -111,15 +103,7 @@ class Event
     public function setColour($colour) {
         $this->colour = $colour;
     }
-
-    public function setStart_time($start_time) {
-        $this->start_time = $start_time;
-    }
-
-    public function setEnd_time($end_time) {
-        $this->end_time = $end_time;
-    }
-
+    
     public function setRoom($room) {
         $this->room = $room;
     }
@@ -151,4 +135,5 @@ class Event
     public function setNote($note) {
         $this->note = $note;
     }
+
 }
