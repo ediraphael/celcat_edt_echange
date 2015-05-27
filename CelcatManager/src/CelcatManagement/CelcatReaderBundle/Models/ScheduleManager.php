@@ -1,19 +1,17 @@
 <?php
 
 namespace CelcatManagement\CelcatReaderBundle\Models;
+
 use Symfony\Component\DomCrawler\Crawler;
 
-class ScheduleManager
-{
-    
+class ScheduleManager {
+
     private $tab_weeks;
-            
-    
-    function __construct() 
-    {
+
+    function __construct() {
         $this->tab_weeks = array();
     }
-    
+
     public function getTab_weeks() {
         return $this->tab_weeks;
     }
@@ -21,59 +19,53 @@ class ScheduleManager
     public function setTab_weeks($tab_weeks) {
         $this->tab_weeks = $tab_weeks;
     }
-    
-    public function addWeek($week)
-    {
+
+    public function addWeek($week) {
         $this->tab_weeks[] = $week;
     }
-    
-    public function weekExists($week_id)
-    {
-        foreach ($this->tab_weeks as $week)
-        {
-            if($week->getId() == $week_id)
+
+    public function weekExists($week_id) {
+        foreach ($this->tab_weeks as $week) {
+            if ($week->getId() == $week_id)
                 return true;
         }
         return false;
     }
-    
-    public function getWeekById($week_id)
-    {
-        foreach ($this->tab_weeks as $week)
-        {
-            if($week->getId() == $week_id)
+
+    public function getWeekById($week_id) {
+        foreach ($this->tab_weeks as $week) {
+            if ($week->getId() == $week_id)
                 return $week;
         }
         return null;
     }
-    
-    public function getWeekByTag($week_tag)
-    {
-        foreach ($this->tab_weeks as $week)
-        {
-            if($week->getTag() == $week_tag)
+
+    /**
+     * 
+     * @param type $week_tag
+     * @return null|Week
+     */
+    public function getWeekByTag($week_tag) {
+        foreach ($this->tab_weeks as $week) {
+            if ($week->getTag() == $week_tag)
                 return $week;
         }
         return null;
     }
-    
+
     /**
      * 
      * @param type $file_contents
      */
-    public function parseWeeks($file_contents)
-    {
-        try 
-        {
+    public function parseWeeks($file_contents) {
+        try {
             $crawler = new Crawler();
             $crawler->addXmlContent($file_contents);
             $return_value = $crawler->filterXPath("//span");
-            foreach ($return_value as $node)
-            {
+            foreach ($return_value as $node) {
                 $crawler = new Crawler();
                 $crawler->add($node);
-                if(!$this->weekExists($crawler->filterXPath("//title")->text()))
-                {
+                if (!$this->weekExists($crawler->filterXPath("//title")->text())) {
                     $week = new Week();
                     $week->setDate($crawler->attr("date"));
                     $week->setId($crawler->filterXPath("//title")->text());
@@ -81,47 +73,40 @@ class ScheduleManager
                     $week->setTag($crawler->filterXPath("//alleventweeks")->text());
                     $this->addWeek($week);
                 }
-
             }
-        } catch(Exception $e)
-        {
+        } catch (Exception $e) {
             print_r($e);
         }
     }
-    
+
     /**
      * 
      * @param type $crawlter
      * @param type $node_name
      * @return string
      */
-    private function parseEventNodeItems(&$crawler, $node_name)
-    {
+    private function parseEventNodeItems(&$crawler, $node_name) {
         $variable_value = "";
-        for($i=0; $i<$crawler->filterXPath($node_name)->count(); $i++)
-        {
-            if($i == $crawler->filterXPath($node_name)->count()-1)
-                $variable_value .=  $crawler->filterXPath($node_name)->getNode($i)->textContent;
+        for ($i = 0; $i < $crawler->filterXPath($node_name)->count(); $i++) {
+            if ($i == $crawler->filterXPath($node_name)->count() - 1)
+                $variable_value .= $crawler->filterXPath($node_name)->getNode($i)->textContent;
             else
-                $variable_value .=  $crawler->filterXPath($node_name)->getNode($i)->textContent."; ";
+                $variable_value .= $crawler->filterXPath($node_name)->getNode($i)->textContent . "; ";
         }
         return $variable_value;
     }
-    
+
     /**
      * 
      * @param type $file_contents
      * @param type $formation_id
      */
-    public function parseEvents($file_contents, $formation_id)
-    {
-        try 
-        {
+    public function parseEvents($file_contents, $formation_id) {
+        try {
             $crawler = new Crawler();
             $crawler->addXmlContent($file_contents);
             $return_value = $crawler->filterXPath("//event");
-            foreach ($return_value as $node)
-            {
+            foreach ($return_value as $node) {
                 $crawler = new Crawler();
                 $crawler->add($node);
                 $event = new Event();
@@ -129,90 +114,84 @@ class ScheduleManager
                 $event->setId($crawler->attr("id"));
                 $event->setColour($crawler->attr("colour"));
                 $event->setWeek($crawler->filterXPath("//rawweeks")->text());
-                if($crawler->filterXPath("//room/item")->count() > 0)
+                if ($crawler->filterXPath("//room/item")->count() > 0) {
                     $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
+                }
                 $event->setCategory($crawler->filterXPath("//category")->text());
                 $event->setDay($crawler->filterXPath("//day")->text());
-                $event->setStart_time($crawler->filterXPath("//starttime")->text());
-                $event->setEnd_time($crawler->filterXPath("//endtime")->text());
-                if($crawler->filterXPath("//group/item")->count() > 0)
+                
+                $startDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()).' '.$crawler->filterXPath("//starttime")->text());
+                $startDateTime->modify("+".$event->getDay()." days");
+                $endDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()).' '.$crawler->filterXPath("//endtime")->text());
+                $endDateTime->modify("+".$event->getDay()." days");
+                
+                $event->setStartDatetime($startDateTime);
+                $event->setEndDatetime($endDateTime);
+                if ($crawler->filterXPath("//group/item")->count() > 0) {
                     $event->setGroup($this->parseEventNodeItems($crawler, "//group/item"));
-                if($crawler->filterXPath("//module/item")->count() > 0)
+                }
+                if ($crawler->filterXPath("//module/item")->count() > 0) {
                     $event->setModule($this->parseEventNodeItems($crawler, "//module/item"));
-                if($crawler->filterXPath("//notes/item")->count() > 0)
+                }
+                if ($crawler->filterXPath("//notes/item")->count() > 0) {
                     $event->setNote($this->parseEventNodeItems($crawler, "//notes/item"));
-                if($crawler->filterXPath("//staff/item")->count() > 0)
+                }
+                if ($crawler->filterXPath("//staff/item")->count() > 0) {
                     $event->setProfessor($this->parseEventNodeItems($crawler, "//staff/item"));
-                if($crawler->filterXPath("//prettytimes/item")->count() > 0)
+                }
+                if ($crawler->filterXPath("//prettytimes/item")->count() > 0) {
                     $event->setTime($this->parseEventNodeItems($crawler, "//prettytimes/item"));
+                }
                 $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
             }
-        } catch(Exception $e)
-        {
+        } catch (Exception $e) {
             print_r($e);
         }
     }
-    
-    
-//    passage d'un fichier XML
+
     /**
-     * 
+     * passage d'un fichier XML
      * @param type $url
      */
-    public function parseAllSchedule($url)
-    {
-        $matches =array();
+    public function parseAllSchedule($url) {
+        $matches = array();
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
         $formation_id = $matches[1];
         $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);
     }
-    
-    
-//    recupere la liste des possibilités
+
     /**
-     * 
+     * recupere la liste des possibilités
      * @param type $event_source
      * @param type $event_destination
      * @return type
      */
-    public function getFreeEventsList($event_source, $event_destination)
-    {
+    public function getFreeEventsList($event_source, $event_destination) {
 //        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
 //                ->getDayById($event_destination->getDay())
 //                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
 //                        ->getEnd_time(), $event_destination->getFormation());
         $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
                 ->getWeekFreeEventsList($event_destination
-                        ->getStart_time(), $event_destination->getEnd_time(), $event_destination->getFormation());
+                ->getStartTime(), $event_destination->getEndTime(), $event_destination->getFormation());
         return $tab_free_events;
     }
-    
-    
-//    tester si un créneau peut etre changer vers un autre
+
     /**
-     * 
+     * tester si un créneau peut etre changer vers un autre
      * @param type $event_source
      * @param type $event_destination
      */
-    public function canSwapEvent($event_source, $event_destination)
-    {
-        if($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
-                ->canAddEvent($event_destination->getStart_time(), $event_destination
-                        ->getEnd_time(), $event_destination->getFormation()))
-        {
+    public function canSwapEvent($event_source, $event_destination) {
+        if ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
+                        ->canAddEvent($event_destination->getStartTime(), $event_destination
+                                ->getEndTime(), $event_destination->getFormation())) {
 //            on peut ajouter un créneau à ce jour ci
-            
-        }    
-        else
-        {
+        } else {
 //            on ne peut pas ajouter un créneau (donc il faut proposer une liste de propositions)
-            
         }
-            
     }
 
-
 }
-
