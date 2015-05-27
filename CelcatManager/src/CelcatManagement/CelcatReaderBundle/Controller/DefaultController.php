@@ -127,7 +127,9 @@ class DefaultController extends Controller
     public function parseAllScheduleAction($file_name = "")
     {       
         $scheduleManager = new ScheduleManager();
-        $scheduleManager->parseAllSchedule($file_name);
+        
+        $url = $this->container->getParameter('celcat.url').$this->container->getParameter('celcat.studentPath').$file_name;
+        $scheduleManager->parseAllSchedule($url);
         //var_dump($scheduleManager->getTab_weeks());
 //        $event_source = $scheduleManager->getWeekById(22)->getDayById(3)->getEventByIdAndByFormation("238656", "g200872");
 //        $event_destination = $scheduleManager->getWeekById(22)->getDayById(3)->getEventByIdAndByFormation("238656", "g200872");
