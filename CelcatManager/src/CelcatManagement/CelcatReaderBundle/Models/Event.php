@@ -4,8 +4,7 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 
 class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
-    private $time,
-            $room,
+    private $room,
             $category,
             $day,
             $week,
@@ -26,7 +25,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->professor = "";
         $this->group = "";
         $this->note = "";
-        $this->time = "";
         $this->formation = "";
     }
 
@@ -36,14 +34,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function setFormation($formation) {
         $this->formation = $formation;
-    }
-
-    public function getTime() {
-        return $this->time;
-    }
-
-    public function setTime($time) {
-        $this->time = $time;
     }
 
     public function getId() {
