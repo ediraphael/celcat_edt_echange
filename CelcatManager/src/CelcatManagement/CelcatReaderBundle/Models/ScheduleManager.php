@@ -112,7 +112,7 @@ class ScheduleManager {
                 $event = new Event();
                 $event->setFormation($formation_id);
                 $event->setId($crawler->attr("id"));
-                $event->setColour($crawler->attr("colour"));
+                $event->setBgColor($crawler->attr("colour"));
                 $event->setWeek($crawler->filterXPath("//rawweeks")->text());
                 if ($crawler->filterXPath("//room/item")->count() > 0) {
                     $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
