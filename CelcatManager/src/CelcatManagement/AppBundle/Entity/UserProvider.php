@@ -11,21 +11,28 @@ use Doctrine\ORM\NoResultException;
 use BeSimple\SsoAuthBundle\Security\Core\User\UserFactoryInterface;
 use CelcatManagement\AppBundle\Entity\User;
 
-class UserProvider extends EntityRepository implements UserProviderInterface, UserFactoryInterface {
+class UserProvider implements UserProviderInterface, UserFactoryInterface {
 
     /**
      * @var array
      */
     private $roles;
+    
+    /**
+     *
+     * @var \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager
+     */
+    private $ldapManager;
  
     /**
      * Constructor.
      *
      * @param array $roles An array of roles
      */
-    public function __construct(array $roles = array())
+    public function __construct(array $roles = array(), \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager $ldapManager)
     {
         $this->roles = $roles;
+        $this->ldapManager = $ldapManager;
     }
     
     /**
@@ -33,13 +40,16 @@ class UserProvider extends EntityRepository implements UserProviderInterface, Us
      */
     public function loadUserByUsername($username)
     {
-        $this->roles = ["ROLE_ADMIN","ROLE_USER"];
-        return new User($username, null, null, $this->roles);
+        $this->roles = ["ROLE_USER"];
+        return $this->spawnUser($username);
     }
 
     public function createUser($username, array $roles, array $attributes) 
     {
-        return new User($username, null, null, $roles);
+        $user = new User($username, null, null, $roles);
+        $userLDAP = $this->ldapManager->searchUser($user->getUsername());
+        $user->hydrateWithLDAP($userLDAP);
+        return $user; 
     }
     
     /**
@@ -51,7 +61,10 @@ class UserProvider extends EntityRepository implements UserProviderInterface, Us
      */
     private function spawnUser($username)
     {
-        return new User($username, null, null, $this->roles);
+        $user = new User($username, null, null, $this->roles);
+        $userLDAP = $this->ldapManager->searchUser($user->getUsername());
+        $user->hydrateWithLDAP($userLDAP);
+        return $user; 
     }
 
     /**
