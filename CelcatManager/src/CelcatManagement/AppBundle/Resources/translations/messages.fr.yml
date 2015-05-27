@@ -1,3 +1,7 @@
 profile:
     show:
         username: Identifiant
+        fullname: Nom
+        mail: Mail
+        group: Groupe
+        groupname: Nom du groupe
