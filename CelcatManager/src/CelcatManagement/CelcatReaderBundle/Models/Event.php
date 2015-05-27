@@ -4,8 +4,7 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 
 class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
-    private $colour,
-            $time,
+    private $time,
             $room,
             $category,
             $day,
@@ -19,7 +18,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
         $this->id = "";
-        $this->colour = "";
         $this->room = "";
         $this->category = "";
         $this->day = "";
@@ -50,10 +48,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function getId() {
         return $this->id;
-    }
-
-    public function getColour() {
-        return $this->colour;
     }
 
     public function getStartTime() {
@@ -98,10 +92,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function setId($id) {
         $this->id = $id;
-    }
-
-    public function setColour($colour) {
-        $this->colour = $colour;
     }
     
     public function setRoom($room) {
