@@ -8,6 +8,7 @@
         {% stylesheets 
 			'%kernel.root_dir%/Resources/public/css/*' 
                         '@ADesignsCalendarBundle/Resources/public/css/fullcalendar/fullcalendar.css'
+                        '@CelcatManagementAppBundle/Resources/public/css/fullcalendar.css'
 			filter='cssrewrite' 
         %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
@@ -18,8 +19,11 @@
 			'%kernel.root_dir%/Resources/public/js/bootstrap.js' 
 			'@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
                         '@FOSJsRoutingBundle/Resources/public/js/router.js'
-                        '@ADesignsCalendarBundle/Resources/public/js/fullcalendar/jquery.fullcalendar.min.js'
-                        '@ADesignsCalendarBundle/Resources/public/js/calendar-settings.js'
+                        
+                        '@CelcatManagementAppBundle/Resources/public/js/moment.min.js'
+                        '@CelcatManagementAppBundle/Resources/public/js/fullcalendar.js'
+                        '@CelcatManagementAppBundle/Resources/public/js/lang/fr.js'
+                        '@CelcatManagementAppBundle/Resources/public/js/calendar-settings.js'
         %}
         <script src="{{ asset_url }}" type="text/javascript" ></script>
         {% endjavascripts  %}
