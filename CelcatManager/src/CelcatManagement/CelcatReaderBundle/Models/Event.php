@@ -4,28 +4,18 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 
 class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
-    private $room,
-            $category,
-            $day,
-            $week,
-            $module,
-            $professor,
-            $group,
-            $note,
-            $formation;
+    private $room;
+    private $category;
+    private $day;
+    private $week;
+    private $module;
+    private $professor;
+    private $group;
+    private $note;
+    private $formation;
 
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
-        $this->id = "";
-        $this->room = "";
-        $this->category = "";
-        $this->day = "";
-        $this->week = "";
-        $this->module = "";
-        $this->professor = "";
-        $this->group = "";
-        $this->note = "";
-        $this->formation = "";
     }
 
     public function getFormation() {
