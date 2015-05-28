@@ -13,5 +13,8 @@ celcat_management_app:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
     
-adesigns_calendar:
-  resource: "@ADesignsCalendarBundle/Resources/config/routing.xml" 
+fullcalendar_loader:
+    pattern: /fc-load-calendar-events
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:loadCalendar }
+    options:
+        expose: true
