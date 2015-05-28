@@ -18,13 +18,14 @@ $(function () {
         dragOpacity: {
             agenda: .5
         },
+        editable: true,
 
         timeFormat: {
             // for agendaWeek and agendaDay
-            agenda: 'h:mmt', // 5:00 - 6:30
+            agenda: 'h:mm', // 5:00 - 6:30
 
             // for all other views
-            '': 'h:mmt'         // 7p
+            '': 'h:mm'         // 7p
         },
         eventSources: [
             {
@@ -32,6 +33,7 @@ $(function () {
                 type: 'POST',
                 // A way to add custom filters to your event listeners
                 data: {
+                    calendar: 'g200872.xml'
                 },
                 error: function () {
                     //   alert('There was an error while fetching Google Calendar!');
