@@ -105,5 +105,23 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setNote($note) {
         $this->note = $note;
     }
+    
+    /**
+     * Convert calendar event details to an array
+     * 
+     * @return array $event 
+     */
+    public function toArray()
+    {
+        $event = parent::toArray();
+        
+        $event['room'] = $this->room;
+        $event['category'] = $this->category;
+        $event['module'] = $this->module;
+        $event['professor'] = $this->professor;
+        $event['group'] = $this->group;
+        $event['note'] = $this->note;
+        return $event;
+    }
 
 }
