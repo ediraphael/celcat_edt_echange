@@ -6258,7 +6258,7 @@ TimeGrid.mixin({
 			fullTimeText = this.getEventTimeText(event, 'LT');
 			startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
 		}
-
+                   console.log(event);
 		return '<a class="' + classes.join(' ') + '"' +
 			(event.url ?
 				' href="' + htmlEscape(event.url) + '"' :
@@ -6285,6 +6285,36 @@ TimeGrid.mixin({
 						'</div>' :
 						''
 						) +
+					(event.room ?
+						'<div class="fc-title">' +
+							htmlEscape(event.room) +
+						'</div>' :
+						''
+						) +
+					(event.module ?
+						'<div class="fc-title">' +
+							htmlEscape(event.module) +
+						'</div>' :
+						''
+						) +
+					(event.professor ?
+						'<div class="fc-title">' +
+							htmlEscape(event.professor) +
+						'</div>' :
+						''
+						) +
+					(event.group ?
+						'<div class="fc-title">' +
+							htmlEscape(event.group) +
+						'</div>' :
+						''
+						) +
+					(event.note ?
+						'<div class="fc-title">' +
+							htmlEscape(event.note) +
+						'</div>' :
+						''
+						) +
 				'</div>' +
 				'<div class="fc-bg"/>' +
 				/* TODO: write CSS for this
@@ -6298,6 +6328,7 @@ TimeGrid.mixin({
 					''
 					) +
 			'</a>';
+                
 	},
 
 
