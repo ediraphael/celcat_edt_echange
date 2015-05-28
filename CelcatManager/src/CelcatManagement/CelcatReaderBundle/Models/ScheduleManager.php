@@ -5,27 +5,30 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ScheduleManager {
-
-    private $tab_weeks;
+    /**
+     *
+     * @var Week[] 
+     */
+    private $ArrayWeeks;
 
     function __construct() {
-        $this->tab_weeks = array();
+        $this->ArrayWeeks = array();
     }
 
-    public function getTab_weeks() {
-        return $this->tab_weeks;
+    public function getArrayWeeks() {
+        return $this->ArrayWeeks;
     }
 
-    public function setTab_weeks($tab_weeks) {
-        $this->tab_weeks = $tab_weeks;
+    public function setArrayWeeks($arrayWeeks) {
+        $this->ArrayWeeks = $arrayWeeks;
     }
 
     public function addWeek($week) {
-        $this->tab_weeks[] = $week;
+        $this->ArrayWeeks[] = $week;
     }
 
     public function weekExists($week_id) {
-        foreach ($this->tab_weeks as $week) {
+        foreach ($this->ArrayWeeks as $week) {
             if ($week->getId() == $week_id) {
                 return true;
             }
@@ -34,7 +37,7 @@ class ScheduleManager {
     }
 
     public function getWeekById($week_id) {
-        foreach ($this->tab_weeks as $week) {
+        foreach ($this->ArrayWeeks as $week) {
             if ($week->getId() == $week_id) {
                 return $week;
             }
@@ -48,7 +51,7 @@ class ScheduleManager {
      * @return null|Week
      */
     public function getWeekByTag($week_tag) {
-        foreach ($this->tab_weeks as $week) {
+        foreach ($this->ArrayWeeks as $week) {
             if ($week->getTag() == $week_tag) {
                 return $week;
             }
@@ -116,7 +119,7 @@ class ScheduleManager {
                 $event = new Event();
                 $event->setFormation($formation_id);
                 $event->setId($crawler->attr("id"));
-                $event->setBgColor($crawler->attr("colour"));
+//                $event->setBgColor($crawler->attr("colour"));
                 $event->setWeek($crawler->filterXPath("//rawweeks")->text());
                 if ($crawler->filterXPath("//room/item")->count() > 0) {
                     $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
@@ -137,14 +140,14 @@ class ScheduleManager {
                 if ($crawler->filterXPath("//module/item")->count() > 0) {
                     $event->setModule($this->parseEventNodeItems($crawler, "//module/item"));
                 }
-                if ($crawler->filterXPath("//notes/item")->count() > 0) {
-                    $event->setNote($this->parseEventNodeItems($crawler, "//notes/item"));
+                if ($crawler->filterXPath("//notes")->count() > 0) {
+                    $event->setNote($this->parseEventNodeItems($crawler, "//notes"));
                 }
                 if ($crawler->filterXPath("//staff/item")->count() > 0) {
                     $event->setProfessor($this->parseEventNodeItems($crawler, "//staff/item"));
                 }
-                if ($crawler->filterXPath("//prettytimes/item")->count() > 0) {
-                    $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes/item"));
+                if ($crawler->filterXPath("//prettytimes")->count() > 0) {
+                    $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
                 }
                 $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
             }
