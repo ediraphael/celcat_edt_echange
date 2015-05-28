@@ -26,16 +26,18 @@ class ScheduleManager {
 
     public function weekExists($week_id) {
         foreach ($this->tab_weeks as $week) {
-            if ($week->getId() == $week_id)
+            if ($week->getId() == $week_id) {
                 return true;
+            }
         }
         return false;
     }
 
     public function getWeekById($week_id) {
         foreach ($this->tab_weeks as $week) {
-            if ($week->getId() == $week_id)
+            if ($week->getId() == $week_id) {
                 return $week;
+            }
         }
         return null;
     }
@@ -47,8 +49,9 @@ class ScheduleManager {
      */
     public function getWeekByTag($week_tag) {
         foreach ($this->tab_weeks as $week) {
-            if ($week->getTag() == $week_tag)
+            if ($week->getTag() == $week_tag) {
                 return $week;
+            }
         }
         return null;
     }
@@ -88,10 +91,11 @@ class ScheduleManager {
     private function parseEventNodeItems(&$crawler, $node_name) {
         $variable_value = "";
         for ($i = 0; $i < $crawler->filterXPath($node_name)->count(); $i++) {
-            if ($i == $crawler->filterXPath($node_name)->count() - 1)
+            if ($i == $crawler->filterXPath($node_name)->count() - 1) {
                 $variable_value .= $crawler->filterXPath($node_name)->getNode($i)->textContent;
-            else
+            } else {
                 $variable_value .= $crawler->filterXPath($node_name)->getNode($i)->textContent . "; ";
+            }
         }
         return $variable_value;
     }
@@ -119,12 +123,12 @@ class ScheduleManager {
                 }
                 $event->setCategory($crawler->filterXPath("//category")->text());
                 $event->setDay($crawler->filterXPath("//day")->text());
-                
-                $startDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()).' '.$crawler->filterXPath("//starttime")->text());
-                $startDateTime->modify("+".$event->getDay()." days");
-                $endDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()).' '.$crawler->filterXPath("//endtime")->text());
-                $endDateTime->modify("+".$event->getDay()." days");
-                
+
+                $startDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//starttime")->text());
+                $startDateTime->modify("+" . $event->getDay() . " days");
+                $endDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//endtime")->text());
+                $endDateTime->modify("+" . $event->getDay() . " days");
+
                 $event->setStartDatetime($startDateTime);
                 $event->setEndDatetime($endDateTime);
                 if ($crawler->filterXPath("//group/item")->count() > 0) {
