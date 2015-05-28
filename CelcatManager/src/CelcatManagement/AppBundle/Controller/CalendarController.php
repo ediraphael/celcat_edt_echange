@@ -5,7 +5,7 @@ namespace CelcatManagement\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-use ADesigns\CalendarBundle\Event\CalendarEvent;
+use CelcatManagement\AppBundle\Event\CalendarEvent;
 
 class CalendarController extends Controller
 {
@@ -17,12 +17,10 @@ class CalendarController extends Controller
      */
     public function loadCalendarAction(Request $request)
     {
-        $startDatetime = new \DateTime($request->request->get('start'));
-        //$startDatetime->setTimestamp($request->request->get('start'));
-        
+        $startDatetime = new \DateTime($request->request->get('start'));        
         $endDatetime = new \DateTime($request->request->get('end'));
-        //$endDatetime->setTimestamp($request->request->get('end'));
-        
+        $urlPath = $this->container->getParameter('celcat.url').$this->container->getParameter('celcat.studentPath').$request->request->get('calendar');
+        $request->request->add(array('urlPath' => $urlPath));
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
         
         $response = new \Symfony\Component\HttpFoundation\Response();
