@@ -4,16 +4,20 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 
 class Day {
 
-    private $tab_events;
+    /**
+     *
+     * @var Event[]
+     */
+    private $arrayEvents;
     private $id;
     private $name;
 
     function __construct() {
-        $this->tab_events = array();
+        $this->arrayEvents = array();
     }
 
-    public function getTab_events() {
-        return $this->tab_events;
+    public function getArrayEvents() {
+        return $this->arrayEvents;
     }
 
     public function getId() {
@@ -24,8 +28,8 @@ class Day {
         return $this->name;
     }
 
-    public function setTab_events($tab_events) {
-        $this->tab_events = $tab_events;
+    public function setArrayEvents($tab_events) {
+        $this->arrayEvents = $tab_events;
     }
 
     public function setId($id) {
@@ -43,7 +47,7 @@ class Day {
      * @return type
      */
     public function getEventByIdAndByFormation($event_id, $formation_id) {
-        foreach ($this->tab_events[$formation_id] as $event) {
+        foreach ($this->arrayEvents[$formation_id] as $event) {
             if ($event->getId() == $event_id) {
                 return $event;
             }
@@ -69,10 +73,10 @@ class Day {
      */
     public function addEvent($event) {
         // le créneau est ajouté dans un tableau via un index qui représente l'd de la formation
-        if (!isset($this->tab_events[$event->getFormation()])) {
-            $this->tab_events[$event->getFormation()] = array();
+        if (!isset($this->arrayEvents[$event->getFormation()])) {
+            $this->arrayEvents[$event->getFormation()] = array();
         }
-        array_push($this->tab_events[$event->getFormation()], $event);
+        array_push($this->arrayEvents[$event->getFormation()], $event);
     }
 
     /**
@@ -83,7 +87,7 @@ class Day {
      * @return boolean
      */
     public function canAddEvent($start_time, $end_time, $formation_id) {
-        foreach ($this->tab_events[$formation_id] as $event) {
+        foreach ($this->arrayEvents[$formation_id] as $event) {
             if (($start_time >= $event->getStartTime() && $start_time <= $event->getEndTime()) ||
                     ($end_time >= $event->getStartTime() && $end_time <= $event->getEndTime())) {
                 return false;
@@ -103,8 +107,8 @@ class Day {
         $tab_busy_events = array();
         $tab_free_events = array();
         $wanted_duration = $this->getDifferenceOfTime($start_time, $end_time);
-        if (count($this->tab_events) > 0 && count($this->tab_events[$formation_id])) {
-            foreach ($this->tab_events[$formation_id] as $index => $event) {
+        if (count($this->arrayEvents) > 0 && count($this->arrayEvents[$formation_id])) {
+            foreach ($this->arrayEvents[$formation_id] as $index => $event) {
                 $tab_temp = array();
                 $tab_temp[] = $event->getStartTime();
                 $tab_temp[] = $event->getEndTime();
