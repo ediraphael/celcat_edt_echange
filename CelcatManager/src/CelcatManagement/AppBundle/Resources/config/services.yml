@@ -2,6 +2,10 @@ services:
     user_provider_service:
         class: CelcatManagement\AppBundle\Entity\UserProvider
         arguments: [[ROLE_USER], @ldap_manager]
+    calendar_listener:
+        class: CelcatManagement\AppBundle\EventListener\CalendarEventListener
+        tags:
+            - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
 #    celcat_management_app.example:
 #        class: CelcatManagement\AppBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
