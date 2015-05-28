@@ -5,15 +5,13 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 class Day
 {
     
-    private $tab_events,
-            $id,
-            $name;
+    private $tab_events;
+    private $id;
+    private $name;
     
     function __construct()
     {
         $this->tab_events = array();
-        $this->name = "";
-        $this->id = "";
     }
     
     public function getTab_events() {
