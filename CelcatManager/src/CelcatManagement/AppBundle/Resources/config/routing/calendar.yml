@@ -1,0 +1,3 @@
+app_calendar:
+    pattern: /
+    defaults: {_controller: CelcatManagementAppBundle:Calendar:index }
