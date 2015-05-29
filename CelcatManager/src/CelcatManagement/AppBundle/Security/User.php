@@ -11,41 +11,49 @@ class User implements UserInterface {
      * @var string 
      */
     private $username;
+
     /**
      * Password (inutilisé)
      * @var string 
      */
     private $password;
+
     /**
      * Salt pour le password (inutilisé)
      * @var string 
      */
     private $salt;
+
     /**
      * Roles utilisateurs
      * @var string[] 
      */
     private $roles;
+
     /**
      *  Identifiant utilisateur
      * @var string 
      */
     private $gidNumber;
+
     /**
      * Mail utilisateur
      * @var string
      */
     private $mail;
+
     /**
      * Nom complet utilisateur
      * @var string
      */
     private $fullName;
+
     /**
      * Code groupe utilisateur
      * @var string
      */
     private $group;
+
     /**
      * Nom groupe utilisateur
      * @var string 
@@ -90,7 +98,7 @@ class User implements UserInterface {
     public function setUsername($username) {
         $this->username = $username;
     }
-    
+
     function getGidNumber() {
         return $this->gidNumber;
     }
@@ -98,7 +106,7 @@ class User implements UserInterface {
     function setGidNumber($gidNumber) {
         $this->gidNumber = $gidNumber;
     }
-    
+
     public function getMail() {
         return $this->mail;
     }
@@ -131,6 +139,15 @@ class User implements UserInterface {
         $this->groupName = $groupName;
     }
 
+    public function getIdentifier() {
+        $matches = array();
+        preg_match('/[0-9]0*([0-9]*)/', $this->getGidNumber(), $matches);
+        if(count($matches) > 1) {
+            return $matches[1];
+        }
+        return null;
+    }
+
     public function eraseCredentials() {
         
     }
@@ -150,9 +167,9 @@ class User implements UserInterface {
         }
         return true;
     }
-    
+
     public function hydrateWithLDAP(\CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult $userLDAP) {
-        if($userLDAP != null) {
+        if ($userLDAP != null) {
             $this->setGidNumber($userLDAP->current()->get('gidNumber')->getValues()[0]);
             $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
             $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
@@ -160,4 +177,5 @@ class User implements UserInterface {
             $this->setGroupName($userLDAP->current()->get('title')->getValues()[0]);
         }
     }
+
 }
