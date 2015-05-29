@@ -2,20 +2,54 @@
 
 namespace CelcatManagement\AppBundle\Security;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\EquatableInterface;
 
 class User implements UserInterface {
 
+    /**
+     * Username
+     * @var string 
+     */
     private $username;
+    /**
+     * Password (inutilisé)
+     * @var string 
+     */
     private $password;
+    /**
+     * Salt pour le password (inutilisé)
+     * @var string 
+     */
     private $salt;
+    /**
+     * Roles utilisateurs
+     * @var string[] 
+     */
     private $roles;
-    
+    /**
+     *  Identifiant utilisateur
+     * @var string 
+     */
+    private $gidNumber;
+    /**
+     * Mail utilisateur
+     * @var string
+     */
     private $mail;
+    /**
+     * Nom complet utilisateur
+     * @var string
+     */
     private $fullName;
+    /**
+     * Code groupe utilisateur
+     * @var string
+     */
     private $group;
+    /**
+     * Nom groupe utilisateur
+     * @var string 
+     */
     private $groupName;
 
     public function __construct($username, $password, $salt, array $roles) {
@@ -55,6 +89,14 @@ class User implements UserInterface {
 
     public function setUsername($username) {
         $this->username = $username;
+    }
+    
+    function getGidNumber() {
+        return $this->gidNumber;
+    }
+
+    function setGidNumber($gidNumber) {
+        $this->gidNumber = $gidNumber;
     }
     
     public function getMail() {
@@ -111,6 +153,7 @@ class User implements UserInterface {
     
     public function hydrateWithLDAP(\CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult $userLDAP) {
         if($userLDAP != null) {
+            $this->setGidNumber($userLDAP->current()->get('gidNumber')->getValues()[0]);
             $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
             $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
             $this->setGroup($userLDAP->current()->get('auaPopulation')->getValues()[0]);
