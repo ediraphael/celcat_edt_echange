@@ -19,7 +19,7 @@ $(function () {
         dragOpacity: {
             agenda: .5
         },
-        editable: true,
+        editable: false,
 
         timeFormat: {
             // for agendaWeek and agendaDay
@@ -43,9 +43,9 @@ $(function () {
         ],
         eventClick: function(calEvent, jsEvent, view) {
 //            alert('Event: ' + calEvent.title);
-//            console.log(calEvent);
-            
-            $(this).toogleClass('selected_event');
+//          console.log(calEvent);
+            $(this).css('border-color','red');
+            calEvent.editable = !calEvent.editable;
             
             
         }
