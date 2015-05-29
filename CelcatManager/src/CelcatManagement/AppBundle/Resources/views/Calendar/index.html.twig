@@ -1,0 +1,12 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+{% block titre %}
+    <h1>Calendrier</h1>
+{% endblock %}
+{% block body %}
+    {% javascripts  
+            '@CelcatManagementAppBundle/Resources/public/js/index-calendar-settings.js'
+    %}
+    <script src="{{ asset_url }}" type="text/javascript" ></script>
+    {% endjavascripts  %}
+    {% include 'ADesignsCalendarBundle::calendar.html.twig' %}
+{% endblock %}
