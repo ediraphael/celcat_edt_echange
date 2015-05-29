@@ -12,9 +12,10 @@ $(function () {
         },
         defaultView: 'agendaWeek',
         allDaySlot: true,
-        firstHour: 8,
-        slotMinutes: 30,
+        slotDuration: '00:30:00',
         axisFormat: 'HH:mm',
+        maxTime: '21:00',
+        minTime: '7:00',
         dragOpacity: {
             agenda: .5
         },
