@@ -1,5 +1,6 @@
 profile:
     show:
+        identifier: Numéro identifiant
         username: Identifiant
         fullname: Nom
         mail: Mail
