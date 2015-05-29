@@ -1,6 +1,6 @@
 services:
     user_provider_service:
-        class: CelcatManagement\AppBundle\Entity\UserProvider
+        class: CelcatManagement\AppBundle\Security\UserProvider
         arguments: [[ROLE_USER], @ldap_manager]
     calendar_listener:
         class: CelcatManagement\AppBundle\EventListener\CalendarEventListener

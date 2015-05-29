@@ -1,6 +1,6 @@
 <?php
 
-namespace CelcatManagement\AppBundle\Entity;
+namespace CelcatManagement\AppBundle\Security;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;

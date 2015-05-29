@@ -1,15 +1,12 @@
 <?php
 
-namespace CelcatManagement\AppBundle\Entity;
+namespace CelcatManagement\AppBundle\Security;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
 use BeSimple\SsoAuthBundle\Security\Core\User\UserFactoryInterface;
-use CelcatManagement\AppBundle\Entity\User;
+use CelcatManagement\AppBundle\Security\User;
 
 class UserProvider implements UserProviderInterface, UserFactoryInterface {
 
