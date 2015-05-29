@@ -39,6 +39,14 @@ $(function () {
                     //   alert('There was an error while fetching Google Calendar!');
                 }
             }
-        ]
+        ],
+        eventClick: function(calEvent, jsEvent, view) {
+//            alert('Event: ' + calEvent.title);
+//            console.log(calEvent);
+            
+            $(this).toogleClass('selected_event');
+            
+            
+        }
     });
 });
