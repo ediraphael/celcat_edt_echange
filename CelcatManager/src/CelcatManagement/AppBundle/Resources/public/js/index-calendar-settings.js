@@ -25,6 +25,11 @@ function addCalendarEventSource(calendarFile) {
 
 function removeCalendarEvents() {
     $('#calendar-holder').fullCalendar('removeEvents');
+    $('#calendar-holder').fullCalendar('removeEventSource',
+        {
+            url: Routing.generate('fullcalendar_loader')
+        }
+    );
 }
 
 $(function () {
