@@ -3,6 +3,15 @@
     <h1>Calendrier</h1>
 {% endblock %}
 {% block body %}
+    <div class="col-lg-6">
+        <select id="groupe_select" onChange="loadCalendarEvents(this)" class="form-control form-" >
+            <option></option>
+            {% for group in groupList %}
+                <option value="{{ group.xmlfile }}" >{{ group.name }}</option>
+                {% endfor %}
+        </select>
+    </div>
+    <div style="clear: both; padding: 20px"></div>
     {% javascripts  
             '@CelcatManagementAppBundle/Resources/public/js/index-calendar-settings.js'
     %}
