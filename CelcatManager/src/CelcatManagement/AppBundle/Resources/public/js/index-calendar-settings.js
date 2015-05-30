@@ -1,3 +1,32 @@
+function loadCalendarEvents(objet) {
+    file = $(objet).find(':selected').attr('value');
+    removeCalendarEvents();
+    addCalendarEventSource(file);
+}
+
+function addCalendarEventSource(calendarFile) {
+    if (typeof calendarFile !== 'undefined') {
+        eventSources =
+                {
+                    url: Routing.generate('fullcalendar_loader'),
+                    type: 'POST',
+                    // A way to add custom filters to your event listeners
+                    data: {
+                        calendar: calendarFile
+                    },
+                    error: function () {
+                        //   alert('There was an error while fetching Google Calendar!');
+                    }
+                }
+        ;
+        $('#calendar-holder').fullCalendar('addEventSource', eventSources);
+    }
+}
+
+function removeCalendarEvents() {
+    $('#calendar-holder').fullCalendar('removeEvents');
+}
+
 $(function () {
     var date = new Date();
     var d = date.getDate();
@@ -20,7 +49,6 @@ $(function () {
             agenda: .5
         },
         editable: false,
-
         timeFormat: {
             // for agendaWeek and agendaDay
             agenda: 'h:mm', // 5:00 - 6:30
@@ -28,26 +56,27 @@ $(function () {
             // for all other views
             '': 'h:mm'         // 7p
         },
-        eventSources: [
-            {
-                url: Routing.generate('fullcalendar_loader'),
-                type: 'POST',
-                // A way to add custom filters to your event listeners
-                data: {
-                    calendar: ''
-                },
-                error: function () {
-                    //   alert('There was an error while fetching Google Calendar!');
-                }
-            }
-        ],
-        eventClick: function(calEvent, jsEvent, view) {
+//        eventSources: [
+//            {
+//                url: Routing.generate('fullcalendar_loader'),
+//                type: 'POST',
+//                // A way to add custom filters to your event listeners
+//                data: {
+//                    calendar: ''
+//                },
+//                error: function () {
+//                    //   alert('There was an error while fetching Google Calendar!');
+//                }
+//            }
+//        ],
+        eventClick: function (calEvent, jsEvent, view) {
 //            alert('Event: ' + calEvent.title);
 //          console.log(calEvent);
-            $(this).css('border-color','red');
+            $(this).css('border-color', 'red');
             calEvent.editable = !calEvent.editable;
-            
-            
+
+
         }
     });
+   loadCalendarEvents($('#groupe_select'));
 });
