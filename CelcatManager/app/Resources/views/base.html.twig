@@ -23,7 +23,6 @@
                         '@CelcatManagementAppBundle/Resources/public/js/moment.min.js'
                         '@CelcatManagementAppBundle/Resources/public/js/fullcalendar.js'
                         '@CelcatManagementAppBundle/Resources/public/js/lang/fr.js'
-                        '@CelcatManagementAppBundle/Resources/public/js/calendar-settings.js'
         %}
         <script src="{{ asset_url }}" type="text/javascript" ></script>
         {% endjavascripts  %}
@@ -54,6 +53,11 @@
                                 <li>
                                     <a href="{{ path('celcat_management_ldap_manager_index') }}"  >
                                         LDAP
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('app_calendar') }}"  >
+                                        Calendrier
                                     </a>
                                 </li>
 
