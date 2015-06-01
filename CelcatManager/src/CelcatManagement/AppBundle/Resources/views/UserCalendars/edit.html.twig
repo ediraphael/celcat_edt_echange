@@ -1,16 +1,21 @@
-{% extends '::base.html.twig' %}
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Calendrier utilisateur modification</h1>
+{% endblock %}
 
 {% block body -%}
-    <h1>UserCalendars edit</h1>
+    <p class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_usercalendars'} } %}
+        </span>
+    </p>
+    {{ form(edit_form, { 'attr': {'class':'ajax-form form-horizontal  ui-tabs ui-widget ui-widget-content ui-corner-all'} } ) }}
 
-    {{ form(edit_form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('usercalendars') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
 {% endblock %}
