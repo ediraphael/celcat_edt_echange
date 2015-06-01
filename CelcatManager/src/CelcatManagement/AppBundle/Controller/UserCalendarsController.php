@@ -172,7 +172,7 @@ class UserCalendarsController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('usercalendars_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('celcat_management_app_usercalendars_edit', array('id' => $id)));
         }
 
         return $this->render('CelcatManagementAppBundle:UserCalendars:edit.html.twig', array(
@@ -200,9 +200,12 @@ class UserCalendarsController extends Controller
 
             $em->remove($entity);
             $em->flush();
+            return $this->redirect($this->generateUrl('celcat_management_app_usercalendars'));
         }
-
-        return $this->redirect($this->generateUrl('usercalendars'));
+        return $this->render('::Formulaire/supprimer.html.twig', array(
+            'form'      => $form->createView(),
+            'btnAnnuler'   => $this->generateUrl('celcat_management_app_usercalendars'),
+        ));
     }
 
     /**
@@ -217,7 +220,6 @@ class UserCalendarsController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('celcat_management_app_usercalendars_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }
