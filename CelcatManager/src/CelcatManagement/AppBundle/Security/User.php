@@ -59,12 +59,19 @@ class User implements UserInterface {
      * @var string 
      */
     private $groupName;
+    
+    /**
+     * Calendrier utilisateur
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $calendars;
 
     public function __construct($username, $password, $salt, array $roles) {
         $this->username = $username;
         $this->password = $password;
         $this->salt = $salt;
         $this->roles = $roles;
+        $this->calendars = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getRoles() {
@@ -147,7 +154,30 @@ class User implements UserInterface {
         }
         return null;
     }
+    
+    public function getCalendars() {
+        return $this->calendars;
+    }
 
+    public function setCalendars($calendars) {
+        $this->calendars = $calendars;
+
+        return $this;
+    }
+
+    public function addCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
+        $this->calendars[] = $calendar;
+        
+        return $this;
+    }
+    
+    public function removeCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
+        $this->calendars->removeElement($calendar);
+        
+        return $this;
+    }
+    
+    
     public function eraseCredentials() {
         
     }

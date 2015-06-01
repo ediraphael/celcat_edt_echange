@@ -1,0 +1,27 @@
+{# typeAction [ajouter|modifier|supprimer] #}
+
+
+{% set href='#' %}
+{% if action.hrefpath is defined %} 
+	{% if action.hrefids is defined %}
+		{% set ids = []  %}
+		{% for hrefidNom, hrefidValeur in action.hrefids %}
+			{% set ids = ids|merge( { (hrefidNom) : donnees[hrefidValeur] } ) %}
+		{% endfor %}
+		{% set href = path(action.hrefpath,ids) %}
+	{% else %}
+		{% set href = path(action.hrefpath) %}
+	{% endif %}
+{% endif %}
+
+
+{% include 'Action/action-'~typeAction~'.html.twig' %}
+{#{% if typeAction is defined %}
+	{% if typeAction ends with 'ajouter' %}
+		{% include 'action/action-ajouter.html.twig' %}
+	{% elseif typeAction ends with 'modifier' %}
+		{% include 'action/action-modifier.html.twig' %}
+	{% elseif typeAction ends with 'supprimer' %}
+		{% include 'action/action-supprimer.html.twig' %}
+	{% endif %}
+{% endif %}#}

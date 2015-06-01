@@ -1,0 +1,30 @@
+celcat_management_app_usercalendars:
+    path:     /
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:index" }
+
+celcat_management_app_usercalendars_show:
+    path:     /{id}/show
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:show" }
+
+celcat_management_app_usercalendars_new:
+    path:     /new
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:new" }
+
+celcat_management_app_usercalendars_create:
+    path:     /create
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:create" }
+    methods:  POST
+
+celcat_management_app_usercalendars_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:edit" }
+
+celcat_management_app_usercalendars_update:
+    path:     /{id}/update
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:update" }
+    methods:  [POST, PUT]
+
+celcat_management_app_usercalendars_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:delete" }
+    methods:  [GET, POST, DELETE]

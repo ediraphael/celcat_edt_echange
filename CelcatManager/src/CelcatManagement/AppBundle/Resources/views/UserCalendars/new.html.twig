@@ -1,0 +1,20 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Calendrier utilisateur création</h1>
+{% endblock %}
+
+{% block body -%}
+    <p class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_usercalendars'} } %}
+        </span>
+    </p>
+    {{ form(form, { 'attr': {'class':'ajax-form form-horizontal  ui-tabs ui-widget ui-widget-content ui-corner-all'} } ) }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+{% endblock %}

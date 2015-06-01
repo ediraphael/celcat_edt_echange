@@ -91,7 +91,19 @@ swiftmailer:
     
     
 mopa_bootstrap:
-    form: ~  # Adds twig form theme  support
+    form: 
+        show_legend: false
+        collection:
+            widget_remove_btn:
+                icon: trash
+                label: Supprimer
+            widget_add_btn:
+                icon: plus-sign
+                label: Ajouter
+        render_required_asterisk: true
+        render_optional_text: false
+        tabs:
+            class: 'nav nav-tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all'
 
 be_simple_sso_auth:
     admin_sso:

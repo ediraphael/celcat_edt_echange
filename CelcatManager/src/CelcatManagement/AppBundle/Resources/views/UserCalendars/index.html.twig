@@ -1,0 +1,40 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Liste des calendriers utilisateur</h1>
+{% endblock %}
+
+{% block body -%}
+
+    <div class="table-responsive">
+        <table class="records_list  table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Utilisateur</th>
+                    <th>Nom fichier calendrier</th>
+                    <th>Nom calendrier</th>
+                    <th>Commentaire</th>
+                    <th>{% include 'Action/action-ajouter.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_new') } %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td>
+                            <div>
+                                {% include 'Action/action-visualiser.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_show', { 'id': entity.id }) } %}
+                                {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_edit', { 'id': entity.id }) } %}
+                            </div>
+                        </td>
+                        <td>{{ entity.username }}</td>
+                        <td>{{ entity.calendarFile }}</td>
+                        <td>{{ entity.calendarName }}</td>
+                        <td>{{ entity.calendarComment }}</td>
+                        <td>{% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_delete', { 'id': entity.id }) } %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
