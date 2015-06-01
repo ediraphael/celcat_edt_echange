@@ -75,10 +75,7 @@ $(function () {
 //            }
 //        ],
         eventClick: function (calEvent, jsEvent, view) {
-//            alert('Event: ' + calEvent.title);
-//          console.log(calEvent);
-            $(this).css('border-color', 'red');
-            calEvent.editable = !calEvent.editable;
+            addCalendarEventSource(calEvent.formation + '.xml');
 
 
         }
