@@ -19,7 +19,7 @@ $(function () {
         dragOpacity: {
             agenda: .5
         },
-        editable: true,
+        editable: false,
 
         timeFormat: {
             // for agendaWeek and agendaDay
@@ -34,20 +34,39 @@ $(function () {
                 type: 'POST',
                 // A way to add custom filters to your event listeners
                 data: {
-                    calendar: 'g200872.xml'
+                    calendar: 'g141890.xml'
                 },
                 error: function () {
-                    //   alert('There was an error while fetching Google Calendar!');
+                    console.err('There was an error while fetching Calendar!');
                 }
             }
         ],
         eventClick: function(calEvent, jsEvent, view) {
-//            alert('Event: ' + calEvent.title);
-//            console.log(calEvent);
-            
-            $(this).toogleClass('selected_event');
-            
-            
+            //$(this).toggleClass('selected_event');
+            calEvent.color = "green";
+            calEvent.editable = true;
+            var arrayEvents = new Array();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: Routing.generate('event_calendar_loader'),
+                data: {
+                    calendar: calEvent.formation + '.xml'
+                },
+                success: function(response) 
+                {
+                    for(var i=0; i<response.length; i++)
+                    {
+                        response[i].color = "red";
+                        arrayEvents.push(response[i]);
+                    }
+                    $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+//                    $('#calendar-holder').fullCalendar( 'refetchEvents' );
+                },
+                error: function(req, status, error) {
+                    console.err(error);
+                }
+            });
         }
     });
 });
