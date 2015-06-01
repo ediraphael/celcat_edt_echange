@@ -1,0 +1,26 @@
+CelcatManagement\AppBundle\Entity\UserCalendars:
+    type: entity
+    table: user_calendars
+    repositoryClass: CelcatManagement\AppBundle\Entity\UserCalendarsRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        username:
+            type: string
+            length: '50'
+        calendarFile:
+            type: string
+            length: '50'
+            column: calendar_file
+        calendarName:
+            type: string
+            length: 255
+            column: calendar_name
+        calendarComment:
+            type: text
+            column: calendar_comment
+    lifecycleCallbacks: {  }
