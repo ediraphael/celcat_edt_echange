@@ -15,10 +15,18 @@ class UserCalendarsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
-            ->add('calendarFile')
-            ->add('calendarName')
-            ->add('calendarComment')
+            ->add('username',null,array(
+                'label' => 'Nom d\'utilisateur'
+            ))
+            ->add('calendarFile', null, array(
+                'label' => 'Nom fichier calendrier'
+            ))
+            ->add('calendarName', null, array(
+                'label' => 'Nom calendrier'
+            ))
+            ->add('calendarComment', null, array(
+                'label' => 'Commentaire'
+            ))
         ;
     }
     
