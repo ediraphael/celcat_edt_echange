@@ -1,0 +1,44 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>UserCalendars</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+            <tr>
+                <th>Calendarfile</th>
+                <td>{{ entity.calendarFile }}</td>
+            </tr>
+            <tr>
+                <th>Calendarname</th>
+                <td>{{ entity.calendarName }}</td>
+            </tr>
+            <tr>
+                <th>Calendarcomment</th>
+                <td>{{ entity.calendarComment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('usercalendars') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('usercalendars_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
