@@ -1,0 +1,6 @@
+{% set btnSmall='' %}
+{% if small is defined %} 
+	{% set btnSmall='btn-sm' %}
+{% endif %}
+
+<a href="{{ href }}" class="ajax-link glyphicon glyphicon-plus btn btn-default {{ btnSmall }}" title="ajouter" ></a>

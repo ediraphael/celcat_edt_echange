@@ -1,0 +1,6 @@
+{% set btnSmall='' %}
+{% if small is defined %} 
+	{% set btnSmall='btn-sm' %}
+{% endif %}
+
+<a href="{{ href }}" class="ajax-link glyphicon glyphicon-refresh btn btn-default {{ btnSmall }}" title="rafraichir" ></a>
