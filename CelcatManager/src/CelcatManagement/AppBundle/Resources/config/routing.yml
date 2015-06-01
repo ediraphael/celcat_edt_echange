@@ -9,3 +9,6 @@ celcat_management_app_index:
 celcat_management_app_bundle_login:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/login.yml"
     prefix:   /
+celcat_management_app_bundle_calendar:
+    resource: "@CelcatManagementAppBundle/Resources/config/routing/calendar.yml"
+    prefix:   /calendar

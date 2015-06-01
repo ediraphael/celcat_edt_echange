@@ -9,6 +9,14 @@ use CelcatManagement\AppBundle\Event\CalendarEvent;
 
 class CalendarController extends Controller
 {
+    public function indexAction(Request $request) {
+        $groupManager = new \CelcatManagement\CelcatReaderBundle\Models\GroupManager();
+        $url = $this->container->getParameter('celcat.url').$this->container->getParameter('celcat.studentPath').$this->container->getParameter('celcat.groupIndex');
+        $groupManager->loadGroups($url);
+        
+        return $this->render('CelcatManagementAppBundle:Calendar:index.html.twig', array('groupList' => $groupManager->getGroupList()));
+    }
+    
     /**
      * Dispatch a CalendarEvent and return a JSON Response of any events returned.
      * 

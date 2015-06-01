@@ -13,7 +13,11 @@ class DefaultController extends Controller
 {
     public function indexAction($name = "")
     {
-        return $this->render('CelcatManagementCelcatReaderBundle:Default:index.html.twig', array('name' => $name));
+        $groupManager = new \CelcatManagement\CelcatReaderBundle\Models\GroupManager();
+        $url = $this->container->getParameter('celcat.url').$this->container->getParameter('celcat.studentPath').$this->container->getParameter('celcat.groupIndex');
+        $groupManager->loadGroups($url);
+        
+        return $this->render('CelcatManagementCelcatReaderBundle:Default:index.html.twig', array('name' => $name, 'groupList' => $groupManager->getGroupList()));
     } 
     
     public function parseAllScheduleAction($file_name = "")
