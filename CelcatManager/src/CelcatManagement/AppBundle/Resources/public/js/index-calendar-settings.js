@@ -74,13 +74,39 @@ $(function () {
 //                }
 //            }
 //        ],
-        eventClick: function (calEvent, jsEvent, view) {
-//            alert('Event: ' + calEvent.title);
-//          console.log(calEvent);
-            $(this).css('border-color', 'red');
-            calEvent.editable = !calEvent.editable;
-
-
+        eventClick: function(calEvent, jsEvent, view) {
+            $(this).toggleClass("selected_event");
+            if(calEvent.color == "green")
+            {
+                calEvent.color = "";
+                calEvent.editable = false;
+            }
+            else
+            {
+                calEvent.color = "green";
+                calEvent.editable = true;
+            }
+            var arrayEvents = new Array();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: Routing.generate('event_calendar_loader'),
+                data: {
+                    calendar: calEvent.formation + '.xml'
+                },
+                success: function(response) 
+                {
+                    for(var i=0; i<response.length; i++)
+                    {
+                        response[i].color = "red";
+                        arrayEvents.push(response[i]);
+                    }
+                    $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+                },
+                error: function(req, status, error) {
+                    console.err(error);
+                }
+            });
         }
     });
    loadCalendarEvents($('#groupe_select'));
