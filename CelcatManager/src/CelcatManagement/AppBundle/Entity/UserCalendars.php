@@ -136,4 +136,9 @@ class UserCalendars
     {
         return $this->calendarComment;
     }
+    
+    public function __toString() {
+        return $this->calendarName;
+    }
+
 }
