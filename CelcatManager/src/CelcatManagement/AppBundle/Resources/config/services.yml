@@ -1,7 +1,7 @@
 services:
     user_provider_service:
         class: CelcatManagement\AppBundle\Security\UserProvider
-        arguments: [[ROLE_USER], @ldap_manager]
+        arguments: [[ROLE_USER], @ldap_manager, @doctrine.orm.entity_manager]
     calendar_listener:
         class: CelcatManagement\AppBundle\EventListener\CalendarEventListener
         tags:
