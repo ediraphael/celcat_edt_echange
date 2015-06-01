@@ -44,7 +44,7 @@ class UserCalendarsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('usercalendars_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('celcat_management_app_usercalendars_show', array('id' => $entity->getId())));
         }
 
         return $this->render('CelcatManagementAppBundle:UserCalendars:new.html.twig', array(
@@ -63,7 +63,7 @@ class UserCalendarsController extends Controller
     private function createCreateForm(UserCalendars $entity)
     {
         $form = $this->createForm(new UserCalendarsType(), $entity, array(
-            'action' => $this->generateUrl('usercalendars_create'),
+            'action' => $this->generateUrl('celcat_management_app_usercalendars_create'),
             'method' => 'POST',
         ));
 
@@ -143,7 +143,7 @@ class UserCalendarsController extends Controller
     private function createEditForm(UserCalendars $entity)
     {
         $form = $this->createForm(new UserCalendarsType(), $entity, array(
-            'action' => $this->generateUrl('usercalendars_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('celcat_management_app_usercalendars_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -215,7 +215,7 @@ class UserCalendarsController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('usercalendars_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('celcat_management_app_usercalendars_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
