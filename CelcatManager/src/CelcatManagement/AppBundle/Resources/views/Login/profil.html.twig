@@ -40,7 +40,22 @@
             </table>
         </div>
         <div id="profil_calendriers" class="table-responsive">
-
+            <table class="record_properties table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Calendrier</th>
+                    </tr>
+                </thead>
+                    
+                <tbody>
+                    {% for userCalendar in user.calendars %} 
+                        <tr>
+                            
+                            <td>{{ userCalendar }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     <script>
