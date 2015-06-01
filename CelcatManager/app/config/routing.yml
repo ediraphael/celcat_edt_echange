@@ -18,3 +18,9 @@ fullcalendar_loader:
     defaults: { _controller: CelcatManagementAppBundle:Calendar:loadCalendar }
     options:
         expose: true
+        
+event_calendar_loader:
+    pattern: /fc-load-calendar-events-by-id
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:loadEventCalendar }
+    options:
+        expose: true
