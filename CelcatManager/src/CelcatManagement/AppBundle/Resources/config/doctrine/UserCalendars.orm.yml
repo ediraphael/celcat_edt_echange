@@ -1,7 +1,6 @@
 CelcatManagement\AppBundle\Entity\UserCalendars:
     type: entity
     table: user_calendars
-    repositoryClass: CelcatManagement\AppBundle\Entity\UserCalendarsRepository
     id:
         id:
             type: integer
