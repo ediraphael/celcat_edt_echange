@@ -43,15 +43,12 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
     public function loadUserByUsername($username)
     {
         $this->roles = ["ROLE_USER"];
-        return $this->spawnUser($username);
+        return $this->spawnUser($username, $this->roles);
     }
 
     public function createUser($username, array $roles, array $attributes) 
     {
-        $user = new User($username, null, null, $roles);
-        $userLDAP = $this->ldapManager->searchUser($user->getUsername());
-        $user->hydrateWithLDAP($userLDAP);
-        return $user; 
+        return $this->spawnUser($username, $roles); 
     }
     
     /**
@@ -61,11 +58,15 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
      *
      * @return \Symfony\Component\Security\Core\User\User
      */
-    private function spawnUser($username)
+    private function spawnUser($username, $roles)
     {
-        $user = new User($username, null, null, $this->roles);
+        $user = new User($username, null, null, $roles);
         $userLDAP = $this->ldapManager->searchUser($user->getUsername());
         $user->hydrateWithLDAP($userLDAP);
+        
+        $userCalendarRepositoty = $this->entityManager->getRepository('CelcatManagementAppBundle:UserCalendars');
+        $userCalendar = $userCalendarRepositoty->findByUsername($user->getUsername());
+        $user->setCalendars($userCalendar);
         return $user; 
     }
 
@@ -78,7 +79,7 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
  
-        return $this->spawnUser($user->getUsername());
+        return $this->spawnUser($user->getUsername(), $this->roles);
     }
 
     public function supportsClass($class) {
