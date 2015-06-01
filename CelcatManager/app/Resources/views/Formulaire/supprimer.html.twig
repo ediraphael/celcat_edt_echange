@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="display:inline-block" >
+        {{ form_start(form, { 'attr': {'class':'ajax-form form-horizontal'} }) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form._token) }}
+        <p>
+            Êtes vous sûr de vouloir supprimer cet élément?
+        </p>
+        <p>
+            <a href="{{ btnAnnuler }}" class="btn btn-default ajax-link" >Annuler</a>
+            <button class="btn btn-default ajax-form" type="submit">Supprimer</button>
+        </p>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
