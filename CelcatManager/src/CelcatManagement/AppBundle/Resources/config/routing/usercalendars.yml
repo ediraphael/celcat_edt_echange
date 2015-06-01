@@ -27,4 +27,4 @@ celcat_management_app_usercalendars_update:
 celcat_management_app_usercalendars_delete:
     path:     /{id}/delete
     defaults: { _controller: "CelcatManagementAppBundle:UserCalendars:delete" }
-    methods:  [POST, DELETE]
+    methods:  [GET, POST, DELETE]
