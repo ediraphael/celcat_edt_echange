@@ -6258,7 +6258,7 @@ TimeGrid.mixin({
 			fullTimeText = this.getEventTimeText(event, 'LT');
 			startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
 		}
-                   console.log(event);
+                
 		return '<a class="' + classes.join(' ') + '"' +
 			(event.url ?
 				' href="' + htmlEscape(event.url) + '"' :
