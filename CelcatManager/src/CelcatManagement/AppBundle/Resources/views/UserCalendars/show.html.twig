@@ -1,44 +1,45 @@
-{% extends '::base.html.twig' %}
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Calendrier utilisateur</h1>
+{% endblock %}
 
 {% block body -%}
-    <h1>UserCalendars</h1>
-
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ entity.username }}</td>
-            </tr>
-            <tr>
-                <th>Calendarfile</th>
-                <td>{{ entity.calendarFile }}</td>
-            </tr>
-            <tr>
-                <th>Calendarname</th>
-                <td>{{ entity.calendarName }}</td>
-            </tr>
-            <tr>
-                <th>Calendarcomment</th>
-                <td>{{ entity.calendarComment }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('usercalendars') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('usercalendars_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <div class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_usercalendars'} } %}
+        </span>
+        <span>
+            {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_edit', { 'id': entity.id }) } %}
+        </span>
+        <span>
+            {% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_usercalendars_delete', { 'id': entity.id }) } %}
+        </span>
+    </div>
+    <div id="categorie_principal" class="table-responsive">
+        <table class="record_properties  table table-striped table-hover">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ entity.id }}</td>
+                </tr>
+                <tr>
+                    <th>Utilisateur</th>
+                    <td>{{ entity.username }}</td>
+                </tr>
+                <tr>
+                    <th>Nom fichier calendrier</th>
+                    <td>{{ entity.calendarFile }}</td>
+                </tr>
+                <tr>
+                    <th>Nom calendrier</th>
+                    <td>{{ entity.calendarName }}</td>
+                </tr>
+                <tr>
+                    <th>Commentaire</th>
+                    <td>{{ entity.calendarComment }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
