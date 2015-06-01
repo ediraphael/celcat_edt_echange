@@ -121,6 +121,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $event['professor'] = $this->professor;
         $event['group'] = $this->group;
         $event['note'] = $this->note;
+        $event['formation'] = $this->formation;
         return $event;
     }
 
