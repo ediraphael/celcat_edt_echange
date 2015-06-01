@@ -16,20 +16,25 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
     private $roles;
     
     /**
-     *
      * @var \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager
      */
     private $ldapManager;
+    
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
  
     /**
      * Constructor.
      *
      * @param array $roles An array of roles
      */
-    public function __construct(array $roles = array(), \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager $ldapManager)
+    public function __construct(array $roles = array(), \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager $ldapManager, \Doctrine\ORM\EntityManager $entityManager)
     {
         $this->roles = $roles;
         $this->ldapManager = $ldapManager;
+        $this->entityManager = $entityManager;
     }
     
     /**
