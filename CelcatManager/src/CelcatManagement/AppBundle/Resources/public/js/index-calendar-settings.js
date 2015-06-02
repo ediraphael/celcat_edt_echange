@@ -77,27 +77,26 @@ $(function () {
 //            }
 //        ],
         eventClick: function(calEvent, jsEvent, view) {
-            //if(two_selected_events.length < 2)
+            $(this).toggleClass("selected_event");
+            if(calEvent.color == "green")
             {
-                $(this).toggleClass("selected_event");
-                if(calEvent.color == "green")
-                {
-                    calEvent.color = "";
-                    calEvent.editable = false;
-                    if(two_selected_events[0] != undefined && two_selected_events[0].id == calEvent.id)
-                        two_selected_events.splice(0,1);
-                    if(two_selected_events[1] != undefined && two_selected_events[1].id == calEvent.id)
-                        two_selected_events.splice(1,1);
-                }
-                else
-                {
-                    calEvent.color = "green";
-                    calEvent.editable = true;
-                    if(two_selected_events.length < 2)
-                        two_selected_events.push(calEvent);
-                }
-                console.log(two_selected_events);
-                var arrayEvents = new Array();
+                calEvent.color = "";
+                calEvent.editable = false;
+                if(two_selected_events[0] != undefined && two_selected_events[0].id == calEvent.id)
+                    two_selected_events.splice(0,1);
+                if(two_selected_events[1] != undefined && two_selected_events[1].id == calEvent.id)
+                    two_selected_events.splice(1,1);
+            }
+            else
+            {
+                calEvent.color = "green";
+                calEvent.editable = true;
+                if(two_selected_events.length < 2)
+                    two_selected_events.push(calEvent);
+            }
+            var arrayEvents = new Array();
+            if(two_selected_events.length < 2)
+            {
                 $.ajax({
                     type: "POST",
                     async: false,
@@ -112,14 +111,40 @@ $(function () {
                             response[i].color = "red";
                             arrayEvents.push(response[i]);
                         }
-                        $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+
                     },
                     error: function(req, status, error) {
                         console.err(error);
                     }
                 });
             }
+            $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+            if(two_selected_events.length == 2)
+            {
+                swapTwoEvents();
+            }
         }
     });
    loadCalendarEvents($('#groupe_select'));
 });
+
+
+function swapTwoEvents()
+{
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: Routing.generate('swap_two_events'),
+        data: {
+            event_source: {id:two_selected_events[0].id, day: two_selected_events[0].day, week:two_selected_events[0].week, formation:two_selected_events[0].formation},
+            event_destination: {id:two_selected_events[1].id, day: two_selected_events[1].day, week:two_selected_events[1].week, formation:two_selected_events[1].formation}
+        },
+        success: function(response) 
+        {
+            console.log(response);
+        },
+        error: function(req, status, error) {
+            console.err(error);
+        }
+    });
+}
