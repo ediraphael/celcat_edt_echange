@@ -43,7 +43,9 @@
             <table class="record_properties table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Calendrier</th>
+                        <th>Nom fichier</th>
+                        <th>Nom</th>
+                        <th>Commentaire</th>
                     </tr>
                 </thead>
                     
@@ -51,7 +53,9 @@
                     {% for userCalendar in user.calendars %} 
                         <tr>
                             
-                            <td>{{ userCalendar }}</td>
+                            <td>{{ userCalendar.calendarFile }}</td>
+                            <td>{{ userCalendar.calendarName }}</td>
+                            <td>{{ userCalendar.calendarComment }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
