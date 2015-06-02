@@ -19,10 +19,10 @@ class CalendarEventListener
         $endDate = $calendarEvent->getEndDatetime();
         $url = $calendarEvent->getRequest()->request->get('urlPath');
         $schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
-        
-        
+
         $schedulerManager->parseAllSchedule($url);
         
+        $_SESSION['schedulerManager'] = serialize($schedulerManager);
         $arrayWeeks = $schedulerManager->getArrayWeeks();
         
         
