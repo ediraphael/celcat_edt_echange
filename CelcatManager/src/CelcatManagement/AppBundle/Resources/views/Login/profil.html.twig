@@ -58,7 +58,7 @@
                     {% for userCalendar in user.calendars %} 
                         <tr>
                             
-                            <td>{{ userCalendar.calendarFile }}</td>
+                            <td>{{ groups[userCalendar.calendarFile] }}</td>
                             <td>{{ userCalendar.calendarName }}</td>
                             <td>{{ userCalendar.calendarComment }}</td>
                         </tr>
