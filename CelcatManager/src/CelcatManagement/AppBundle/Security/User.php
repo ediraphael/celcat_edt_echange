@@ -59,7 +59,7 @@ class User implements UserInterface {
      * @var string 
      */
     private $groupName;
-    
+
     /**
      * Calendrier utilisateur
      * @var \Doctrine\Common\Collections\Collection
@@ -149,17 +149,17 @@ class User implements UserInterface {
     public function getIdentifier() {
         $matches = array();
         preg_match('/[0-9]0*([0-9]*)/', $this->getGidNumber(), $matches);
-        if(count($matches) > 1) {
+        if (count($matches) > 1) {
             return $matches[1];
         }
         return null;
     }
-    
+
     public function getCalendars() {
         return $this->calendars;
     }
 
-    public function setCalendars($calendars) {
+    public function setCalendars(\Doctrine\Common\Collections\ArrayCollection $calendars) {
         $this->calendars = $calendars;
 
         return $this;
@@ -167,17 +167,16 @@ class User implements UserInterface {
 
     public function addCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
         $this->calendars[] = $calendar;
-        
+
         return $this;
     }
-    
+
     public function removeCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
         $this->calendars->removeElement($calendar);
         
         return $this;
     }
-    
-    
+
     public function eraseCredentials() {
         
     }
