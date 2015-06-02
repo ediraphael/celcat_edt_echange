@@ -65,8 +65,12 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
         $user->hydrateWithLDAP($userLDAP);
         
         $userCalendarRepositoty = $this->entityManager->getRepository('CelcatManagementAppBundle:UserCalendars');
-        $userCalendar = $userCalendarRepositoty->findByUsername($user->getUsername());
-        $user->setCalendars($userCalendar);
+        $userCalendarEm = $userCalendarRepositoty->findByUsername($user->getUsername());
+        $userCalendars = new \Doctrine\Common\Collections\ArrayCollection();
+        foreach ($userCalendarEm as $userCalendar) {
+            $userCalendars[] = $userCalendar;
+        }
+        $user->setCalendars($userCalendars);
         return $user; 
     }
 
