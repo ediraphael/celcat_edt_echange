@@ -3,6 +3,11 @@
     <h1>Profil</h1>
 {% endblock %}
 {% block body %}
+    <div class="record_actions">
+        <span>
+            {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_login_edit') } %}
+        </span>
+    </div>
     <div class="onglet-container form-horizontal" style="margin-bottom: 10px;">
         <ul>
             <li><a href="#profil_principal">Principal</a></li>

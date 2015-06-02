@@ -7,7 +7,7 @@
 {% block body -%}
     <p class="record_actions">
         <span>
-            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_usercalendars'} } %}
+            {% include 'Action/action-visualiser.html.twig' with { 'href' :  path('profil') } %}
         </span>
     </p>
     {{ form_stylesheet(edit_form) }}
