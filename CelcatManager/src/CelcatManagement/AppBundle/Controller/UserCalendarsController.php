@@ -172,7 +172,7 @@ class UserCalendarsController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('celcat_management_app_usercalendars_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('celcat_management_app_usercalendars_show', array('id' => $id)));
         }
 
         return $this->render('CelcatManagementAppBundle:UserCalendars:edit.html.twig', array(

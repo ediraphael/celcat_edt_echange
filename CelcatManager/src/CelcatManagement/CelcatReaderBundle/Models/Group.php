@@ -34,4 +34,9 @@ class Group {
     function setXmlFile($XmlFile) {
         $this->XmlFile = $XmlFile;
     }
+    
+    public function __toString() {
+        return $this->getName();
+    }
+
 }

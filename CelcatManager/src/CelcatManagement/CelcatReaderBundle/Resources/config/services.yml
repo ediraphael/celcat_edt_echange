@@ -1,4 +1,9 @@
 services:
+    type.group_select:
+        class: CelcatManagement\CelcatReaderBundle\Form\GroupSelectType
+        arguments: [%celcat.url%,%celcat.studentPath%,%celcat.groupIndex%]
+        tags:
+          - { name: form.type, alias: group_select }
 #    celcat_management_celcat_reader.example:
 #        class: CelcatManagement\CelcatReaderBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

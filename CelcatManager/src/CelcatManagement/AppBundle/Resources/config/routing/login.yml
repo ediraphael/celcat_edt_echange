@@ -10,3 +10,12 @@ login_check:
 profil:
     pattern: /profil
     defaults: {_controller: CelcatManagementAppBundle:Login:profil }
+    
+celcat_management_app_login_edit:
+    path:     /profil/edit
+    defaults: { _controller: "CelcatManagementAppBundle:Login:edit" }
+
+celcat_management_app_login_update:
+    path:     /profil/update
+    defaults: { _controller: "CelcatManagementAppBundle:Login:update" }
+    methods:  [POST, PUT]
