@@ -10,6 +10,9 @@
                 <option value="{{ group.xmlfile }}" >{{ group.name }}</option>
                 {% endfor %}
         </select>
+        <script>
+            $('#groupe_select').select2([]);
+        </script>
     </div>
     <div style="clear: both; padding: 20px"></div>
     {% javascripts  
