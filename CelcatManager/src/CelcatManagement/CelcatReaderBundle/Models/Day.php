@@ -111,10 +111,10 @@ class Day {
      * @param type $formation_id
      * @return boolean
      */
-    public function canAddEvent($start_time, $end_time, $formation_id) {
+    public function canAddEvent($event_source_id, $start_time, $end_time, $formation_id) {
         foreach ($this->arrayEvents[$formation_id] as $event) {
-            if (($start_time >= $event->getStartTime() && $start_time <= $event->getEndTime()) ||
-                    ($end_time >= $event->getStartTime() && $end_time <= $event->getEndTime())) {
+            if ($event_source_id != $event->getId() && (($start_time >= $event->getStartTime() && $start_time <= $event->getEndTime()) ||
+                    ($end_time >= $event->getStartTime() && $end_time <= $event->getEndTime()))) {
                 return false;
             }
         }
