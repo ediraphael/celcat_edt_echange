@@ -72,6 +72,22 @@ class CalendarController extends Controller
         
         return $response;
     }
+      
+    public function swapTwoEventsAction(Request $request)
+    {
+        $schedulerManager = unserialize($_SESSION['schedulerManager']);
+        $obj_event_source = $request->request->get('event_source');
+        $obj_event_destination = $request->request->get('event_destination');
+        $event_source = $schedulerManager->getWeekByTag($obj_event_source['week'])->getDayById($obj_event_source['day'])->getEventByIdAndByFormation($obj_event_source['id'], $obj_event_source['formation']);
+        $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventByIdAndByFormation($obj_event_destination['id'], $obj_event_destination['formation']);
+        
+        $result = $schedulerManager->canSwapEvent($event_source, $event_destination);
+        
+        $response = new \Symfony\Component\HttpFoundation\Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
     
     
 }
