@@ -58,9 +58,13 @@ class CalendarController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         
         $return_events = array();
-        
-        foreach($events as $event) {
-            $return_events[] = $event->toArray();    
+        $current_user = $this->getUser();
+        foreach($events as $event) 
+        {
+            if($current_user->calendarExists($event->getFormation()))
+            {
+                $return_events[$event->getId()] = $event->toArray();    
+            }
         }
         
         
@@ -68,4 +72,6 @@ class CalendarController extends Controller
         
         return $response;
     }
+    
+    
 }

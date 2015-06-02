@@ -47,13 +47,35 @@ class Day {
      * @return type
      */
     public function getEventByIdAndByFormation($event_id, $formation_id) {
-        foreach ($this->arrayEvents[$formation_id] as $event) {
-            if ($event->getId() == $event_id) {
-                return $event;
+        if (isset($this->arrayEvents[$formation_id]))
+        {
+            foreach ($this->arrayEvents[$formation_id] as $event) {
+                if ($event->getId() == $event_id) {
+                    return $event;
+                }
             }
         }
         return null;
     }
+    
+    
+    /**
+     * 
+     * @param type $event_id
+     * @return type
+     */
+    public function getEventByIdInAllFormations($event_id) {
+        foreach ($this->arrayEvents as $events) {
+            foreach ($events as $event)
+            {
+                if ($event->getId() == $event_id) {
+                    return $event;
+                }
+            }
+        }
+        return null;
+    }
+    
 
     /**
      * 
@@ -72,11 +94,14 @@ class Day {
      * @param type $event
      */
     public function addEvent($event) {
-        // le créneau est ajouté dans un tableau via un index qui représente l'd de la formation
-        if (!isset($this->arrayEvents[$event->getFormation()])) {
-            $this->arrayEvents[$event->getFormation()] = array();
-        }
-        array_push($this->arrayEvents[$event->getFormation()], $event);
+        if($this->getEventByIdAndByFormation($event->getId(), $event->getFormation()) == null)
+        {
+            // le créneau est ajouté dans un tableau via un index qui représente l'd de la formation
+            if (!isset($this->arrayEvents[$event->getFormation()])) {
+                $this->arrayEvents[$event->getFormation()] = array();
+            }
+            array_push($this->arrayEvents[$event->getFormation()], $event);
+        }    
     }
 
     /**

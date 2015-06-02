@@ -170,7 +170,25 @@ class User implements UserInterface {
 
         return $this;
     }
-
+    
+    
+    /**
+     * 
+     * @param type $formation
+     * @return boolean
+     */
+    public function calendarExists($formation)
+    {
+        foreach ($this->calendars as $calendar)
+        {
+            if($calendar->getCalendarName() == $formation)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public function removeCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
         $this->calendars->removeElement($calendar);
         

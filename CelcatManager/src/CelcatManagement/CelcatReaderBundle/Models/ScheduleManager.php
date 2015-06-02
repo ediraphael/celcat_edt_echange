@@ -196,9 +196,14 @@ class ScheduleManager {
                         ->canAddEvent($event_destination->getStartTime(), $event_destination
                                 ->getEndTime(), $event_destination->getFormation())) {
 //            on peut ajouter un créneau à ce jour ci
+            
         } else {
 //            on ne peut pas ajouter un créneau (donc il faut proposer une liste de propositions)
+            
         }
     }
+    
+    
+    
 
 }

@@ -1,3 +1,5 @@
+var two_selected_events = new Array();
+
 function loadCalendarEvents(objet) {
     file = $(objet).find(':selected').attr('value');
     removeCalendarEvents();
@@ -74,10 +76,49 @@ $(function () {
 //                }
 //            }
 //        ],
-        eventClick: function (calEvent, jsEvent, view) {
-            addCalendarEventSource(calEvent.formation + '.xml');
-
-
+        eventClick: function(calEvent, jsEvent, view) {
+            //if(two_selected_events.length < 2)
+            {
+                $(this).toggleClass("selected_event");
+                if(calEvent.color == "green")
+                {
+                    calEvent.color = "";
+                    calEvent.editable = false;
+                    if(two_selected_events[0] != undefined && two_selected_events[0].id == calEvent.id)
+                        two_selected_events.splice(0,1);
+                    if(two_selected_events[1] != undefined && two_selected_events[1].id == calEvent.id)
+                        two_selected_events.splice(1,1);
+                }
+                else
+                {
+                    calEvent.color = "green";
+                    calEvent.editable = true;
+                    if(two_selected_events.length < 2)
+                        two_selected_events.push(calEvent);
+                }
+                console.log(two_selected_events);
+                var arrayEvents = new Array();
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: Routing.generate('event_calendar_loader'),
+                    data: {
+                        calendar: calEvent.formation + '.xml'
+                    },
+                    success: function(response) 
+                    {
+                        for(var i=0; i<response.length; i++)
+                        {
+                            response[i].color = "red";
+                            arrayEvents.push(response[i]);
+                        }
+                        $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+                    },
+                    error: function(req, status, error) {
+                        console.err(error);
+                    }
+                });
+            }
         }
     });
    loadCalendarEvents($('#groupe_select'));
