@@ -37,7 +37,7 @@ class GroupSelectType extends AbstractType {
     }
 
     public function getParent() {
-        return 'choice';
+        return 'genemu_jqueryselect2_choice';
     }
 
     public function getName() {
