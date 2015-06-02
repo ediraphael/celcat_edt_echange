@@ -115,3 +115,6 @@ be_simple_sso_auth:
             login_url: https://cas.univ-angers.fr/cas/login
             logout_url: https://cas.univ-angers.fr/cas/logout
             validation_url: https://cas.univ-angers.fr/cas/serviceValidate
+
+genemu_form:
+    select2: ~
