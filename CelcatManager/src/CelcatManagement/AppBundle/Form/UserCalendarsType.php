@@ -18,7 +18,7 @@ class UserCalendarsType extends AbstractType
             ->add('username',null,array(
                 'label' => 'Nom d\'utilisateur'
             ))
-            ->add('calendarFile', null, array(
+            ->add('calendarFile', 'group_select', array(
                 'label' => 'Nom fichier calendrier'
             ))
             ->add('calendarName', null, array(
