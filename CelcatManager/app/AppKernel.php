@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
+            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
