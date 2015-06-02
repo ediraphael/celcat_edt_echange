@@ -122,6 +122,8 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $event['group'] = $this->group;
         $event['note'] = $this->note;
         $event['formation'] = $this->formation;
+        $event['day'] = $this->day;
+        $event['week'] = $this->week;
         return $event;
     }
 
