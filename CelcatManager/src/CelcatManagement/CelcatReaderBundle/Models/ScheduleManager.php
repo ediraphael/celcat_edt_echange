@@ -187,20 +187,51 @@ class ScheduleManager {
     }
 
     /**
-     * tester si un créneau peut etre changer vers un autre
      * @param type $event_source
      * @param type $event_destination
      */
-    public function canSwapEvent($event_source, $event_destination) {
-        if ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
-                        ->canAddEvent($event_destination->getStartTime(), $event_destination
-                                ->getEndTime(), $event_destination->getFormation())) {
-//            on peut ajouter un créneau à ce jour ci
-            
-        } else {
-//            on ne peut pas ajouter un créneau (donc il faut proposer une liste de propositions)
-            
+//    public function canSwapEvent($event_source, $event_destination) {
+//        if ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
+//                        ->canAddEvent($event_source->getId(), $event_destination->getStartTime(), $event_destination
+//                                ->getEndTime(), $event_destination->getFormation())) {
+////            on peut ajouter un créneau à ce jour ci
+//            return true;
+//        } else {
+////            on ne peut pas ajouter un créneau (donc il faut proposer une liste de propositions)
+//            return false;
+//        }
+//    }
+    
+    
+    /**
+     * 
+     * @param type $event_source
+     * @param type $event_destination
+     * @return boolean
+     */
+    public function canSwapEvent($event_source, $event_destination)
+    {
+        $array_formations_ids = array();
+        foreach($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events)
+        {
+            foreach ($events as $event)
+            {
+                if($event->getId() == $event_destination->getId())
+                {
+                    $array_formations_ids[] = $event->getFormation();
+                }
+            }
         }
+        foreach ($array_formations_ids as $formation_id)
+        {
+            if(!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
+                    ->canAddEvent($event_source->getId(), $event_destination->getStartTime(), 
+                            $event_destination->getEndTime(), $formation_id))
+            {
+                return false;
+            }
+        }
+        return true;
     }
     
     
