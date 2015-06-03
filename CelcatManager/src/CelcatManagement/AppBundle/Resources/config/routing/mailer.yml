@@ -1,0 +1,7 @@
+celcat_management_app_mailer:
+    pattern: /
+    defaults: {_controller: CelcatManagementAppBundle:Mailer:index }
+    
+celcat_management_app_mailer_send:
+    pattern: /send
+    defaults: {_controller: CelcatManagementAppBundle:Mailer:send }

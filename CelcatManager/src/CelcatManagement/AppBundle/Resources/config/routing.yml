@@ -1,3 +1,7 @@
+celcat_management_app_mailer:
+    resource: "@CelcatManagementAppBundle/Resources/config/routing/mailer.yml"
+    prefix:   /mailer
+    
 celcat_management_app_usercalendars:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/usercalendars.yml"
     prefix:   /usercalendars
