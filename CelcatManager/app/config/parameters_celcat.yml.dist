@@ -2,6 +2,9 @@
 parameters:
     celcat.url: http://celcat.univ-angers.fr/
     celcat.studentPath: web/publi/etu/
-    celcat.teacherPath: total/
+    celcat.teacherPath: 
     celcat.groupIndex: gindex.html
     celcat.personnelIndex: sindex.html
+    celcat.teacherFileGet: xml.php
+    celcat.teacherFileArgumentId: id
+    celcat.teacherFileArgumentkey: cle
