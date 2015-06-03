@@ -77,8 +77,9 @@ $(function () {
 //            }
 //        ],
         eventClick: function(calEvent, jsEvent, view) {
+            var arrayEvents = new Array();
             $(this).toggleClass("selected_event");
-            if(calEvent.color == "green")
+            if(calEvent.color == "orange")
             {
                 calEvent.color = "";
                 calEvent.editable = false;
@@ -89,61 +90,75 @@ $(function () {
             }
             else
             {
-                calEvent.color = "green";
+                calEvent.color = "orange";
                 calEvent.editable = true;
                 if(two_selected_events.length < 2)
                     two_selected_events.push(calEvent);
-            }
-            var arrayEvents = new Array();
-            if(two_selected_events.length < 2 && calEvent.color == "green")
-            {
-                //chargement des créneaux liés a la formation du créneau selectionné
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: Routing.generate('event_calendar_loader'),
-                    data: {
-                        calendar: calEvent.formation + '.xml'
-                    },
-                    success: function(response) 
-                    {
-                        for(var i=0; i<response.length; i++)
-                        {
-                            response[i].color = "red";
-                            arrayEvents.push(response[i]);
-                        }
-                    },
-                    error: function(req, status, error) {
-                        console.err(error);
-                    }
-                });
-            }
-            if(two_selected_events.length == 1)
-            {
-                //récupération de tous les créneaux du calendrié + vérification de la possibilité de swap
-                var array_events_calendar = $('#calendar-holder').fullCalendar('clientEvents');
-                for(var i =0; i<array_events_calendar.length; i++)
+                if(two_selected_events.length < 2)
                 {
-                    if(array_events_calendar[i].id != calEvent.id)
-                    {
-                        canSwapTwoEvents(two_selected_events[0], array_events_calendar[i]);
+                    //chargement des créneaux liés a la formation du créneau selectionné
+                    reloadCalendarEvents(calEvent, arrayEvents);
+                }
+            }
+            //récupération de tous les créneaux du calendrié + vérification de la possibilité de swap
+            if(two_selected_events.length == 1 && calEvent.color == "orange")
+            {
+                markUpAlterableEvents(calEvent);
+            }
+            //dans le cas ou on choisi deux créneaux pour les swapé
+            else if(two_selected_events.length == 2)
+            {
+                if(canSwapTwoEvents(two_selected_events[0], two_selected_events[1]))
+                {
+                    if (confirm("Voulez vous vraiment échanger ces deux évennements?")) {
+                        console.log("ok");
+                    } 
+                    else {
+                        console.log("ko");
                     }
                 }
             }
-            //dans le cas ou on choisi deux créneaux pour les swapé
-            if(two_selected_events.length == 2)
-            {
-                canSwapTwoEvents(two_selected_events[0], two_selected_events[1]);
+            //dans le cas ou ont déselectionne un créneau
+            else
+            { 
+                if(two_selected_events.length == 0)
+                {
+                    resetEventsColor(calEvent);
+                }
             }
-            $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
+            $('#calendar-holder').fullCalendar('addEventSource', arrayEvents);
         }
     });
-   loadCalendarEvents($('#groupe_select'));
+    loadCalendarEvents($('#groupe_select'));
 });
 
 
+function reloadCalendarEvents(calEvent, arrayEvents)
+{
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: Routing.generate('event_calendar_loader'),
+        data: {
+            calendar: calEvent.formation + '.xml'
+        },
+        success: function(response) 
+        {
+            for(var i=0; i<response.length; i++)
+            {
+                response[i].color = "red";
+                arrayEvents.push(response[i]);
+            }
+        },
+        error: function(req, status, error) {
+            console.err(error);
+        }
+    });
+}
+
 function canSwapTwoEvents(event_source, event_destination)
 {
+    var result = false;
     $.ajax({
         type: "POST",
         async: false,
@@ -154,11 +169,36 @@ function canSwapTwoEvents(event_source, event_destination)
         },
         success: function(response) 
         {
-            if(response)
-                event_destination.color = "orange";
+            result = response;
         },
         error: function(req, status, error) {
             console.err(error);
         }
     });
+    return result;
+}
+
+function resetEventsColor(calEvent)
+{
+    var array_events_calendar = $('#calendar-holder').fullCalendar('clientEvents');
+    for(var i =0; i<array_events_calendar.length; i++)
+    {
+        if(array_events_calendar[i].id != calEvent.id)
+        {
+            array_events_calendar[i].color = "";
+        }
+    }
+}
+
+function markUpAlterableEvents(calEvent)
+{
+    var array_events_calendar = $('#calendar-holder').fullCalendar('clientEvents');
+    for(var i =0; i<array_events_calendar.length; i++)
+    {
+        if(array_events_calendar[i].id != calEvent.id)
+        {
+            if(canSwapTwoEvents(two_selected_events[0], array_events_calendar[i]))
+                array_events_calendar[i].color = "green";
+        }
+    }
 }
