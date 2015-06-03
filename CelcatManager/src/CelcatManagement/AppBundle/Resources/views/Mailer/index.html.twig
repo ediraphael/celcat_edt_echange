@@ -1,0 +1,7 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+{% block titre %}
+    <h1>Envoie de mail</h1>
+{% endblock %}
+{% block body %}
+    {{ form(form, { 'attr': {'class':'ajax-form form-horizontal  ui-tabs ui-widget ui-widget-content ui-corner-all'} } ) }}
+{% endblock %}
