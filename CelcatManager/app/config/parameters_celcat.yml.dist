@@ -1,6 +1,7 @@
 
 parameters:
-    celcat.url: http://celcat.univ-angers.fr/web/publi/
-    celcat.studentPath: etu/
-    celcat.teacherPath: prof/
+    celcat.url: http://celcat.univ-angers.fr/
+    celcat.studentPath: web/publi/etu/
+    celcat.teacherPath: total/
     celcat.groupIndex: gindex.html
+    celcat.personnelIndex: sindex.html
