@@ -33,7 +33,7 @@ class EmailType extends AbstractType {
                 ->add('fromAddress', 'email', array(
                     'label' => 'De',
                     'data' => $this->fromAddress,
-                    'disabled' => ($this->fromAddress != ''),
+                    'read_only' => ($this->fromAddress != ''),
                     'widget_addon_prepend' => array(
                         'text' => '@',
                     )
@@ -41,7 +41,7 @@ class EmailType extends AbstractType {
                 ->add('toAddress', 'email', array(
                     'label' => 'À',
                     'data' => $this->toAddress,
-                    'disabled' => ($this->toAddress != ''),
+                    'read_only' => ($this->toAddress != ''),
                     'widget_addon_prepend' => array(
                         'text' => '@',
                     )
