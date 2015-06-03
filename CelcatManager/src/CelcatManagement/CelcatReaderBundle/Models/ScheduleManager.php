@@ -5,6 +5,7 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ScheduleManager {
+
     /**
      *
      * @var Week[] 
@@ -163,7 +164,13 @@ class ScheduleManager {
     public function parseAllSchedule($url) {
         $matches = array();
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
-        $formation_id = $matches[1];
+        if (count($matches) > 0) {
+            $formation_id = $matches[1];
+        }
+        else {
+            preg_match("/\=([0-9]+)&/", $url, $matches);
+            $formation_id = $matches[1];
+        }
         $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);
@@ -201,40 +208,29 @@ class ScheduleManager {
 //            return false;
 //        }
 //    }
-    
-    
+
     /**
      * 
      * @param type $event_source
      * @param type $event_destination
      * @return boolean
      */
-    public function canSwapEvent($event_source, $event_destination)
-    {
+    public function canSwapEvent($event_source, $event_destination) {
         $array_formations_ids = array();
-        foreach($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events)
-        {
-            foreach ($events as $event)
-            {
-                if($event->getId() == $event_destination->getId())
-                {
+        foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events) {
+            foreach ($events as $event) {
+                if ($event->getId() == $event_destination->getId()) {
                     $array_formations_ids[] = $event->getFormation();
                 }
             }
         }
-        foreach ($array_formations_ids as $formation_id)
-        {
-            if(!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
-                    ->canAddEvent($event_source->getId(), $event_destination->getStartTime(), 
-                            $event_destination->getEndTime(), $formation_id))
-            {
+        foreach ($array_formations_ids as $formation_id) {
+            if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
+                            ->canAddEvent($event_source->getId(), $event_destination->getStartTime(), $event_destination->getEndTime(), $formation_id)) {
                 return false;
             }
         }
         return true;
     }
-    
-    
-    
 
 }
