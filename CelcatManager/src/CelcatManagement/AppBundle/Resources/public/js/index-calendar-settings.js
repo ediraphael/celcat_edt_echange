@@ -95,8 +95,9 @@ $(function () {
                     two_selected_events.push(calEvent);
             }
             var arrayEvents = new Array();
-            if(two_selected_events.length < 2)
+            if(two_selected_events.length < 2 && calEvent.color == "green")
             {
+                //chargement des créneaux liés a la formation du créneau selectionné
                 $.ajax({
                     type: "POST",
                     async: false,
@@ -117,9 +118,22 @@ $(function () {
                     }
                 });
             }
+            if(two_selected_events.length == 1)
+            {
+                //récupération de tous les créneaux du calendrié + vérification de la possibilité de swap
+                var array_events_calendar = $('#calendar-holder').fullCalendar('clientEvents');
+                for(var i =0; i<array_events_calendar.length; i++)
+                {
+                    if(array_events_calendar[i].id != calEvent.id)
+                    {
+                        canSwapTwoEvents(two_selected_events[0], array_events_calendar[i]);
+                    }
+                }
+            }
+            //dans le cas ou on choisi deux créneaux pour les swapé
             if(two_selected_events.length == 2)
             {
-                swapTwoEvents();
+                canSwapTwoEvents(two_selected_events[0], two_selected_events[1]);
             }
             $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
         }
@@ -128,19 +142,20 @@ $(function () {
 });
 
 
-function swapTwoEvents()
+function canSwapTwoEvents(event_source, event_destination)
 {
     $.ajax({
         type: "POST",
         async: false,
         url: Routing.generate('swap_two_events'),
         data: {
-            event_source: {id:two_selected_events[0].id, day: two_selected_events[0].day, week:two_selected_events[0].week, formation:two_selected_events[0].formation},
-            event_destination: {id:two_selected_events[1].id, day: two_selected_events[1].day, week:two_selected_events[1].week, formation:two_selected_events[1].formation}
+            event_source: {id:event_source.id, day: event_source.day, week:event_source.week, formation:event_source.formation},
+            event_destination: {id:event_destination.id, day: event_destination.day, week:event_destination.week, formation:event_destination.formation}
         },
         success: function(response) 
         {
-            console.log(response);
+            if(response)
+                event_destination.color = "orange";
         },
         error: function(req, status, error) {
             console.err(error);
