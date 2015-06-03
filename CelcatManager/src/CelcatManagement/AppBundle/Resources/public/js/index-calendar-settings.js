@@ -111,18 +111,17 @@ $(function () {
                             response[i].color = "red";
                             arrayEvents.push(response[i]);
                         }
-
                     },
                     error: function(req, status, error) {
                         console.err(error);
                     }
                 });
             }
-            $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
             if(two_selected_events.length == 2)
             {
                 swapTwoEvents();
             }
+            $('#calendar-holder').fullCalendar( 'addEventSource', arrayEvents );
         }
     });
    loadCalendarEvents($('#groupe_select'));
