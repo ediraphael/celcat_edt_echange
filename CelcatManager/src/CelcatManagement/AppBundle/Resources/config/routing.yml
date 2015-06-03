@@ -6,13 +6,9 @@ celcat_management_app_usercalendars:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/usercalendars.yml"
     prefix:   /usercalendars
 
-celcat_management_app_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: CelcatManagementAppBundle:Default:index }
-
 celcat_management_app_index:
     path:     /
-    defaults: { _controller: CelcatManagementAppBundle:Default:index2 }
+    defaults: { _controller: CelcatManagementAppBundle:Default:index }
 
 celcat_management_app_bundle_login:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/login.yml"
