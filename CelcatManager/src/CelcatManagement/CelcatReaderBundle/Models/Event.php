@@ -2,6 +2,8 @@
 
 namespace CelcatManagement\CelcatReaderBundle\Models;
 
+use \Doctrine\Common\Collections\ArrayCollection;
+
 class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     private $room;
@@ -12,14 +14,19 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     private $professor;
     private $group;
     private $note;
-    private $formation;
+
+    /**
+     *
+     * @var ArrayCollection 
+     */
+    private $formations;
     private $isDeleted = false;
 
-    
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
+        $this->formation = new ArrayCollection();
     }
-    
+
     public function getIsDeleted() {
         return $this->isDeleted;
     }
@@ -28,12 +35,20 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->isDeleted = $isDeleted;
     }
 
-    public function getFormation() {
-        return $this->formation;
+    public function getFormations() {
+        return $this->formations;
     }
 
-    public function setFormation($formation) {
-        $this->formation = $formation;
+    public function setFormations(ArrayCollection $formations) {
+        $this->formations = $formations;
+    }
+
+    public function addFormation($formation) {
+        $this->formations[] = $formation;
+    }
+
+    public function removeFormation($formation) {
+        $this->formations->removeElement($formation);
     }
 
     public function getId() {
@@ -83,7 +98,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setId($id) {
         $this->id = $id;
     }
-    
+
     public function setRoom($room) {
         $this->room = $room;
     }
@@ -115,23 +130,22 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setNote($note) {
         $this->note = $note;
     }
-    
+
     /**
      * Convert calendar event details to an array
      * 
      * @return array $event 
      */
-    public function toArray()
-    {
+    public function toArray() {
         $event = parent::toArray();
-        
+
         $event['room'] = $this->room;
         $event['category'] = $this->category;
         $event['module'] = $this->module;
         $event['professor'] = $this->professor;
         $event['group'] = $this->group;
         $event['note'] = $this->note;
-        $event['formation'] = $this->formation;
+        $event['formation'] = $this->formations->toArray();
         $event['day'] = $this->day;
         $event['week'] = $this->week;
         return $event;
