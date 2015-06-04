@@ -7,28 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UserMail
  */
-class UserMail extends \CelcatManagement\AppBundle\Email\Email
+class UserMail extends Mail
 {
-    /**
-     * @var integer
-     */
-    private $id;
-
     /**
      * @var \DateTime
      */
     private $sendDate = 'CURRENT_TIMESTAMP';
-
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set sendDate
