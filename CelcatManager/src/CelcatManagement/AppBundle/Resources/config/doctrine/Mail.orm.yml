@@ -1,0 +1,23 @@
+CelcatManagement\AppBundle\Entity\Mail:
+    type: mappedSuperclass
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        fromAddress:
+            type: string
+            length: 70
+            column: from_address
+        toAddress:
+            type: string
+            length: 70
+            column: to_address
+        subject:
+            type: string
+        body:
+            type: text
+        
+    lifecycleCallbacks: {  }
