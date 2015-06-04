@@ -1,0 +1,30 @@
+celcat_management_app_modelmail:
+    path:     /
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:index" }
+
+celcat_management_app_modelmail_show:
+    path:     /{id}/show
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:show" }
+
+celcat_management_app_modelmail_new:
+    path:     /new
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:new" }
+
+celcat_management_app_modelmail_create:
+    path:     /create
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:create" }
+    methods:  POST
+
+celcat_management_app_modelmail_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:edit" }
+
+celcat_management_app_modelmail_update:
+    path:     /{id}/update
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:update" }
+    methods:  [POST, PUT]
+
+celcat_management_app_modelmail_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "CelcatManagementAppBundle:ModelMail:delete" }
+    methods:  [GET, POST, DELETE]
