@@ -1,0 +1,15 @@
+CelcatManagement\AppBundle\Entity\UserMail:
+    type: entity
+    table: user_mail
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        sendDate:
+            type: datetime
+            version: true
+            column: send_date
+    lifecycleCallbacks: {  }
