@@ -39,6 +39,7 @@ class Day {
     public function setName($name) {
         $this->name = $name;
     }
+    
 
     /**
      * 
@@ -96,13 +97,34 @@ class Day {
     public function addEvent($event) {
         if($this->getEventByIdAndByFormation($event->getId(), $event->getFormation()) == null)
         {
-            // le créneau est ajouté dans un tableau via un index qui représente l'd de la formation
+            // le créneau est ajouté dans un tableau via un index qui représente l'id de la formation
             if (!isset($this->arrayEvents[$event->getFormation()])) {
                 $this->arrayEvents[$event->getFormation()] = array();
             }
             array_push($this->arrayEvents[$event->getFormation()], $event);
         }    
     }
+    
+    
+    /**
+     * 
+     * @param type $event_id
+     * @param type $formation_id
+     * @return boolean
+     */
+    public function removeEvent($event_id, $formation_id)
+    {
+        foreach ($this->arrayEvents as $index1 => $events) {
+            foreach ($events as $index2 => $event)
+            {
+                if ($event->getId() == $event_id) {
+                    unset($this->arrayEvents[$index1][$index2]);
+                }
+            }
+        }
+        return true;
+    }
+    
 
     /**
      * 
