@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserMailType extends EmailType
+class UserMailType extends MailType
 {
     /**
      * @param OptionsResolverInterface $resolver
