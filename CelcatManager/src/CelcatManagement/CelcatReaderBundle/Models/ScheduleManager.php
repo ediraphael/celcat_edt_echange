@@ -126,7 +126,7 @@ class ScheduleManager {
                 $crawler = new Crawler();
                 $crawler->add($node);
                 $event = new Event();
-                $event->setFormation($formation_id);
+                $event->addFormation($formation_id);
                 $event->setId($crawler->attr("id"));
 //                $event->setBgColor($crawler->attr("colour"));
                 $event->setWeek($crawler->filterXPath("//rawweeks")->text());
@@ -171,7 +171,6 @@ class ScheduleManager {
      * @param type $url
      */
     public function parseAllSchedule($url) {
-        echo '                      ';
         $matches = array();
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
         if (count($matches) > 0) {
@@ -200,7 +199,7 @@ class ScheduleManager {
 //                        ->getEnd_time(), $event_destination->getFormation());
         $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
                 ->getWeekFreeEventsList($event_destination
-                ->getStartTime(), $event_destination->getEndTime(), $event_destination->getFormation());
+                ->getStartTime(), $event_destination->getEndTime(), $event_destination->getFormations());
         return $tab_free_events;
     }
 
@@ -209,8 +208,8 @@ class ScheduleManager {
      * @param type $event_destination
      */
     public function swapEvent($event_source, $event_destination) {
-        $result_remove_source = $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->removeEvent($event_source->getId(), $event_source->getFormation());
-        $result_remove_destination = $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->removeEvent($event_destination->getId(), $event_destination->getFormation());
+        $result_remove_source = $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->removeEvent($event_source->getId());
+        $result_remove_destination = $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->removeEvent($event_destination->getId());
 //        $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->addEvent($event_destination);
 //        $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->addEvent($event_source);
         $_SESSION['schedulerManager'] = serialize($this);
@@ -232,7 +231,7 @@ class ScheduleManager {
         foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events) {
             foreach ($events as $event) {
                 if ($event->getId() == $event_destination->getId()) {
-                    $array_formations_ids[] = $event->getFormation();
+                    $array_formations_ids[] = $event->getFormations();
                 }
             }
         }
