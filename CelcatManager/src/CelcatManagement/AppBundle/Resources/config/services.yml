@@ -6,6 +6,7 @@ services:
         class: CelcatManagement\AppBundle\EventListener\CalendarEventListener
         tags:
             - { name: kernel.event_listener, event: calendar.load_events, method: loadEvents }
+            - { name: kernel.event_listener, event: calendar.refresh_events, method: refreshEvents }
 #    celcat_management_app.example:
 #        class: CelcatManagement\AppBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
