@@ -174,7 +174,13 @@ class ScheduleManager {
         echo '                      ';
         $matches = array();
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
-        $formation_id = $matches[1];
+        if (count($matches) > 0) {
+            $formation_id = $matches[1];
+        }
+        else {
+            preg_match("/\=([0-9]+)&/", $url, $matches);
+            $formation_id = $matches[1];
+        }
         $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);

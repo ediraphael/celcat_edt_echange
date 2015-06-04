@@ -27,7 +27,8 @@ class LoginController extends Controller {
 
     public function profilAction(Request $request) {
         return $this->render('CelcatManagementAppBundle:Login:profil.html.twig', array(
-                    'user' => $this->getUser()
+                    'user' => $this->getUser(),
+                    'groups' => $this->get('type.group_select')->getChoices()
         ));
     }
 

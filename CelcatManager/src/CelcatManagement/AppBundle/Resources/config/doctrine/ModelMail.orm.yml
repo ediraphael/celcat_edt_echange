@@ -1,0 +1,14 @@
+CelcatManagement\AppBundle\Entity\ModelMail:
+    type: entity
+    table: model_mail
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 25
+    lifecycleCallbacks: {  }

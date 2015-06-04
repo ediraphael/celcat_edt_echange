@@ -1,0 +1,50 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Mail utilisateur</h1>
+{% endblock %}
+
+{% block body -%}
+    <div class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_usermail'} } %}
+        </span>
+        <span>
+            {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_usermail_edit', { 'id': entity.id }) } %}
+        </span>
+        <span>
+            {% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_usermail_delete', { 'id': entity.id }) } %}
+        </span>
+    </div>
+    <div id="categorie_principal" class="table-responsive">
+        <table class="record_properties  table table-striped table-hover">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ entity.id }}</td>
+                </tr>
+                <tr>
+                    <th>De</th>
+                    <td>{{ entity.fromAddress }}</td>
+                </tr>
+                <tr>
+                    <th>A</th>
+                    <td>{{ entity.toAddress }}</td>
+                </tr>
+                <tr>
+                    <th>Sujet</th>
+                    <td>{{ entity.subject }}</td>
+                </tr>
+                <tr>
+                    <th>Message</th>
+                    <td>{{ entity.body }}</td>
+                </tr>
+                <tr>
+                    <th>Envoyé le</th>
+                    <td>{{ entity.sendDate|date('d-m-Y H:i:s') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

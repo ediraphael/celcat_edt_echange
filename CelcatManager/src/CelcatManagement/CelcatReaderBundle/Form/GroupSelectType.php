@@ -43,5 +43,12 @@ class GroupSelectType extends AbstractType {
     public function getName() {
         return 'group_select';
     }
+    
+    function getChoices() {
+        return $this->choices;
+    }
 
+    function setChoices($choices) {
+        $this->choices = $choices;
+    }
 }
