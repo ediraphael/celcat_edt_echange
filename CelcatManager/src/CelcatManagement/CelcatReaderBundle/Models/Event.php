@@ -30,15 +30,15 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function getIsDeleted() {
         return $this->isDeleted;
     }
-    
+
     public function isDeleted() {
         return $this->isDeleted;
     }
-    
+
     public function delete() {
         $this->isDeleted = true;
     }
-    
+
     public function undelete() {
         $this->isDeleted = false;
     }
@@ -56,7 +56,16 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function addFormation($formation) {
-        $this->formations->add($formation);
+        if(is_array($formation) || $formation instanceof ArrayCollection) {
+            foreach ($formation as $form) {
+                if($form != '' && !$this->formations->contains($form)) {
+                    $this->formations->add($form);
+                }
+            }
+        }
+        elseif ($formation != '' && !$this->formations->contains($formation)) {
+            $this->formations->add($formation);
+        }
     }
 
     public function removeFormation($formation) {
