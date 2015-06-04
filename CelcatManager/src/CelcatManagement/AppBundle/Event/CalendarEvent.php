@@ -7,15 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 use ADesigns\CalendarBundle\Entity\EventEntity;
 
-/**
- * Event used to store EventEntitys
- * 
- * @author Mike Yudin <mikeyudin@gmail.com>
- */
 class CalendarEvent extends Event
 {
     const CONFIGURE = 'calendar.load_events';
-
+    const CONFIGURE_REFRESH = 'calendar.refresh_events';
+    
     private $startDatetime;
     
     private $endDatetime;
