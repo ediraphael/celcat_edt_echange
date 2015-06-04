@@ -4,17 +4,17 @@ namespace CelcatManagement\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use CelcatManagement\AppBundle\Form\EmailType;
-use CelcatManagement\AppBundle\Email\Email;
+use CelcatManagement\AppBundle\Form\UserMailType;
+use CelcatManagement\AppBundle\Entity\UserMail;
 
 class MailerController extends Controller {
 
     public function indexAction(Request $request) {
-        $email = new Email();
+        $email = new UserMail();
         $user = $this->getUser();
         /* @var $user \CelcatManagement\AppBundle\Security\User */
 
-        $form = $this->createForm(new EmailType($user->getMail()), $email, array(
+        $form = $this->createForm(new UserMailType($user->getMail()), $email, array(
             'action' => $this->generateUrl('celcat_management_app_mailer_send'),
             'method' => 'POST',
         ));
@@ -26,11 +26,12 @@ class MailerController extends Controller {
     }
 
     public function sendAction(Request $request) {
-        $email = new Email();
+        $em = $this->getDoctrine()->getManager();
+        $email = new UserMail();
         $user = $this->getUser();
         /* @var $user \CelcatManagement\AppBundle\Security\User */
 
-        $form = $this->createForm(new EmailType($user->getMail()), $email, array(
+        $form = $this->createForm(new UserMailType($user->getMail()), $email, array(
             'action' => $this->generateUrl('celcat_management_app_mailer_send'),
             'method' => 'POST',
         ));
@@ -44,8 +45,10 @@ class MailerController extends Controller {
                     ->setTo($email->getToAddress())
                     ->setBody($email->getBody())
             ;
-            $this->get('mailer')->send($message);
-            echo 'OK<br/>';
+            $failed = array();
+            $result = $this->get('mailer')->send($message, $failed);
+            $em->persist($email);
+            $em->flush();
         }
 
         return $this->render('CelcatManagementAppBundle:Mailer:index.html.twig', array(
