@@ -29,23 +29,47 @@ class EmailType extends AbstractType {
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        if ($this->fromAddress != '') {
+            $builder
+                    ->add('fromAddress', 'email', array(
+                        'label' => 'De',
+                        'data' => $this->fromAddress,
+                        'read_only' => true,
+                        'widget_addon_prepend' => array(
+                            'text' => '@',
+                        )
+            ));
+        }
+        else {
+            $builder
+                    ->add('fromAddress', 'email', array(
+                        'label' => 'De',
+                        'widget_addon_prepend' => array(
+                            'text' => '@',
+                        )
+            ));
+        }
+        if ($this->toAddress != '') {
+            $builder
+                    ->add('toAddress', 'email', array(
+                        'label' => 'De',
+                        'data' => $this->toAddress,
+                        'read_only' => true,
+                        'widget_addon_prepend' => array(
+                            'text' => '@',
+                        )
+            ));
+        }
+        else {
+            $builder
+                    ->add('toAddress', 'email', array(
+                        'label' => 'De',
+                        'widget_addon_prepend' => array(
+                            'text' => '@',
+                        )
+            ));
+        }
         $builder
-                ->add('fromAddress', 'email', array(
-                    'label' => 'De',
-                    'data' => $this->fromAddress,
-                    'read_only' => ($this->fromAddress != ''),
-                    'widget_addon_prepend' => array(
-                        'text' => '@',
-                    )
-                ))
-                ->add('toAddress', 'email', array(
-                    'label' => 'À',
-                    'data' => $this->toAddress,
-                    'read_only' => ($this->toAddress != ''),
-                    'widget_addon_prepend' => array(
-                        'text' => '@',
-                    )
-                ))
                 ->add('subject', 'text', array(
                     'label' => 'sujet',
                 ))
