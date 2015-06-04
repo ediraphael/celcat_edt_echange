@@ -27,4 +27,4 @@ celcat_management_app_usermail_update:
 celcat_management_app_usermail_delete:
     path:     /{id}/delete
     defaults: { _controller: "CelcatManagementAppBundle:UserMail:delete" }
-    methods:  [POST, DELETE]
+    methods:  [GET, POST, DELETE]
