@@ -5,30 +5,39 @@ namespace CelcatManagement\CelcatReaderBundle\Models;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ScheduleManager {
+
     /**
      *
      * @var Week[] 
      */
-    private $ArrayWeeks;
+    private $arrayWeeks;
 
     function __construct() {
-        $this->ArrayWeeks = array();
+        if (isset($_SESSION['schedulerManager'])) {
+            $scheduleur = unserialize($_SESSION['schedulerManager']);
+            $this->arrayWeeks = $scheduleur->getArrayWeeks();
+        } else {
+            $this->arrayWeeks = array();
+            $_SESSION['schedulerManager'] = serialize($this);
+        }
     }
 
     public function getArrayWeeks() {
-        return $this->ArrayWeeks;
+        return $this->arrayWeeks;
     }
 
     public function setArrayWeeks($arrayWeeks) {
-        $this->ArrayWeeks = $arrayWeeks;
+        $this->arrayWeeks = $arrayWeeks;
+        $_SESSION['schedulerManager'] = serialize($this);
     }
 
     public function addWeek($week) {
-        $this->ArrayWeeks[] = $week;
+        $this->arrayWeeks[] = $week;
+        $_SESSION['schedulerManager'] = serialize($this);
     }
 
     public function weekExists($week_id) {
-        foreach ($this->ArrayWeeks as $week) {
+        foreach ($this->arrayWeeks as $week) {
             if ($week->getId() == $week_id) {
                 return true;
             }
@@ -37,7 +46,7 @@ class ScheduleManager {
     }
 
     public function getWeekById($week_id) {
-        foreach ($this->ArrayWeeks as $week) {
+        foreach ($this->arrayWeeks as $week) {
             if ($week->getId() == $week_id) {
                 return $week;
             }
@@ -51,7 +60,7 @@ class ScheduleManager {
      * @return null|Week
      */
     public function getWeekByTag($week_tag) {
-        foreach ($this->ArrayWeeks as $week) {
+        foreach ($this->arrayWeeks as $week) {
             if ($week->getTag() == $week_tag) {
                 return $week;
             }
@@ -154,6 +163,7 @@ class ScheduleManager {
         } catch (Exception $e) {
             print_r($e);
         }
+        $_SESSION['schedulerManager'] = serialize($this);
     }
 
     /**
@@ -161,12 +171,14 @@ class ScheduleManager {
      * @param type $url
      */
     public function parseAllSchedule($url) {
+        echo '                      ';
         $matches = array();
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
         $formation_id = $matches[1];
         $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);
+        $_SESSION['schedulerManager'] = serialize($this);
     }
 
     /**
@@ -190,60 +202,47 @@ class ScheduleManager {
      * @param type $event_source
      * @param type $event_destination
      */
-//    public function canSwapEvent($event_source, $event_destination) {
-//        if ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())
-//                        ->canAddEvent($event_source->getId(), $event_destination->getStartTime(), $event_destination
-//                                ->getEndTime(), $event_destination->getFormation())) {
-////            on peut ajouter un créneau à ce jour ci
-//            return true;
-//        } else {
-////            on ne peut pas ajouter un créneau (donc il faut proposer une liste de propositions)
-//            return false;
-//        }
-//    }
-    
-    
+    public function swapEvent($event_source, $event_destination) {
+        $result_remove_source = $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->removeEvent($event_source->getId(), $event_source->getFormation());
+        $result_remove_destination = $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->removeEvent($event_destination->getId(), $event_destination->getFormation());
+//        $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->addEvent($event_destination);
+//        $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->addEvent($event_source);
+        $_SESSION['schedulerManager'] = serialize($this);
+        if ($result_remove_source && $result_remove_destination) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 
      * @param type $event_source
      * @param type $event_destination
      * @return boolean
      */
-    public function canSwapEvent($event_source, $event_destination)
-    {
+    public function canSwapEvent($event_source, $event_destination) {
         $array_formations_ids = array();
-        foreach($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events)
-        {
-            foreach ($events as $event)
-            {
-                if($event->getId() == $event_destination->getId())
-                {
+        foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events) {
+            foreach ($events as $event) {
+                if ($event->getId() == $event_destination->getId()) {
                     $array_formations_ids[] = $event->getFormation();
                 }
             }
         }
-        foreach ($array_formations_ids as $formation_id)
-        {
-            $duree_event_destination =  gmdate('H:i', strtotime($event_destination->getEndTime()) - strtotime($event_destination->getStartTime()));
-//            return $duree_event_destination;
+        foreach ($array_formations_ids as $formation_id) {
+            $duree_event_destination = gmdate('H:i', strtotime($event_destination->getEndTime()) - strtotime($event_destination->getStartTime()));
             $hours = explode(":", $duree_event_destination)[0];
             $minutes = explode(":", $duree_event_destination)[1];
             $convert = strtotime("+$hours hours", strtotime($event_source->getStartTime()));
             $convert = strtotime("+$minutes minutes", $convert);
             $calculated_end_time = date('H:i', $convert);
-//            return $calculated_end_time;
-//            return $event_source->getStartTime();
-            if(!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
-                    ->canAddEvent($event_source->getId(), $event_source->getStartTime(), 
-                            $calculated_end_time, $formation_id))
-            {
+            if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
+                            ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id)) {
                 return false;
             }
         }
         return true;
     }
-    
-    
-    
 
 }
