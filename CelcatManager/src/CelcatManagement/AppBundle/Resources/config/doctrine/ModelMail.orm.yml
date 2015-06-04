@@ -1,0 +1,9 @@
+CelcatManagement\AppBundle\Entity\ModelMail:
+    type: entity
+    table: model_mail
+    
+    fields:
+        name:
+            type: string
+            length: 25
+    lifecycleCallbacks: {  }
