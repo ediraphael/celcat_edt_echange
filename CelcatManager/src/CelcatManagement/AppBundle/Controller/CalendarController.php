@@ -12,7 +12,7 @@ class CalendarController extends Controller {
         $groupManager = new \CelcatManagement\CelcatReaderBundle\Models\GroupManager();
         $url = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath') . $this->container->getParameter('celcat.groupIndex');
         //$url = $this->container->getParameter('celcat.url').$this->container->getParameter('celcat.teacherPath').$this->container->getParameter('celcat.personnelIndex');
-        echo $url;
+        
         $groupManager->loadGroups($url);
 
         return $this->render('CelcatManagementAppBundle:Calendar:index.html.twig', array('groupList' => $groupManager->getGroupList()));
