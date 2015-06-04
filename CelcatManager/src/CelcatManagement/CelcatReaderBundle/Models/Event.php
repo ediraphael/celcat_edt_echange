@@ -30,6 +30,18 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function getIsDeleted() {
         return $this->isDeleted;
     }
+    
+    public function isDeleted() {
+        return $this->isDeleted;
+    }
+    
+    public function delete() {
+        $this->isDeleted = true;
+    }
+    
+    public function undelete() {
+        $this->isDeleted = false;
+    }
 
     public function setIsDeleted($isDeleted) {
         $this->isDeleted = $isDeleted;
