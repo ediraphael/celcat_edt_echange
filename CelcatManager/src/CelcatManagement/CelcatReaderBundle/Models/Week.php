@@ -19,31 +19,31 @@ class Week {
         $monday = new Day();
         $monday->setId(0);
         $monday->setName("lundi");
-        $this->arrayDays[] = $monday;
+        $this->arrayDays[0] = $monday;
         $tuesday = new Day();
         $tuesday->setId(1);
         $tuesday->setName("mardi");
-        $this->arrayDays[] = $tuesday;
+        $this->arrayDays[1] = $tuesday;
         $wednesday = new Day();
         $wednesday->setId(2);
         $wednesday->setName("mercredi");
-        $this->arrayDays[] = $wednesday;
+        $this->arrayDays[2] = $wednesday;
         $thursday = new Day();
         $thursday->setId(3);
         $thursday->setName("jeudi");
-        $this->arrayDays[] = $thursday;
+        $this->arrayDays[3] = $thursday;
         $friday = new Day();
         $friday->setId(4);
         $friday->setName("vendredi");
-        $this->arrayDays[] = $friday;
+        $this->arrayDays[4] = $friday;
         $saturday = new Day();
         $saturday->setId(5);
         $saturday->setName("samedi");
-        $this->arrayDays[] = $saturday;
+        $this->arrayDays[5] = $saturday;
         $sunday = new Day();
         $sunday->setId(6);
         $sunday->setName("dimanche");
-        $this->arrayDays[] = $sunday;
+        $this->arrayDays[6] = $sunday;
     }
 
     public function getArrayDays() {
@@ -90,11 +90,9 @@ class Week {
         $this->arrayDays[] = $day;
     }
 
-    public function getDayById($day_id) {
-        foreach ($this->arrayDays as $day) {
-            if ($day->getId() == $day_id) {
-                return $day;
-            }
+    public function getDayById($dayId) {
+        if(isset($this->arrayDays[$dayId]) && $this->arrayDays != '') {
+            return $this->arrayDays[$dayId];
         }
         return null;
     }
