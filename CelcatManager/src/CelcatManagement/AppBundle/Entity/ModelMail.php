@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ModelMail
  */
-class ModelMail
+class ModelMail extends Mail
 {
     /**
      * @var string
