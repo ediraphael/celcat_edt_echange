@@ -13,9 +13,19 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     private $group;
     private $note;
     private $formation;
+    private $isDeleted = false;
 
+    
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
+    }
+    
+    public function getIsDeleted() {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted($isDeleted) {
+        $this->isDeleted = $isDeleted;
     }
 
     public function getFormation() {
