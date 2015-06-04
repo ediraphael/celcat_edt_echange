@@ -8,5 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserMailType extends EmailType
 {
-    
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'CelcatManagement\AppBundle\Entity\UserMail'
+        ));
+    }
 }
