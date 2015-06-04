@@ -8,9 +8,10 @@ use Doctrine\ORM\EntityManager;
 
 class CalendarEventListener
 {
+    private $schedulerManager;
     public function __construct()
     {
-    
+        $this->schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
     }
 
     public function loadEvents(CalendarEvent $calendarEvent)
@@ -18,14 +19,24 @@ class CalendarEventListener
         $startDate = $calendarEvent->getStartDatetime();
         $endDate = $calendarEvent->getEndDatetime();
         $url = $calendarEvent->getRequest()->request->get('urlPath');
-        $schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
-
-        $schedulerManager->parseAllSchedule($url);
         
-        $_SESSION['schedulerManager'] = serialize($schedulerManager);
-        $arrayWeeks = $schedulerManager->getArrayWeeks();
+        $this->schedulerManager->parseAllSchedule($url);
+        $arrayWeeks = $this->schedulerManager->getArrayWeeks();
         
-        
+        foreach ($arrayWeeks as $indexWeek => $week) {
+            foreach ($week->getArrayDays() as $indexDay => $day) {
+                foreach ($day->getArrayEvents() as $indexEvents => $events) {
+                    foreach ($events as $groupeName => $event) {
+                        $calendarEvent->addEvent($event);
+                    }
+                }
+            }
+        }
+    }
+    
+    public function refreshEvents(CalendarEvent $calendarEvent)
+    {
+        $arrayWeeks = $this->schedulerManager->getArrayWeeks();
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $events) {
