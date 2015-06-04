@@ -4,7 +4,6 @@ namespace CelcatManagement\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use CelcatManagement\AppBundle\Entity\ModelMail;
 use CelcatManagement\AppBundle\Form\ModelMailType;
 
@@ -12,29 +11,27 @@ use CelcatManagement\AppBundle\Form\ModelMailType;
  * ModelMail controller.
  *
  */
-class ModelMailController extends Controller
-{
+class ModelMailController extends Controller {
 
     /**
      * Lists all ModelMail entities.
      *
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findAll();
 
         return $this->render('CelcatManagementAppBundle:ModelMail:index.html.twig', array(
-            'entities' => $entities,
+                    'entities' => $entities,
         ));
     }
+
     /**
      * Creates a new ModelMail entity.
      *
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         $entity = new ModelMail();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -44,12 +41,12 @@ class ModelMailController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('modelmail_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('celcat_management_app_modelmail_show', array('id' => $entity->getId())));
         }
 
         return $this->render('CelcatManagementAppBundle:ModelMail:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+                    'entity' => $entity,
+                    'form' => $form->createView(),
         ));
     }
 
@@ -60,10 +57,9 @@ class ModelMailController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(ModelMail $entity)
-    {
+    private function createCreateForm(ModelMail $entity) {
         $form = $this->createForm(new ModelMailType(), $entity, array(
-            'action' => $this->generateUrl('modelmail_create'),
+            'action' => $this->generateUrl('celcat_management_app_modelmail_create'),
             'method' => 'POST',
         ));
 
@@ -76,14 +72,13 @@ class ModelMailController extends Controller
      * Displays a form to create a new ModelMail entity.
      *
      */
-    public function newAction()
-    {
+    public function newAction() {
         $entity = new ModelMail();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return $this->render('CelcatManagementAppBundle:ModelMail:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+                    'entity' => $entity,
+                    'form' => $form->createView(),
         ));
     }
 
@@ -91,8 +86,7 @@ class ModelMailController extends Controller
      * Finds and displays a ModelMail entity.
      *
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ModelMail')->find($id);
@@ -104,8 +98,8 @@ class ModelMailController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('CelcatManagementAppBundle:ModelMail:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -113,8 +107,7 @@ class ModelMailController extends Controller
      * Displays a form to edit an existing ModelMail entity.
      *
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ModelMail')->find($id);
@@ -127,23 +120,22 @@ class ModelMailController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('CelcatManagementAppBundle:ModelMail:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a ModelMail entity.
-    *
-    * @param ModelMail $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(ModelMail $entity)
-    {
+     * Creates a form to edit a ModelMail entity.
+     *
+     * @param ModelMail $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(ModelMail $entity) {
         $form = $this->createForm(new ModelMailType(), $entity, array(
-            'action' => $this->generateUrl('modelmail_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('celcat_management_app_modelmail_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -151,12 +143,12 @@ class ModelMailController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing ModelMail entity.
      *
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ModelMail')->find($id);
@@ -172,21 +164,21 @@ class ModelMailController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('modelmail_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('celcat_management_app_modelmail_show', array('id' => $id)));
         }
 
         return $this->render('CelcatManagementAppBundle:ModelMail:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a ModelMail entity.
      *
      */
-    public function deleteAction(Request $request, $id)
-    {
+    public function deleteAction(Request $request, $id) {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -200,9 +192,13 @@ class ModelMailController extends Controller
 
             $em->remove($entity);
             $em->flush();
+            return $this->redirect($this->generateUrl('celcat_management_app_modelmail'));
         }
 
-        return $this->redirect($this->generateUrl('modelmail'));
+        return $this->render('::Formulaire/supprimer.html.twig', array(
+                    'form' => $form->createView(),
+                    'btnAnnuler' => $this->generateUrl('celcat_management_app_modelmail'),
+        ));
     }
 
     /**
@@ -212,13 +208,12 @@ class ModelMailController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('modelmail_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
+                        ->setAction($this->generateUrl('celcat_management_app_modelmail_delete', array('id' => $id)))
+                        ->setMethod('DELETE')
+                        ->getForm()
         ;
     }
+
 }
