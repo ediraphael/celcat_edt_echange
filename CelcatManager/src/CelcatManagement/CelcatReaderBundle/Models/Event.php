@@ -24,7 +24,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
-        $this->formation = new ArrayCollection();
+        $this->formations = new ArrayCollection();
     }
 
     public function getIsDeleted() {
@@ -56,7 +56,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function addFormation($formation) {
-        $this->formations[] = $formation;
+        $this->formations->add($formation);
     }
 
     public function removeFormation($formation) {
@@ -150,7 +150,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      */
     public function toArray() {
         $event = parent::toArray();
-
         $event['room'] = $this->room;
         $event['category'] = $this->category;
         $event['module'] = $this->module;
