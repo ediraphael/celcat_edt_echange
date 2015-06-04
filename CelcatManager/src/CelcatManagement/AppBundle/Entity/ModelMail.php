@@ -7,13 +7,26 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ModelMail
  */
-class ModelMail extends Mail
-{
+class ModelMail extends Mail {
+
+    /**
+     * @var integer
+     */
+    private $id;
+
     /**
      * @var string
      */
     private $name;
 
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId() {
+        return $this->id;
+    }
 
     /**
      * Set name
@@ -21,8 +34,7 @@ class ModelMail extends Mail
      * @param string $name
      * @return ModelMail
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -33,8 +45,8 @@ class ModelMail extends Mail
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
+
 }

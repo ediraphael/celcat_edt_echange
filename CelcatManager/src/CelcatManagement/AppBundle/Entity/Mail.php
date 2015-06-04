@@ -10,11 +10,6 @@ namespace CelcatManagement\AppBundle\Entity;
 class Mail {
 
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
      * From adress
      * @var string 
      */
@@ -38,15 +33,7 @@ class Mail {
      */
     private $body;
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId() {
-        return $this->id;
-    }
-    
+        
     public function getFromAddress() {
         return $this->fromAddress;
     }

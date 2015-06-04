@@ -10,10 +10,25 @@ use Doctrine\ORM\Mapping as ORM;
 class UserMail extends Mail
 {
     /**
+     * @var integer
+     */
+    private $id;
+    
+    /**
      * @var \DateTime
      */
     private $sendDate = 'CURRENT_TIMESTAMP';
 
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
     /**
      * Set sendDate
      *
@@ -36,4 +51,5 @@ class UserMail extends Mail
     {
         return $this->sendDate;
     }
+    
 }
