@@ -1,0 +1,30 @@
+celcat_management_app_usermail:
+    path:     /
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:index" }
+
+celcat_management_app_usermail_show:
+    path:     /{id}/show
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:show" }
+
+celcat_management_app_usermail_new:
+    path:     /new
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:new" }
+
+celcat_management_app_usermail_create:
+    path:     /create
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:create" }
+    methods:  POST
+
+celcat_management_app_usermail_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:edit" }
+
+celcat_management_app_usermail_update:
+    path:     /{id}/update
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:update" }
+    methods:  [POST, PUT]
+
+celcat_management_app_usermail_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "CelcatManagementAppBundle:UserMail:delete" }
+    methods:  [POST, DELETE]
