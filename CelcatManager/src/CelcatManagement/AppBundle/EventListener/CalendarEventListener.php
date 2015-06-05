@@ -37,10 +37,20 @@ class CalendarEventListener {
 
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
 
+        $arrayIdTest = array(
+            '265036',
+            '269660'
+        );
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $event) {
                     if (!$event->isDeleted()) {
+                        
+                        if(in_array($event->getId(), $arrayIdTest)) {
+                            $event->addProfessor('PILLIE RAPHAEL');
+                            $event->addProfessor('POTTIER PIERRE-MARIE');
+                            $event->addProfessor('DAOUDI MOHAMED');
+                        }
                         $calendarEvent->addEvent($event);
                     }
                 }
