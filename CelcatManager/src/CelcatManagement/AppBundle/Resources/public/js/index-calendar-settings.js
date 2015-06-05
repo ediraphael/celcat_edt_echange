@@ -92,21 +92,8 @@ $(function () {
             // for all other views
             '': 'h:mm'         // 7p
         },
-//        eventSources: [
-//            {
-//                url: Routing.generate('fullcalendar_loader'),
-//                type: 'POST',
-//                // A way to add custom filters to your event listeners
-//                data: {
-//                    calendar: ''
-//                },
-//                error: function () {
-//                    //   alert('There was an error while fetching Google Calendar!');
-//                }
-//            }
-//        ],
         eventClick: function (calEvent, jsEvent, view) {
-            if(calEvent.canClick)
+            if(calEvent.canClick || two_selected_events.length > 0)
             {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
