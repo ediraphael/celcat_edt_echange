@@ -133,7 +133,8 @@ class Day {
             {
                 if($eventId != $event->getId())
                 {
-                    if (($startTime > $event->getStartTime() && $startTime < $event->getEndTime()) ||
+                    if (count($event->getProfessors()) == 0 || 
+                            ($startTime > $event->getStartTime() && $startTime < $event->getEndTime()) ||
                             ($endTime > $event->getStartTime() && $endTime < $event->getEndTime()) ||
                             ($startTime < $event->getStartTime() && $endTime > $event->getEndTime())) {
                         return false;
