@@ -39,7 +39,10 @@ class CalendarEventListener {
 
         $arrayIdTest = array(
             '265036',
-            '269660'
+            '269660',
+            '274487',
+            '274495',
+            '265415',
         );
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
@@ -50,6 +53,7 @@ class CalendarEventListener {
                             $event->addProfessor('PILLIE RAPHAEL');
                             $event->addProfessor('POTTIER PIERRE-MARIE');
                             $event->addProfessor('DAOUDI MOHAMED');
+                            $event->addFormation('2314');
                         }
                         $calendarEvent->addEvent($event);
                     }
