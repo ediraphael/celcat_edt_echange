@@ -95,7 +95,6 @@ class CalendarController extends Controller {
             }
         }
 
-
         $response->setContent(json_encode($return_events));
 
         return $response;
