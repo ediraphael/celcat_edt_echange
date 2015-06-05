@@ -89,6 +89,11 @@ class LDAPManager {
         return $this->search("(uid=$username)");
     }
     
+    /**
+     * Fonction de recherche d'utilisateur LDAP
+     * @param string $fullname
+     * @return null|Core\SearchResult
+     */
     function searchUserByFullName($fullname = "") {
         if($fullname == "" || $fullname == null) {
             return null;
@@ -97,6 +102,22 @@ class LDAPManager {
         $fullname = preg_replace('/[, ]/', '*', $fullname);
         return $this->search("(cn=$fullname)");
         
+    }
+    
+    function getUserByFullName($fullname = "") {
+        if($fullname == '' || $fullname == null) {
+            return null;
+        }
+        $searchResult = $this->searchUserByFullName($fullname);
+        while($searchResult->valid()) {
+            if($searchResult->current()->get('auaPopulation')->getValues()[0] != 'ETU') {
+                $user = new \CelcatManagement\AppBundle\Security\User($searchResult->current()->get('uid')->getValues()[0], '', '', array());
+                $user->hydrateWithLDAP($searchResult);
+                return $user;
+            }
+            $searchResult->next();
+        }
+        return null;
     }
     
     /**
