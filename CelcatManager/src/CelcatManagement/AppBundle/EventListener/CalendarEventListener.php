@@ -18,8 +18,19 @@ class CalendarEventListener {
         $startDate = $calendarEvent->getStartDatetime();
         $endDate = $calendarEvent->getEndDatetime();
         $url = $calendarEvent->getRequest()->request->get('urlPath');
+        $calendars = $calendarEvent->getRequest()->request->get('calendars');
 
-        $this->schedulerManager->parseAllSchedule($url);
+        if (is_array($calendars)) {
+            foreach ($calendars as $calendar) {
+                $path = $url . $calendar . '.xml';
+                $this->schedulerManager->parseAllSchedule($path);
+            }
+        }
+        else {
+            $path = $url . $calendars . '.xml';
+            $this->schedulerManager->parseAllSchedule($path);
+        }
+
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
 
         foreach ($arrayWeeks as $indexWeek => $week) {
