@@ -126,7 +126,7 @@ class Day {
      * @param type $formation_id
      * @return boolean
      */
-    public function canAddEvent($eventId, $startTime, $endTime, $formation_id) {
+    public function canAddEvent($eventId, $startTime, $endTime, $formation_id, $user) {
         if (isset($this->arrayEvents[$eventId]) && $this->arrayEvents[$eventId]) {
             $array_events = $this->getFormationEvents($formation_id);
             foreach ($array_events as $event)
@@ -136,6 +136,10 @@ class Day {
                     if (($startTime > $event->getStartTime() && $startTime < $event->getEndTime()) ||
                             ($endTime > $event->getStartTime() && $endTime < $event->getEndTime()) ||
                             ($startTime < $event->getStartTime() && $endTime > $event->getEndTime())) {
+                        return false;
+                    }
+                    if(!$user->calendarExists($event->getFormations()))
+                    {
                         return false;
                     }
                 }
