@@ -37,11 +37,10 @@ class CalendarController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
 
         $return_events = array();
-
+        $current_user = $this->getUser();
         foreach ($events as $event) {
-            $return_events[] = $event->toArray();
+            $return_events[] = $event->toArray($current_user->calendarExists($event->getFormations()));
         }
-
 
         $response->setContent(json_encode($return_events));
 
@@ -64,9 +63,9 @@ class CalendarController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         
         $return_events = array();
-        
+        $current_user = $this->getUser();
         foreach($events as $event) {
-            $return_events[] = $event->toArray();    
+            $return_events[] = $event->toArray($current_user->calendarExists($event->getFormations()));    
         }
         
         
@@ -109,6 +108,7 @@ class CalendarController extends Controller {
 
         $event_source = $schedulerManager->getWeekByTag($obj_event_source['week'])->getDayById($obj_event_source['day'])->getEventById($obj_event_source['id']);
         $result = array();
+        $current_user = $this->getUser();
         foreach ($obj_events_destination as $obj_event_destination)
         {
             $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);

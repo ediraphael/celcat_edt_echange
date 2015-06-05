@@ -230,7 +230,7 @@ class ScheduleManager {
      * @param type $event_destination
      * @return boolean
      */
-    public function canSwapEvent($event_source, $event_destination) {
+    public function canSwapEvent($event_source, $event_destination, $user) {
         $array_formations_ids = array();
         foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $event) {
                 if ($event->getId() == $event_destination->getId()) {
@@ -247,7 +247,7 @@ class ScheduleManager {
                 $convert = strtotime("+$minutes minutes", $convert);
                 $calculated_end_time = date('H:i', $convert);
                 if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
-                                ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id)) {
+                                ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id, $user)) {
                     return false;
                 }
             }

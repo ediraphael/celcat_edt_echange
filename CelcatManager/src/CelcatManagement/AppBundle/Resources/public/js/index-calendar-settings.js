@@ -265,11 +265,8 @@ function swapTwoEvents(event_source, event_destination)
         {
             if (response)
             {
-                console.log(two_selected_events);
                 refreshCalendarEvents();
                 two_selected_events = [];
-
-                console.log(two_selected_events);
             }
             else {
                 alert("Une erreur s'est produite lors du chagement des créneaux");
