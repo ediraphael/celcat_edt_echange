@@ -80,7 +80,8 @@ class CalendarController extends Controller {
     {
         $startDatetime = new \DateTime($request->request->get('start'));        
         $endDatetime = new \DateTime($request->request->get('end'));
-        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath') . $request->request->get('calendar');
+                
+        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath')  ;
         $request->request->add(array('urlPath' => $urlPath));
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
 
