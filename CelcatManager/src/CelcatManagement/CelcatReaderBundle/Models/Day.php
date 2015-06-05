@@ -138,10 +138,10 @@ class Day {
                             ($startTime < $event->getStartTime() && $endTime > $event->getEndTime())) {
                         return false;
                     }
-                    if(!$user->calendarExists($event->getFormations()))
-                    {
-                        return false;
-                    }
+//                    if(!$user->calendarExists($event->getFormations()))
+//                    {
+//                        return false;
+//                    }
                 }
             }
         }
