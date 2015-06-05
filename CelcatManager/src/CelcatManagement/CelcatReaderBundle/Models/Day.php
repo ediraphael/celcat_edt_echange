@@ -60,7 +60,7 @@ class Day {
      * @param string $eventId
      * @return Event|null
      */
-    public function getEventByIdInAllFormations($eventId) {
+    public function getEventById($eventId) {
         if (isset($this->arrayEvents[$eventId]) && $this->arrayEvents[$eventId]) {
             return $this->arrayEvents[$eventId];
         }
