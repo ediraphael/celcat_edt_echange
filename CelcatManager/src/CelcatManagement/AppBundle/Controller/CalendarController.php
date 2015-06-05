@@ -17,6 +17,24 @@ class CalendarController extends Controller {
 
         return $this->render('CelcatManagementAppBundle:Calendar:index.html.twig', array('groupList' => $groupManager->getGroupList()));
     }
+    
+    
+    public function userOwnThisEvent($event, $current_user, $ldapManager)
+    {
+        $eventProfessors = $event->getProfessors();
+        $userOwnThisEvent = false;
+        foreach ($eventProfessors as $eventProfessor) {
+            $indexArray = str_replace(",", "", $eventProfessor);
+            if (!isset($userProfessors[$indexArray]) || $userProfessors[$indexArray] != '') {
+                $userProfessor = $ldapManager->getUserByFullName($eventProfessor);
+                $userProfessors[$indexArray] = $userProfessor;
+            }
+            if ($userProfessors[$indexArray] != null && $userProfessors[$indexArray]->getUsername() == $current_user->getUsername()) {
+                $userOwnThisEvent = true;
+            }
+        }
+        return $userOwnThisEvent;
+    }
 
     /**
      * Dispatch a CalendarEvent and return a JSON Response of any events returned.
@@ -44,19 +62,7 @@ class CalendarController extends Controller {
         $current_user = $this->getUser();
         /* @var $current_user \CelcatManagement\AppBundle\Security\User */
         foreach ($events as $event) {
-            $eventProfessors = $event->getProfessors();
-            $userOwnThisEvent = false;
-            foreach ($eventProfessors as $eventProfessor) {
-                $indexArray = str_replace(",", "", $eventProfessor);
-                if (!isset($userProfessors[$indexArray]) || $userProfessors[$indexArray] != '') {
-                    $userProfessor = $ldapManager->getUserByFullName($eventProfessor);
-                    $userProfessors[$indexArray] = $userProfessor;
-                }
-                if ($userProfessors[$indexArray] != null && $userProfessors[$indexArray]->getUsername() == $current_user->getUsername()) {
-                    $userOwnThisEvent = true;
-                }
-            }
-            $return_events[] = $event->toArray($userOwnThisEvent);
+            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
         }
 
         $response->setContent(json_encode($return_events));
@@ -71,6 +77,7 @@ class CalendarController extends Controller {
      * @return Response
      */
     public function refreshCalendarAction(Request $request) {
+        $ldapManager = $this->get('ldap_manager');
         $startDatetime = new \DateTime($request->request->get('start'));
         $endDatetime = new \DateTime($request->request->get('end'));
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE_REFRESH, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
@@ -81,7 +88,7 @@ class CalendarController extends Controller {
         $return_events = array();
         $current_user = $this->getUser();
         foreach ($events as $event) {
-            $return_events[] = $event->toArray($current_user->calendarExists($event->getFormations()));
+            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
         }
 
 
@@ -91,6 +98,7 @@ class CalendarController extends Controller {
     }
 
     public function loadEventCalendarAction(Request $request) {
+        $ldapManager = $this->get('ldap_manager');
         $startDatetime = new \DateTime($request->request->get('start'));
         $endDatetime = new \DateTime($request->request->get('end'));
 
@@ -105,7 +113,7 @@ class CalendarController extends Controller {
         $current_user = $this->getUser();
         foreach ($events as $event) {
             if ($current_user->calendarExists($event->getFormations())) {
-                $return_events[$event->getId()] = $event->toArray();
+                $return_events[$event->getId()] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
             }
         }
 
