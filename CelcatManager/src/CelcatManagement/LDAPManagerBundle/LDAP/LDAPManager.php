@@ -89,6 +89,16 @@ class LDAPManager {
         return $this->search("(uid=$username)");
     }
     
+    function searchUserByFullName($fullname = "") {
+        if($fullname == "" || $fullname == null) {
+            return null;
+        }
+        
+        $fullname = preg_replace('/[, ]/', '*', $fullname);
+        return $this->search("(cn=$fullname)");
+        
+    }
+    
     /**
      * Fonction de recherche LDAP
      * @param string $filter Filtre de recherche LDAP
