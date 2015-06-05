@@ -41,7 +41,7 @@ class GroupManager {
                     if ($option->attributes->getNamedItem('value')) {
                         $group = new Group();
                         $group->setName($option->nodeValue);
-                        $group->setXmlFile(str_replace('.html', '.xml', $option->attributes->getNamedItem('value')->nodeValue));
+                        $group->setXmlFile(str_replace('.html', '', $option->attributes->getNamedItem('value')->nodeValue));
                         $this->groupList[] = $group;
                     }
                 }
