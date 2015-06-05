@@ -103,26 +103,49 @@ class Day {
         }
         return false;
     }
+    
+    
+    public function getFormationEvents($formation_id)
+    {
+        $array_events = array();
+        foreach ($this->arrayEvents as $event)
+        {
+            if($event->getFormations()->contains($formation_id))
+            {
+                $array_events[] = $event;
+            }
+        }
+        return $array_events;
+    }
 
     /**
      * 
-     * @param string $eventId
-     * @param string $startTime
-     * @param string $endTime
+     * @param type $eventId
+     * @param type $startTime
+     * @param type $endTime
+     * @param type $formation_id
      * @return boolean
      */
-    public function canAddEvent($eventId, $startTime, $endTime) {
-        if (isset($this->arrayEvents[$event_id]) && $this->arrayEvents[$event_id]) {
-            $event = $this->arrayEvents[$event_id];
-            if (($startTime > $event->getStartTime() && $startTime < $event->getEndTime()) ||
-                    ($endTime > $event->getStartTime() && $endTime < $event->getEndTime()) ||
-                    ($startTime < $event->getStartTime() && $endTime > $event->getEndTime())) {
-                return false;
+    public function canAddEvent($eventId, $startTime, $endTime, $formation_id) {
+        if (isset($this->arrayEvents[$eventId]) && $this->arrayEvents[$eventId]) {
+            $array_events = $this->getFormationEvents($formation_id);
+            foreach ($array_events as $event)
+            {
+                if($eventId != $event->getId())
+                {
+                    if (($startTime > $event->getStartTime() && $startTime < $event->getEndTime()) ||
+                            ($endTime > $event->getStartTime() && $endTime < $event->getEndTime()) ||
+                            ($startTime < $event->getStartTime() && $endTime > $event->getEndTime())) {
+                        return false;
+                    }
+                }
             }
         }
 
         return true;
     }
+    
+     
 
     /**
      * 
