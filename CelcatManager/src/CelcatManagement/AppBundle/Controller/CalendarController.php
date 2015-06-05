@@ -111,7 +111,6 @@ class CalendarController extends Controller {
         foreach ($obj_events_destination as $obj_event_destination)
         {
             $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
-            print_r($event_destination);
             $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination));
         }
         
