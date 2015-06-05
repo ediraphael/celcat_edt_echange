@@ -11,7 +11,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     private $day;
     private $week;
     private $module;
-    private $professor;
+    private $professors;
     private $group;
     private $note;
 
@@ -25,6 +25,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
         $this->formations = new ArrayCollection();
+        $this->professors = new ArrayCollection();
     }
 
     public function getIsDeleted() {
@@ -104,8 +105,8 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         return $this->module;
     }
 
-    public function getProfessor() {
-        return $this->professor;
+    public function getProfessors() {
+        return $this->professors;
     }
 
     public function getGroup() {
@@ -140,8 +141,25 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->module = $module;
     }
 
-    public function setProfessor($professor) {
-        $this->professor = $professor;
+    public function setProfessors($professors) {
+        $this->professors = $professors;
+    }
+    
+    public function addProfessor($professor) {
+        if(is_array($professor) || $professor instanceof ArrayCollection) {
+            foreach ($professor as $prof) {
+                if($prof != '' && !$this->professors->contains($prof)) {
+                    $this->professors->add($prof);
+                }
+            }
+        }
+        elseif ($professor != '' && !$this->professors->contains($professor)) {
+            $this->professors->add($professor);
+        }
+    }
+    
+    public function removeProfessor($professor) {
+        $this->professors->removeElement($professor);
     }
 
     public function setGroup($group) {
@@ -162,7 +180,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $event['room'] = $this->room;
         $event['category'] = $this->category;
         $event['module'] = $this->module;
-        $event['professor'] = $this->professor;
+        $event['professors'] = $this->professors->toArray();
         $event['group'] = $this->group;
         $event['note'] = $this->note;
         $event['formations'] = $this->formations->toArray();

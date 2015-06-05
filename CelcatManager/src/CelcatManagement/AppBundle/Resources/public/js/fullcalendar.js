@@ -6297,9 +6297,9 @@ TimeGrid.mixin({
 						'</div>' :
 						''
 						) +
-					(event.professor ?
+					(event.professors ?
 						'<div class="fc-title">' +
-							htmlEscape(event.professor) +
+							htmlEscape(event.professors) +
 						'</div>' :
 						''
 						) +
