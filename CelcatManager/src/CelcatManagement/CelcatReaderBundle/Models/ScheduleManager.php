@@ -157,7 +157,10 @@ class ScheduleManager {
                     $event->setNote($this->parseEventNodeItems($crawler, "//notes"));
                 }
                 if ($crawler->filterXPath("//staff/item")->count() > 0) {
-                    $event->setProfessor($this->parseEventNodeItems($crawler, "//staff/item"));
+                    $professors = explode(";", $this->parseEventNodeItems($crawler, "//staff/item"));
+                    foreach ($professors as $professor) {
+                        $event->addProfessor($professor);
+                    }
                 }
                 if ($crawler->filterXPath("//prettytimes")->count() > 0) {
                     $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
