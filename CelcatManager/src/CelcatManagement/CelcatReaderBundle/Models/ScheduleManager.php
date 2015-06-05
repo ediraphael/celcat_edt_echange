@@ -35,6 +35,10 @@ class ScheduleManager {
         $this->arrayWeeks[] = $week;
         $_SESSION['schedulerManager'] = serialize($this);
     }
+    
+    public function freeWeeks() {
+        $this->arrayWeeks = array();
+    }
 
     public function weekExists($week_id) {
         foreach ($this->arrayWeeks as $week) {
