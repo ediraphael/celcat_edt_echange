@@ -235,16 +235,18 @@ class ScheduleManager {
                 }
             }
         }
-        foreach ($array_formations_ids as $formation_id) {
-            $duree_event_destination = gmdate('H:i', strtotime($event_destination->getEndTime()) - strtotime($event_destination->getStartTime()));
-            $hours = explode(":", $duree_event_destination)[0];
-            $minutes = explode(":", $duree_event_destination)[1];
-            $convert = strtotime("+$hours hours", strtotime($event_source->getStartTime()));
-            $convert = strtotime("+$minutes minutes", $convert);
-            $calculated_end_time = date('H:i', $convert);
-            if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
-                            ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id)) {
-                return false;
+        foreach ($array_formations_ids as $formation_ids) {
+            foreach ($formation_ids as $formation_id) {
+                $duree_event_destination = gmdate('H:i', strtotime($event_destination->getEndTime()) - strtotime($event_destination->getStartTime()));
+                $hours = explode(":", $duree_event_destination)[0];
+                $minutes = explode(":", $duree_event_destination)[1];
+                $convert = strtotime("+$hours hours", strtotime($event_source->getStartTime()));
+                $convert = strtotime("+$minutes minutes", $convert);
+                $calculated_end_time = date('H:i', $convert);
+                if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
+                                ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id)) {
+                    return false;
+                }
             }
         }
         return true;
