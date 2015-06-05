@@ -186,7 +186,7 @@ function reloadCalendarEvents(calEvent, arrayEvents)
             }
         },
         error: function (req, status, error) {
-            console.err(error);
+            console.error(error);
         }
     });
 }
@@ -207,7 +207,7 @@ function canSwapTwoEvents(event_source, array_events_destination)
             result = response;
         },
         error: function (req, status, error) {
-            console.err(error);
+            console.error(error);
         }
     });
     return result;
@@ -276,7 +276,7 @@ function swapTwoEvents(event_source, event_destination)
             }
         },
         error: function (req, status, error) {
-            console.err(error);
+            console.error(error);
         }
     });
 }
