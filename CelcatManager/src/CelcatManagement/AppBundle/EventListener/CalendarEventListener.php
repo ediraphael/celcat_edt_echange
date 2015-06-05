@@ -27,7 +27,11 @@ class CalendarEventListener {
             }
         }
         else {
-            $path = $url . $calendars . '.xml';
+            if(!preg_match('/\?/', $url)) {
+                $path = $url . $calendars . '.xml';
+            } else {
+                $path = $url;
+            }
             $this->schedulerManager->parseAllSchedule($path);
         }
 
