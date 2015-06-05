@@ -59,7 +59,7 @@ class User implements UserInterface {
      * @var string 
      */
     private $groupName;
-    
+
     /**
      * Calendrier utilisateur
      * @var \Doctrine\Common\Collections\Collection
@@ -149,12 +149,12 @@ class User implements UserInterface {
     public function getIdentifier() {
         $matches = array();
         preg_match('/[0-9]0*([0-9]*)/', $this->getGidNumber(), $matches);
-        if(count($matches) > 1) {
+        if (count($matches) > 1) {
             return $matches[1];
         }
         return null;
     }
-    
+
     public function getCalendars() {
         return $this->calendars;
     }
@@ -167,35 +167,30 @@ class User implements UserInterface {
 
     public function addCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
         $this->calendars[] = $calendar;
-        
+
         return $this;
     }
-    
-    
+
     /**
      * 
      * @param type $formation
      * @return boolean
      */
-    public function calendarExists($formation)
-    {
-        foreach ($this->calendars as $calendar)
-        {
-            if($formation->contains($calendar->getCalendarFile()))
-            {
+    public function calendarExists($formation) {
+        foreach ($this->calendars as $calendar) {
+            if ($formation->contains($calendar->getCalendarFile())) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public function removeCalendar(\CelcatManagement\AppBundle\Entity\UserCalendars $calendar) {
         $this->calendars->removeElement($calendar);
-        
+
         return $this;
     }
-    
-    
+
     public function eraseCredentials() {
         
     }
@@ -218,11 +213,21 @@ class User implements UserInterface {
 
     public function hydrateWithLDAP(\CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult $userLDAP) {
         if ($userLDAP != null) {
-            $this->setGidNumber($userLDAP->current()->get('gidNumber')->getValues()[0]);
-            $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
-            $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
-            $this->setGroup($userLDAP->current()->get('auaPopulation')->getValues()[0]);
-            $this->setGroupName($userLDAP->current()->get('title')->getValues()[0]);
+            if ($this->setGidNumber($userLDAP->current()->get('gidNumber')) != null) {
+                $this->setGidNumber($userLDAP->current()->get('gidNumber')->getValues()[0]);
+            }
+            if ($this->setGidNumber($userLDAP->current()->get('cn')) != null) {
+                $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
+            }
+            if ($this->setGidNumber($userLDAP->current()->get('mail')) != null) {
+                $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
+            }
+            if ($this->setGidNumber($userLDAP->current()->get('auaPopulation')) != null) {
+                $this->setGroup($userLDAP->current()->get('auaPopulation')->getValues()[0]);
+            }
+            if ($this->setGidNumber($userLDAP->current()->get('title')) != null) {
+                $this->setGroupName($userLDAP->current()->get('title')->getValues()[0]);
+            }
         }
     }
 
