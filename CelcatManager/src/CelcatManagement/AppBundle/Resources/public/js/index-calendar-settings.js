@@ -20,7 +20,7 @@ function addCalendarEventSource(calendarFile) {
                     type: 'POST',
                     // A way to add custom filters to your event listeners
                     data: {
-                        calendar: calendarFile
+                        calendars: calendarFile
                     },
                     error: function () {
                         //   alert('There was an error while fetching Google Calendar!');
@@ -138,7 +138,7 @@ $(function () {
             else if (two_selected_events.length == 2)
             {
                 var array_objects_events = new Array();
-                array_objects_events.push({id: two_selected_events[1].id, day: two_selected_events[1].day, week: two_selected_events[1].week, formation: two_selected_events[1].formation});
+                array_objects_events.push({id: two_selected_events[1].id, day: two_selected_events[1].day, week: two_selected_events[1].week, formations: two_selected_events[1].formations});
                 if (canSwapTwoEvents(two_selected_events[0], array_objects_events)[0].result)
                 {
                     if (confirm("Voulez vous vraiment échanger ces deux évennements?")) {
@@ -173,9 +173,9 @@ function reloadCalendarEvents(calEvent, arrayEvents)
     $.ajax({
         type: "POST",
         async: false,
-        url: Routing.generate('event_calendar_refresh'),
+        url: Routing.generate('event_calendar_loader'),
         data: {
-            calendar: calEvent.formation + '.xml'
+            calendars: calEvent.formations
         },
         success: function (response)
         {
@@ -199,7 +199,7 @@ function canSwapTwoEvents(event_source, array_events_destination)
         async: false,
         url: Routing.generate('can_swap_two_events'),
         data: {
-            event_source: {id: event_source.id, day: event_source.day, week: event_source.week, formation: event_source.formation},
+            event_source: {id: event_source.id, day: event_source.day, week: event_source.week, formations: event_source.formations},
             events_destination: array_events_destination
         },
         success: function (response)
@@ -233,7 +233,7 @@ function markUpAlterableEvents(calEvent)
     {
         if (array_events_calendar[i].id != calEvent.id)
         {
-            array_objects_events.push({id: array_events_calendar[i].id, day: array_events_calendar[i].day, week: array_events_calendar[i].week, formation: array_events_calendar[i].formation});
+            array_objects_events.push({id: array_events_calendar[i].id, day: array_events_calendar[i].day, week: array_events_calendar[i].week, formations: array_events_calendar[i].formations});
         }
 
     }
@@ -258,8 +258,8 @@ function swapTwoEvents(event_source, event_destination)
         async: false,
         url: Routing.generate('swap_two_events'),
         data: {
-            event_source: {id: event_source.id, day: event_source.day, week: event_source.week, formation: event_source.formation},
-            event_destination: {id: event_destination.id, day: event_destination.day, week: event_destination.week, formation: event_destination.formation}
+            event_source: {id: event_source.id, day: event_source.day, week: event_source.week},
+            event_destination: {id: event_destination.id, day: event_destination.day, week: event_destination.week}
         },
         success: function (response)
         {
