@@ -180,7 +180,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $event['room'] = $this->room;
         $event['category'] = $this->category;
         $event['module'] = $this->module;
-        $event['professors'] = $this->professors;
+        $event['professors'] = $this->professors->toArray();
         $event['group'] = $this->group;
         $event['note'] = $this->note;
         $event['formations'] = $this->formations->toArray();
