@@ -35,7 +35,7 @@ class ScheduleManager {
         $this->arrayWeeks[] = $week;
         $_SESSION['schedulerManager'] = serialize($this);
     }
-    
+
     public function freeWeeks() {
         $this->arrayWeeks = array();
     }
@@ -182,14 +182,15 @@ class ScheduleManager {
         preg_match("/([^.\/]*)\.xml/", $url, $matches);
         if (count($matches) > 0) {
             $formation_id = $matches[1];
-        }
-        else {
+        } else {
             preg_match("/\=([0-9]+)&/", $url, $matches);
             $formation_id = $matches[1];
         }
-        $file_contents = file_get_contents($url);
-        $this->parseWeeks($file_contents);
-        $this->parseEvents($file_contents, $formation_id);
+        if ($formation_id[0] == 'g') {
+            $file_contents = file_get_contents($url);
+            $this->parseWeeks($file_contents);
+            $this->parseEvents($file_contents, $formation_id);
+        }
         $_SESSION['schedulerManager'] = serialize($this);
     }
 
@@ -233,13 +234,12 @@ class ScheduleManager {
      * @param type $event_destination
      * @return boolean
      */
-    public function canSwapEvent($event_source, $event_destination, $user) {
+    public function canSwapEvent(&$event_source, &$event_destination, $user) {
         $array_formations_ids = array();
         foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $event) {
-                if ($event->getId() == $event_destination->getId()) {
-                    $array_formations_ids[] = $event->getFormations();
-                }
-            
+            if ($event->getId() == $event_destination->getId()) {
+                $array_formations_ids[] = $event->getFormations();
+            }
         }
         foreach ($array_formations_ids as $formation_ids) {
             foreach ($formation_ids as $formation_id) {
@@ -251,10 +251,16 @@ class ScheduleManager {
                 $calculated_end_time = date('H:i', $convert);
                 if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
                                 ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id, $user)) {
+//                    $event_source->setBgColor("orange");
+//                    $event_destination->setBgColor("");
+//                    $_SESSION['schedulerManager'] = serialize($this);
                     return false;
                 }
             }
         }
+//        $event_source->setBgColor("orange");
+//        $event_destination->setBgColor("green");
+//        $_SESSION['schedulerManager'] = serialize($this);
         return true;
     }
 
