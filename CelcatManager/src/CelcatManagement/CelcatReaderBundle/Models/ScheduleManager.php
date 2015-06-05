@@ -232,12 +232,11 @@ class ScheduleManager {
      */
     public function canSwapEvent($event_source, $event_destination) {
         $array_formations_ids = array();
-        foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $events) {
-            foreach ($events as $event) {
+        foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $event) {
                 if ($event->getId() == $event_destination->getId()) {
                     $array_formations_ids[] = $event->getFormations();
                 }
-            }
+            
         }
         foreach ($array_formations_ids as $formation_ids) {
             foreach ($formation_ids as $formation_id) {
