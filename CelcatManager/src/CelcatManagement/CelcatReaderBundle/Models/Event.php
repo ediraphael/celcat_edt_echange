@@ -157,7 +157,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * 
      * @return array $event 
      */
-    public function toArray() {
+    public function toArray($canClick = true) {
         $event = parent::toArray();
         $event['room'] = $this->room;
         $event['category'] = $this->category;
@@ -168,6 +168,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $event['formations'] = $this->formations->toArray();
         $event['day'] = $this->day;
         $event['week'] = $this->week;
+        $event['canClick'] = $canClick;
         return $event;
     }
 
