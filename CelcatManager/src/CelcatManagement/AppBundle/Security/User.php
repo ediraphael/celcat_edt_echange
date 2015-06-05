@@ -213,19 +213,19 @@ class User implements UserInterface {
 
     public function hydrateWithLDAP(\CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult $userLDAP) {
         if ($userLDAP != null) {
-            if ($this->setGidNumber($userLDAP->current()->get('gidNumber')) != null) {
+            if ($userLDAP->current()->get('gidNumber') != null) {
                 $this->setGidNumber($userLDAP->current()->get('gidNumber')->getValues()[0]);
             }
-            if ($this->setGidNumber($userLDAP->current()->get('cn')) != null) {
+            if ($userLDAP->current()->get('cn') != null) {
                 $this->setFullName($userLDAP->current()->get('cn')->getValues()[0]);
             }
-            if ($this->setGidNumber($userLDAP->current()->get('mail')) != null) {
+            if ($userLDAP->current()->get('mail') != null) {
                 $this->setMail($userLDAP->current()->get('mail')->getValues()[0]);
             }
-            if ($this->setGidNumber($userLDAP->current()->get('auaPopulation')) != null) {
+            if ($userLDAP->current()->get('auaPopulation') != null) {
                 $this->setGroup($userLDAP->current()->get('auaPopulation')->getValues()[0]);
             }
-            if ($this->setGidNumber($userLDAP->current()->get('title')) != null) {
+            if ($userLDAP->current()->get('title') != null) {
                 $this->setGroupName($userLDAP->current()->get('title')->getValues()[0]);
             }
         }
