@@ -181,7 +181,7 @@ class User implements UserInterface {
     {
         foreach ($this->calendars as $calendar)
         {
-            if(explode(".", $calendar->getCalendarFile())[0] == $formation)
+            if($formation->contains($calendar->getCalendarFile()))
             {
                 return true;
             }
