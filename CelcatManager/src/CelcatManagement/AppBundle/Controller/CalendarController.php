@@ -27,10 +27,9 @@ class CalendarController extends Controller {
     public function loadCalendarAction(Request $request) {
         $startDatetime = new \DateTime($request->request->get('start'));
         $endDatetime = new \DateTime($request->request->get('end'));
-        $urlPath = $request->request->get('calendar');
-        if ((substr($urlPath, 0, 4) !== 'http')) {
-            $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath') . $urlPath;
-        }
+
+        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath');
+        
         $request->request->add(array('urlPath' => $urlPath));
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
 
@@ -80,7 +79,7 @@ class CalendarController extends Controller {
         $startDatetime = new \DateTime($request->request->get('start'));        
         $endDatetime = new \DateTime($request->request->get('end'));
                 
-        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath')  ;
+        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath');
         $request->request->add(array('urlPath' => $urlPath));
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
 
@@ -112,8 +111,8 @@ class CalendarController extends Controller {
         foreach ($obj_events_destination as $obj_event_destination)
         {
             $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
-            print_r($event_destination->getFormations());
-            $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination, $current_user));
+            print_r($event_destination);
+            $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination));
         }
         
         $response = new \Symfony\Component\HttpFoundation\Response();
