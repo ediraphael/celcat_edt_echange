@@ -109,8 +109,13 @@ class LDAPManager {
             return null;
         }
         $searchResult = $this->searchUserByFullName($fullname);
+        $tabException = array(
+            'rpillie',
+            'mdaoudi',
+            'p.pottier'
+        );
         while($searchResult->valid()) {
-            if($searchResult->current()->get('auaPopulation')->getValues()[0] != 'ETU') {
+            if($searchResult->current()->get('auaPopulation')->getValues()[0] != 'ETU'  || in_array($searchResult->current()->get('uid')->getValues()[0],$tabException)) {
                 $user = new \CelcatManagement\AppBundle\Security\User($searchResult->current()->get('uid')->getValues()[0], '', '', array());
                 $user->hydrateWithLDAP($searchResult);
                 return $user;

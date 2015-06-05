@@ -52,7 +52,7 @@ class CalendarController extends Controller {
                     $userProfessor = $ldapManager->getUserByFullName($eventProfessor);
                     $userProfessors[$indexArray] = $userProfessor;
                 }
-                if ($userProfessors[$indexArray]->getUsername() == $current_user->getUsername()) {
+                if ($userProfessors[$indexArray] != null && $userProfessors[$indexArray]->getUsername() == $current_user->getUsername()) {
                     $userOwnThisEvent = true;
                 }
             }
