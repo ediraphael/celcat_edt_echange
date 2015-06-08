@@ -93,52 +93,54 @@ $(function () {
             '': 'h:mm'         // 7p
         },
         eventClick: function (calEvent, jsEvent, view) {
-            if(calEvent.canClick || two_selected_events.length > 0)
+            if(calEvent.canClick || (two_selected_events.length > 0))
             {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
-                if (calEvent.color == "orange")
+                if (calEvent.color == "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == calEvent.id))
                 {
                     calEvent.color = "";
                     calEvent.editable = false;
                     if (two_selected_events[0] != undefined && two_selected_events[0].id == calEvent.id)
+                    { 
                         two_selected_events.splice(0, 1);
+                    }
                     if (two_selected_events[1] != undefined && two_selected_events[1].id == calEvent.id)
+                    {
                         two_selected_events.splice(1, 1);
+                    }
                 }
                 else
                 {
                     calEvent.color = "orange";
                     calEvent.editable = true;
                     if (two_selected_events.length < 2)
-                        two_selected_events.push(calEvent);
-                    if (two_selected_events.length < 2)
                     {
-                        //chargement des créneaux liés a la formation du créneau selectionné
-                        reloadCalendarEvents(calEvent, arrayEvents);
+                        two_selected_events.push(calEvent);
                     }
                 }
                 //récupération de tous les créneaux du calendrié + vérification de la possibilité de swap
                 if (two_selected_events.length == 1 && calEvent.color == "orange")
                 {
                     markUpAlterableEvents(calEvent);
+                    //chargement des créneaux liés a la formation du créneau selectionné
+                    reloadCalendarEvents(calEvent, arrayEvents);
                 }
                 //dans le cas ou on choisi deux créneaux pour les swapé
                 else if (two_selected_events.length == 2)
                 {
                     var array_objects_events = new Array();
                     array_objects_events.push({id: two_selected_events[1].id, day: two_selected_events[1].day, week: two_selected_events[1].week, formations: two_selected_events[1].formations});
-                    if (canSwapTwoEvents(two_selected_events[0], array_objects_events)[0].result)
+                    if (calEvent.color = "green")
                     {
                         if (confirm("Voulez vous vraiment échanger ces deux évennements?")) {
                             swapTwoEvents(two_selected_events[0], two_selected_events[1]);
                         }
                         else {
-                            calEvent.color = "";
-                            two_selected_events.splice(1, 1);
-                            two_selected_events[0].color = "";
-                            resetEventsColor(two_selected_events[0]);
                             two_selected_events.splice(0, 1);
+                            two_selected_events.splice(1, 1);
+                            two_selected_events = [];
+                            loadCalendarEvents($('#groupe_select'));
                         }
                     }
                 }
@@ -146,11 +148,10 @@ $(function () {
                 else
                 {
                     if (two_selected_events.length == 0)
-                    {
-                        resetEventsColor(calEvent);
+                    { 
+                        loadCalendarEvents($('#groupe_select'));
                     }
                 }
-                $('#calendar-holder').fullCalendar('addEventSource', arrayEvents);
             }
         }
     });
@@ -158,6 +159,7 @@ $(function () {
 });
 
 
+//chargement des créneaux liés à la formation du créneau selectionné
 function reloadCalendarEvents(calEvent, arrayEvents)
 {
     $.ajax({
@@ -171,9 +173,11 @@ function reloadCalendarEvents(calEvent, arrayEvents)
         {
             for (var i = 0; i < response.length; i++)
             {
-                response[i].color = "red";
+                response[i].backgroundColor = "red";
+                response[i].editable = false;
                 arrayEvents.push(response[i]);
             }
+            $('#calendar-holder').fullCalendar('addEventSource', arrayEvents);
         },
         error: function (req, status, error) {
             console.error(error);
@@ -186,7 +190,7 @@ function canSwapTwoEvents(event_source, array_events_destination)
     var result = false;
     $.ajax({
         type: "POST",
-        async: false,
+        async: true,
         url: Routing.generate('can_swap_two_events'),
         data: {
             event_source: {id: event_source.id, day: event_source.day, week: event_source.week, formations: event_source.formations},
@@ -195,24 +199,13 @@ function canSwapTwoEvents(event_source, array_events_destination)
         success: function (response)
         {
             result = response;
+            refreshCalendarEvents();
         },
         error: function (req, status, error) {
             console.error(error);
         }
     });
     return result;
-}
-
-function resetEventsColor(calEvent)
-{
-    var array_events_calendar = $('#calendar-holder').fullCalendar('clientEvents');
-    for (var i = 0; i < array_events_calendar.length; i++)
-    {
-        if (array_events_calendar[i].id != calEvent.id)
-        {
-            array_events_calendar[i].color = "";
-        }
-    }
 }
 
 function markUpAlterableEvents(calEvent)
@@ -225,20 +218,8 @@ function markUpAlterableEvents(calEvent)
         {
             array_objects_events.push({id: array_events_calendar[i].id, day: array_events_calendar[i].day, week: array_events_calendar[i].week, formations: array_events_calendar[i].formations});
         }
-
     }
-    var array_return_values = canSwapTwoEvents(two_selected_events[0], array_objects_events);
-    for (var i = 0; i < array_return_values.length; i++)
-    {
-        if (array_return_values[i].result)
-        {
-            for (var j = 0; j < array_events_calendar.length; j++)
-            {
-                if (array_events_calendar[j].id == array_return_values[i].id)
-                    array_events_calendar[j].color = "green";
-            }
-        }
-    }
+    canSwapTwoEvents(two_selected_events[0], array_objects_events);
 }
 
 function swapTwoEvents(event_source, event_destination)
@@ -255,7 +236,7 @@ function swapTwoEvents(event_source, event_destination)
         {
             if (response)
             {
-                refreshCalendarEvents();
+                loadCalendarEvents($('#groupe_select'));
                 two_selected_events = [];
             }
             else {
