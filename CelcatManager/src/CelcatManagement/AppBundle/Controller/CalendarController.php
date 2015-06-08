@@ -105,7 +105,7 @@ class CalendarController extends Controller {
         
         $return_events = array();
         foreach ($scheduleModifications as $cle => $scheduleModification) {
-            $return_events[$cle] = $scheduleModification->toArray();
+            $return_events[] = $scheduleModification->toArray();
         }
         
         $response = new \Symfony\Component\HttpFoundation\Response();
