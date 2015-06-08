@@ -65,6 +65,12 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var boolean 
      */
     private $isDeleted = false;
+    
+    /**
+     *
+     * @var boolean 
+     */
+    private $isSwapable = false;
 
     /**
      *
@@ -245,8 +251,28 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         }
         parent::setBgColor($color);
     }
-   
+    
+    public function getIsSwapable() {
+        return $this->isSwapable;
+    }
 
+    public function setIsSwapable($isSwapable) {
+        $this->isSwapable = $isSwapable;
+        return $this;
+    }
+
+    public function swapable() {
+        $this->isSwapable = true;
+    }   
+
+    public function unswapable() {
+        $this->isSwapable = false;
+    }
+    
+    public function isSwapable() {
+        return $this->isSwapable;
+    }
+    
         /**
      * Convert calendar event details to an array
      * 
