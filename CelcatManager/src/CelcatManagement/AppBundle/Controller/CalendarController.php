@@ -53,7 +53,7 @@ class CalendarController extends Controller {
         $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath');
 
         $request->request->add(array('urlPath' => $urlPath));
-        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
+        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -91,7 +91,7 @@ class CalendarController extends Controller {
         $ldapManager = $this->get('ldap_manager');
         $startDatetime = new \DateTime($request->request->get('start'));
         $endDatetime = new \DateTime($request->request->get('end'));
-        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE_REFRESH, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
+        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE_REFRESH, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -131,7 +131,7 @@ class CalendarController extends Controller {
 
         $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath');
         $request->request->add(array('urlPath' => $urlPath));
-        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
+        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
