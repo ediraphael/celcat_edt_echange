@@ -6,5 +6,5 @@ function loadCalendarEvents(objet) {
 }
 
 $(function () {
-    loadCalendarEvents($('#groupe_select'));
+    refreshCalendarEvents();
 });
