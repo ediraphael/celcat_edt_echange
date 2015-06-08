@@ -1,4 +1,5 @@
 var two_selected_events = new Array();
+var removed_schedule_modification = null; 
 
 function refreshCalendarEvents() {
     removeCalendarEvents();
@@ -48,6 +49,10 @@ function refreshCalendarEventSource() {
         };
 
     }
+    
+    if(removed_schedule_modification) {
+        data['removed_schedule_modification'] = removed_schedule_modification;
+    }
 
     eventSources =
             {
@@ -94,7 +99,7 @@ function loadCalendarModifications()
             for (i = 0; i < response.length; i++) {
                 $('#schedule_modification_container').append("" +
                         "<div class=\"alert alert-info alert-dismissible\" role=\"alert\">" +
-                        "<button type\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "<button type\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onClick=\"removeScheduleModification('"+response[i].firstEvent.id+"')\"><span aria-hidden=\"true\">&times;</span></button>" +
                         "<strong>" + response[i].modificationType + "</strong>  " + response[i].firstEvent.title + " <-> " + response[i].secondEvent.title +
                         "</div>"
                         );
@@ -104,6 +109,12 @@ function loadCalendarModifications()
             console.error(error);
         }
     });
+}
+
+function removeScheduleModification(eventId) {
+    removed_schedule_modification = eventId;
+    refreshCalendarEvents();
+    removed_schedule_modification = null;
 }
 
 $(function () {
@@ -136,24 +147,31 @@ $(function () {
             if ((calEvent.canClick || (two_selected_events.length > 0)) && calEvent.backgroundColor != "purple") {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
-                if (calEvent.color == "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == calEvent.id)) {
+                if (calEvent.backgroundColor === "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == calEvent.id)) {
 
-                    two_selected_events = [];
+                    two_selected_events  = new Array();
                 }
                 else {
                     two_selected_events.push(calEvent);
                 }
 
                 if (two_selected_events.length == 2) {
-                    if (calEvent.color = "green") {
+     
+                    if (calEvent.backgroundColor === "green") {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
-                            two_selected_events = [];
+                            two_selected_events  = new Array();
                         }
                         refreshCalendarEvents();
-                        two_selected_events = [];
+                        two_selected_events  = new Array();
+                    }
+                    else {
+                        two_selected_events.splice(1,1);
+                        $(this).toggleClass("selected_event");
                     }
                 }
-                refreshCalendarEvents();
+                else {
+                    refreshCalendarEvents();
+                }
             }
         }
     });
