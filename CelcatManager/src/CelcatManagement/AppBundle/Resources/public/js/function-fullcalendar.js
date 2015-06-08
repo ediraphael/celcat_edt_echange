@@ -64,32 +64,6 @@ function refreshCalendarEventSource() {
 
 }
 
-function reloadCalendarEvents(calEvent, arrayEvents)
-{
-    $.ajax({
-        type: "POST",
-        async: false,
-        url: Routing.generate('event_calendar_loader'),
-        data: {
-            calendars: calEvent.formations
-        },
-        success: function (response)
-        {
-            for (var i = 0; i < response.length; i++)
-            {
-                response[i].backgroundColor = "red";
-                response[i].editable = false;
-                arrayEvents.push(response[i]);
-            }
-            $('#calendar-holder').fullCalendar('addEventSource', arrayEvents);
-        },
-        error: function (req, status, error) {
-            console.error(error);
-        }
-    });
-}
-
-
 function removeCalendarEvents() {
     $('#calendar-holder').fullCalendar('removeEvents');
     $('#calendar-holder').fullCalendar('removeEventSource',
@@ -155,9 +129,8 @@ $(function () {
         },
         editable: false,
         timeFormat: {
-            agenda: 'HH:mm', 
-
-            '': 'HH:mm'       
+            agenda: 'HH:mm',
+            '': 'HH:mm'
         },
         eventClick: function (calEvent, jsEvent, view) {
             if ((calEvent.canClick || (two_selected_events.length > 0)) && calEvent.backgroundColor != "purple") {
@@ -170,7 +143,7 @@ $(function () {
                 else {
                     two_selected_events.push(calEvent);
                 }
-                
+
                 if (two_selected_events.length == 2) {
                     if (calEvent.color = "green") {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
