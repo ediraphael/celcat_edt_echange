@@ -14,18 +14,18 @@ class ScheduleManager {
     
     /**
      *
-     * @var Event[] 
+     * @var ScheduleModification[] 
      */
-    private $modifiedEvents;
+    private $scheduleModifications;
 
     function __construct() {
         if (isset($_SESSION['schedulerManager'])) {
             $scheduleur = unserialize($_SESSION['schedulerManager']);
             $this->arrayWeeks = $scheduleur->getArrayWeeks();
-            $this->modifiedEvents = $scheduleur->getModifiedEvents();
+            $this->scheduleModifications = $scheduleur->getScheduleModifications();
         } else {
             $this->arrayWeeks = array();
-            $this->modifiedEvents = array();
+            $this->scheduleModifications = array();
             $_SESSION['schedulerManager'] = serialize($this);
         }
     }
@@ -80,21 +80,21 @@ class ScheduleManager {
         return null;
     }
     
-    public function getModifiedEvents() {
-        return $this->modifiedEvents;
+    public function getScheduleModifications() {
+        return $this->scheduleModifications;
     }
 
-    public function setModifiedEvents(array $modifiedEvents) {
-        $this->modifiedEvents = $modifiedEvents;
+    public function setScheduleModifications(array $scheduleModifications) {
+        $this->scheduleModifications = $scheduleModifications;
         return $this;
     }
     
-    public function addModifiedEvent(Event $modifiedEvent) {
-        $this->modifiedEvents[$modifiedEvent->getId()] = $modifiedEvent;
+    public function addScheduleModification(ScheduleModification $scheduleModifications) {
+        $this->scheduleModifications[$scheduleModifications->getFirstEvent()->getId()] = $scheduleModifications;
     }
     
-    public function removeModifiedEvent(Event $modifiedEvent) {
-        unset($this->modifiedEvents[$modifiedEvent->getId()]);
+    public function removeScheduleModification(ScheduleModification $scheduleModifications) {
+        unset($this->scheduleModifications[$scheduleModifications->getFirstEvent()->getId()]);
     }
 
     
@@ -254,8 +254,9 @@ class ScheduleManager {
             $eventSource->replaceBy($newEventSource);
             $eventDestination->replaceBy($newEventDestination);
             
-            $this->addModifiedEvent($eventSource);
-            $this->addModifiedEvent($eventDestination);
+            
+            $scheduleModification = new ScheduleModification();
+            $scheduleModification->setSwapModification($eventSource, $eventDestination);
             
             $_SESSION['schedulerManager'] = serialize($this);
             return true;
