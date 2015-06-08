@@ -88,4 +88,13 @@ class ScheduleModification {
     public function getModificationType() {
         return $this->modificationType;
     }
+    
+    public function toArray() {
+        $array = array();
+        $array['firstEvent'] = $this->firstEvent->toArray();
+        $array['secondEvent'] = $this->secondEvent->toArray();
+        $array['modificationType'] = $this->modificationType;
+        
+        return $array;
+    }
 }
