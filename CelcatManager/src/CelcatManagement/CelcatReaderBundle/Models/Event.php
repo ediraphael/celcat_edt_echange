@@ -290,6 +290,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['formations'] = $this->formations->toArray();
             $event['day'] = $this->day;
             $event['week'] = $this->week;
+            $event['isSwapable'] = $this->isSwapable;
             $event['canClick'] = $canClick;
         }
         else {
