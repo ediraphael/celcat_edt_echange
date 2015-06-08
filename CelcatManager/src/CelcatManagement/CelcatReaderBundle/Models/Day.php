@@ -159,7 +159,7 @@ class Day {
      * @param type $formation_id
      * @return array
      */
-    public function getFreeEventsList($startTime, $endTime, $formation_id) {
+    public function getFreeEventsList($startTime, $endTime) {
         $tabBusEvents = array();
         $tabFreeEvents = array();
         $wantedDuration = $this->getDifferenceOfTime($startTime, $endTime);

@@ -233,7 +233,7 @@ class ScheduleManager {
 //                        ->getEnd_time(), $event_destination->getFormation());
         $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
                 ->getWeekFreeEventsList($event_destination
-                ->getStartTime(), $event_destination->getEndTime(), $event_destination->getFormations());
+                ->getStartTime(), $event_destination->getEndTime());
         return $tab_free_events;
     }
 
@@ -289,16 +289,16 @@ class ScheduleManager {
                 $calculated_end_time = date('H:i', $convert);
                 if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
                                 ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id, $user)) {
-//                    $event_source->setBgColor("orange");
-//                    $event_destination->setBgColor("");
-//                    $_SESSION['schedulerManager'] = serialize($this);
+                    $event_source->setBgColor("orange");
+                    $event_destination->setBgColor("");
+                    $_SESSION['schedulerManager'] = serialize($this);
                     return false;
                 }
             }
         }
-//        $event_source->setBgColor("orange");
-//        $event_destination->setBgColor("green");
-//        $_SESSION['schedulerManager'] = serialize($this);
+        $event_source->setBgColor("orange");
+        $event_destination->setBgColor("green");
+        $_SESSION['schedulerManager'] = serialize($this);
         return true;
     }
 

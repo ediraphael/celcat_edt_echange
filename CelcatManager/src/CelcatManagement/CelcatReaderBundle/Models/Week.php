@@ -118,11 +118,11 @@ class Week {
      * @param type $formation_id
      * @return type
      */
-    public function getWeekFreeEventsList($start_time, $end_time, $formation_id) {
+    public function getWeekFreeEventsList($start_time, $end_time) {
         $tab_free_events = array();
         foreach ($this->arrayDays as $day) {
             //if(count($day->getTab_events()) > 0)
-            $tab_free_events[$day->getName()] = $day->getFreeEventsList($start_time, $end_time, $formation_id);
+            $tab_free_events[$day->getName()] = $day->getFreeEventsList($start_time, $end_time);
         }
         return $tab_free_events;
     }
