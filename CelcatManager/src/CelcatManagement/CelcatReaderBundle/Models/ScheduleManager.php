@@ -311,5 +311,9 @@ class ScheduleManager {
         $_SESSION['schedulerManager'] = serialize($this);
         return true;
     }
+    
+    public function save() {
+        $_SESSION['schedulerManager'] = serialize($this);
+    }
 
 }
