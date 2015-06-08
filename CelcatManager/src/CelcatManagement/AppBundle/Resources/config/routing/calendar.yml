@@ -1,3 +1,33 @@
 app_calendar:
     pattern: /
     defaults: {_controller: CelcatManagementAppBundle:Calendar:index }
+    
+fullcalendar_loader:
+    pattern: /fc-load-calendar-events
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:loadCalendar }
+    options:
+        expose: true
+        
+fullcalendar_refresh:
+    pattern: /fc-refresh-calendar-events
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:refreshCalendar }
+    options:
+        expose: true
+        
+event_calendar_loader:
+    pattern: /fc-load-calendar-events-by-id
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:loadEventCalendar }
+    options:
+        expose: true
+        
+can_swap_two_events:
+    pattern: /can-swap-two-events
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:canSwapTwoEvents }
+    options:
+        expose: true
+        
+swap_two_events:
+    pattern: /swap-two-events
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:swapTwoEvents }
+    options:
+        expose: true
