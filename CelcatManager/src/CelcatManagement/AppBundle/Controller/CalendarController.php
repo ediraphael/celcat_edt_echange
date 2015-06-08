@@ -17,10 +17,8 @@ class CalendarController extends Controller {
 
         return $this->render('CelcatManagementAppBundle:Calendar:index.html.twig', array('groupList' => $groupManager->getGroupList()));
     }
-    
-    
-    public function userOwnThisEvent($event, $current_user, $ldapManager)
-    {
+
+    public function userOwnThisEvent($event, $current_user, $ldapManager) {
         $eventProfessors = $event->getProfessors();
         $userOwnThisEvent = false;
         foreach ($eventProfessors as $eventProfessor) {
@@ -63,13 +61,10 @@ class CalendarController extends Controller {
         /* @var $current_user \CelcatManagement\AppBundle\Security\User */
         /* @var $event \CelcatManagement\CelcatReaderBundle\Models\Event */
         foreach ($events as $event) {
-            if($event->hasReplacementEvent())
-            {
+            if ($event->hasReplacementEvent()) {
                 $event->setBgColor("purple");
                 $ownEvent = false;
-            }
-            else
-            {
+            } else {
                 $event->setBgColor("");
                 $ownEvent = $this->userOwnThisEvent($event, $current_user, $ldapManager);
             }
@@ -88,18 +83,71 @@ class CalendarController extends Controller {
      * @return Response
      */
     public function refreshCalendarAction(Request $request) {
+        $user = $this->getUser();
         $ldapManager = $this->get('ldap_manager');
         $startDatetime = new \DateTime($request->request->get('start'));
         $endDatetime = new \DateTime($request->request->get('end'));
+        $eventSourceJs = $request->request->get('event_source');
+        $eventDestinationJs = $request->request->get('event_destination');
+
+
+        $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
+        //On réinitialise les evenements
+        $arrayWeeks = $scheduleManager->getArrayWeeks();
+        foreach ($arrayWeeks as $indexWeek => $week) {
+            foreach ($week->getArrayDays() as $indexDay => $day) {
+                foreach ($day->getArrayEvents() as $indexEvents => $event) {
+                    $event->unEventSource();
+                    $event->unswapable();
+                    $event->delete();
+                }
+            }
+        }
+       
+
+        // On verifie si on vient de faire un click sur un premier evenement
+        if ($eventSourceJs != null && $eventSourceJs != '' && ($eventDestinationJs == null || $eventDestinationJs == '')) {
+            //Dans ce cas on recherche tout ce qui sont swapable
+            $eventSource = $scheduleManager->getWeekByTag($eventSourceJs['week'])->getDayById($eventSourceJs['day'])->getEventById($eventSourceJs['id']);
+            foreach ($arrayWeeks as $indexWeek => $week) {
+                foreach ($week->getArrayDays() as $indexDay => $day) {
+                    foreach ($day->getArrayEvents() as $indexEvents => $event) {
+                        if ($event->getId() != $eventSource->getId()) {
+                            if ($scheduleManager->canSwapEvent($eventSource, $event, $user)) {
+                                $event->swapable();
+                            } 
+                            else {
+                                $formations = $event->getFormations()->toArray();
+                                foreach ($formations as $formation) {
+                                    if(in_array($formation, $eventSource->getFormations()->toArray())) {
+                                        $event->undelete();
+                                    }
+                                }
+                            }
+                        } else {
+                            $event->eventSource();
+                        }
+                    }
+                }
+            }
+        }
+        
+        if ($eventSourceJs != null && $eventSourceJs != '' && $eventDestinationJs != null && $eventDestinationJs != '') {
+            $eventSource = $scheduleManager->getWeekByTag($eventSourceJs['week'])->getDayById($eventSourceJs['day'])->getEventById($eventSourceJs['id']);
+            $eventDestination = $scheduleManager->getWeekByTag($eventDestinationJs['week'])->getDayById($eventDestinationJs['day'])->getEventById($eventDestinationJs['id']);
+            $scheduleManager->swapEvent($eventSource, $eventDestination);
+        }
+
+
+         $scheduleManager->save();
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE_REFRESH, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
 
         $return_events = array();
-        $current_user = $this->getUser();
         foreach ($events as $event) {
-            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
+            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $user, $ldapManager));
         }
 
 
@@ -107,79 +155,20 @@ class CalendarController extends Controller {
 
         return $response;
     }
-    
+
     public function loadCalendarModificationsAction(Request $request) {
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
         $scheduleModifications = $scheduleManager->getScheduleModifications();
-        
+
         $return_events = array();
         foreach ($scheduleModifications as $cle => $scheduleModification) {
             $return_events[] = $scheduleModification->toArray();
         }
-        
+
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($return_events));
 
         return $response;
     }
-
-    public function loadEventCalendarAction(Request $request) {
-        $ldapManager = $this->get('ldap_manager');
-        $startDatetime = new \DateTime($request->request->get('start'));
-        $endDatetime = new \DateTime($request->request->get('end'));
-
-        $urlPath = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.studentPath');
-        $request->request->add(array('urlPath' => $urlPath));
-        $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
-
-        $response = new \Symfony\Component\HttpFoundation\Response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        $return_events = array();
-        $current_user = $this->getUser();
-        foreach ($events as $event) {
-            $return_events[$event->getId()] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
-        }
-
-        $response->setContent(json_encode($return_events));
-
-        return $response;
-    }
-
-    public function canSwapTwoEventsAction(Request $request) {
-        $schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
-        $obj_event_source = $request->request->get('event_source');
-        $obj_events_destination = $request->request->get('events_destination');
-
-        $event_source = $schedulerManager->getWeekByTag($obj_event_source['week'])->getDayById($obj_event_source['day'])->getEventById($obj_event_source['id']);
-        $result = array();
-        $current_user = $this->getUser();
-        foreach ($obj_events_destination as $obj_event_destination) {
-            $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
-            //$event_destination->setBgColor("green");
-            $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination, $current_user));
-        }
-
-        $response = new \Symfony\Component\HttpFoundation\Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($result));
-        return $response;
-    }
-
-    public function swapTwoEventsAction(Request $request) {
-        $schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
-        $obj_event_source = $request->request->get('event_source');
-        $obj_event_destination = $request->request->get('event_destination');
-        $event_source = $schedulerManager->getWeekByTag($obj_event_source['week'])->getDayById($obj_event_source['day'])->getEventById($obj_event_source['id']);
-        $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
-
-        $result = $schedulerManager->swapEvent($event_source, $event_destination);
-
-        $response = new \Symfony\Component\HttpFoundation\Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($result));
-        return $response;
-    }
-
 }
