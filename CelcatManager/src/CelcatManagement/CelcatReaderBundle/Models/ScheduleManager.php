@@ -11,7 +11,7 @@ class ScheduleManager {
      * @var Week[] 
      */
     private $arrayWeeks;
-    
+
     /**
      *
      * @var ScheduleModification[] 
@@ -79,7 +79,7 @@ class ScheduleManager {
         }
         return null;
     }
-    
+
     public function getScheduleModifications() {
         return $this->scheduleModifications;
     }
@@ -88,16 +88,25 @@ class ScheduleManager {
         $this->scheduleModifications = $scheduleModifications;
         return $this;
     }
-    
+
     public function addScheduleModification(ScheduleModification $scheduleModification) {
         $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
     }
-    
-    public function removeScheduleModification(ScheduleModification $scheduleModifications) {
-        unset($this->scheduleModifications[$scheduleModifications->getFirstEvent()->getId()]);
+
+    public function removeScheduleModification(ScheduleModification $scheduleModification) {
+        unset($this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()]);
     }
 
-    
+    public function removeScheduleModificationById($eventId) {
+        foreach ($this->scheduleModifications as $scheduleModification) {
+            if($scheduleModification->getFirstEvent()->getId() == $eventId) {
+                $scheduleModification->getFirstEvent()->deleteReplacementEvent();
+                $scheduleModification->getSecondEvent()->deleteReplacementEvent();
+                $this->removeScheduleModification($scheduleModification);
+            }
+        }
+    }
+
     /**
      * 
      * @param type $file_contents
@@ -246,26 +255,26 @@ class ScheduleManager {
         if (!$eventSource->hasReplacementEvent() && !$eventDestination->hasReplacementEvent()) {
             $newEventSource = clone $eventSource;
             $newEventDestination = clone $eventDestination;
-            
+
             $startSource = $eventSource->getStartDatetime();
             $startDestinaton = $eventDestination->getStartDatetime();
             $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
             $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
-            
+
             $newEventSource->setStartDatetime($startDestinaton);
             $newEndDateTimeSource = clone $startDestinaton;
             $newEndDateTimeSource->add($durationDestination);
             $newEventSource->setEndDatetime($newEndDateTimeSource);
-            
+
             $newEventDestination->setStartDatetime($startSource);
             $newEndDateTimeDestination = clone $startSource;
             $newEndDateTimeDestination->add($durationSource);
-            $newEventDestination->setEndDatetime($newEndDateTimeDestination);          
-            
+            $newEventDestination->setEndDatetime($newEndDateTimeDestination);
+
             $eventSource->replaceBy($newEventSource);
             $eventDestination->replaceBy($newEventDestination);
-            
-            
+
+
             $scheduleModification = new ScheduleModification();
             $scheduleModification->setSwapModification($eventSource, $eventDestination);
             $this->addScheduleModification($scheduleModification);
@@ -312,7 +321,7 @@ class ScheduleManager {
         $this->save();
         return true;
     }
-    
+
     public function save() {
         $_SESSION['schedulerManager'] = serialize($this);
     }
