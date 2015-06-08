@@ -105,7 +105,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function deleteReplacementEvent() {
         $this->replacementEvent = null;
     }
-    
+
     public function hasReplacementEvent() {
         return $this->replacementEvent != null;
     }
@@ -245,18 +245,22 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @return array $event 
      */
     public function toArray($canClick = true) {
-        if($this->re)
-        $event = parent::toArray();
-        $event['room'] = $this->room;
-        $event['category'] = $this->category;
-        $event['module'] = $this->module;
-        $event['professors'] = $this->professors->toArray();
-        $event['group'] = $this->group;
-        $event['note'] = $this->note;
-        $event['formations'] = $this->formations->toArray();
-        $event['day'] = $this->day;
-        $event['week'] = $this->week;
-        $event['canClick'] = $canClick;
+        if (!$this->hasReplacementEvent()) {
+            $event = parent::toArray();
+            $event['room'] = $this->room;
+            $event['category'] = $this->category;
+            $event['module'] = $this->module;
+            $event['professors'] = $this->professors->toArray();
+            $event['group'] = $this->group;
+            $event['note'] = $this->note;
+            $event['formations'] = $this->formations->toArray();
+            $event['day'] = $this->day;
+            $event['week'] = $this->week;
+            $event['canClick'] = $canClick;
+        }
+        else {
+            $event = $this->replacementEvent->toArray($canClick);
+        }
         return $event;
     }
 
