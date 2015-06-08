@@ -3,8 +3,13 @@
     <h1>Accueil</h1>
 {% endblock %}
 {% block body %}
+    <div id="schedule_modification_container" >
+        {#<div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> Better check yourself, you're not looking too good.
+        </div>#}
+    </div>
     {% include 'ADesignsCalendarBundle::calendar.html.twig' %}
-    <input type="hidden" id="calendar_file_source" value="{{ calendar_file_source }}">
     {% javascripts  
             '@CelcatManagementAppBundle/Resources/public/js/default-calendar-settings.js'
     %}
