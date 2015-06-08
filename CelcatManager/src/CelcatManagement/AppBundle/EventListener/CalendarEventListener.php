@@ -55,13 +55,17 @@ class CalendarEventListener {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $event) {
                     if (!$event->isDeleted()) {
-
                         if (in_array($event->getId(), $this->arrayIdTest)) {
                             $event->addProfessor('PILLIE RAPHAEL');
                             $event->addProfessor('POTTIER PIERRE-MARIE');
                             $event->addProfessor('DAOUDI MOHAMED');
                             $event->addFormation('2314');
                         }
+                        
+                        if($event->hasReplacementEvent()) {
+                            $event->setBgColor("purple");
+                        }
+                        
                         $calendarEvent->addEvent($event);
                     }
                 }
