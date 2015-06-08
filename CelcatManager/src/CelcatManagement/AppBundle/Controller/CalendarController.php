@@ -61,10 +61,19 @@ class CalendarController extends Controller {
         $return_events = array();
         $current_user = $this->getUser();
         /* @var $current_user \CelcatManagement\AppBundle\Security\User */
-        
+        /* @var $event \CelcatManagement\CelcatReaderBundle\Models\Event */
         foreach ($events as $event) {
-            $event->setBgColor("");
-            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
+            if($event->hasReplacementEvent())
+            {
+                $event->setBgColor("purple");
+                $ownEvent = false;
+            }
+            else
+            {
+                $event->setBgColor("");
+                $ownEvent = $this->userOwnThisEvent($event, $current_user, $ldapManager);
+            }
+            $return_events[] = $event->toArray($ownEvent);
         }
 
         $response->setContent(json_encode($return_events));
