@@ -63,7 +63,7 @@ class CalendarController extends Controller {
         /* @var $current_user \CelcatManagement\AppBundle\Security\User */
         
         foreach ($events as $event) {
-//            $event->setBgColor("");
+            $event->setBgColor("");
             $return_events[] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
         }
 
@@ -114,9 +114,7 @@ class CalendarController extends Controller {
         $return_events = array();
         $current_user = $this->getUser();
         foreach ($events as $event) {
-            if ($current_user->calendarExists($event->getFormations())) {
-                $return_events[$event->getId()] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
-            }
+            $return_events[$event->getId()] = $event->toArray($this->userOwnThisEvent($event, $current_user, $ldapManager));
         }
 
         $response->setContent(json_encode($return_events));
@@ -134,6 +132,7 @@ class CalendarController extends Controller {
         $current_user = $this->getUser();
         foreach ($obj_events_destination as $obj_event_destination) {
             $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
+            $event_destination->setBgColor("green");
             $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination, $current_user));
         }
 
