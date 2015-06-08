@@ -246,10 +246,20 @@ class ScheduleManager {
             $newEventSource = clone $eventSource;
             $newEventDestination = clone $eventDestination;
             
-            $newEventSource->setStartDatetime($eventDestination->getStartDatetime());
-            $newEventDestination->setStartDatetime($eventSource->getStartDatetime());
-            $newEventSource->setEndDatetime($eventDestination->getEndDatetime());
-            $newEventDestination->setEndDatetime($eventSource->getEndDatetime());
+            $startSource = $eventSource->getStartDatetime();
+            $startDestinaton = $eventDestination->getStartDatetime();
+            $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
+            $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
+            
+            $newEventSource->setStartDatetime($startDestinaton);
+            $newEndDateTimeSource = clone $startDestinaton;
+            $newEndDateTimeSource->add($durationDestination);
+            $newEventSource->setEndDatetime($newEndDateTimeSource);
+            
+            $newEventDestination->setStartDatetime($startSource);
+            $newEndDateTimeDestination = clone $startSource;
+            $newEndDateTimeDestination->add($durationSource);
+            $newEventDestination->setEndDatetime($newEndDateTimeDestination);          
             
             $eventSource->replaceBy($newEventSource);
             $eventDestination->replaceBy($newEventDestination);
