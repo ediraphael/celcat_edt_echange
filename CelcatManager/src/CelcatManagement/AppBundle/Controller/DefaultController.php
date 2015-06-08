@@ -22,7 +22,7 @@ class DefaultController extends Controller {
         }
         $request->request->add(array('urlPath' => $urlPath));
         $request->request->add(array('calendars' => $calendars));
-        $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
+        $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         
         $url = $this->container->getParameter('celcat.url') . $this->container->getParameter('celcat.teacherPath') . $this->container->getParameter('celcat.teacherFileGet');
@@ -32,7 +32,7 @@ class DefaultController extends Controller {
         $calendarFileSource = $url . $argument;
         $request->request->add(array('urlPath' => $calendarFileSource));
         $request->request->add(array('calendars' => ''));
-        $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request))->getEvents();
+        $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         
         return $this->render('CelcatManagementAppBundle:Default:index.html.twig', array(
