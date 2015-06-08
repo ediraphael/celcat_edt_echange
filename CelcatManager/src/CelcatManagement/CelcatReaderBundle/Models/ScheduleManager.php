@@ -89,8 +89,8 @@ class ScheduleManager {
         return $this;
     }
     
-    public function addScheduleModification(ScheduleModification $scheduleModifications) {
-        $this->scheduleModifications[$scheduleModifications->getFirstEvent()->getId()] = $scheduleModifications;
+    public function addScheduleModification(ScheduleModification $scheduleModification) {
+        $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
     }
     
     public function removeScheduleModification(ScheduleModification $scheduleModifications) {
@@ -257,7 +257,8 @@ class ScheduleManager {
             
             $scheduleModification = new ScheduleModification();
             $scheduleModification->setSwapModification($eventSource, $eventDestination);
-            
+            $this->addScheduleModification($scheduleModification);
+
             $_SESSION['schedulerManager'] = serialize($this);
             return true;
         } else {
