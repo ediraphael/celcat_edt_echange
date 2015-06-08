@@ -21,17 +21,24 @@ class CalendarEvent extends Event
     private $events;
     
     /**
+     *
+     * @var \CelcatManagement\AppBundle\Security\User 
+     */
+    private $user;
+    
+    /**
      * Constructor method requires a start and end time for event listeners to use.
      * 
      * @param \DateTime $start Begin datetime to use
      * @param \DateTime $end End datetime to use
      */
-    public function __construct(\DateTime $start, \DateTime $end, Request $request = null)
+    public function __construct(\DateTime $start, \DateTime $end, Request $request = null, $user)
     {
         $this->startDatetime = $start;
         $this->endDatetime = $end;
         $this->request = $request;
         $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->user = $user;
     }
 
     public function getEvents()
@@ -83,4 +90,15 @@ class CalendarEvent extends Event
     {
         return $this->request;
     }
+    
+    public function getUser() {
+        return $this->user;
+    }
+
+    public function setUser($user) {
+        $this->user = $user;
+        return $this;
+    }
+
+
 }
