@@ -89,9 +89,15 @@ class CalendarController extends Controller {
         $endDatetime = new \DateTime($request->request->get('end'));
         $eventSourceJs = $request->request->get('event_source');
         $eventDestinationJs = $request->request->get('event_destination');
+        $removedScheduleModification = $request->request->get('removed_schedule_modification');
 
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
+        
+        if($removedScheduleModification != null && $removedScheduleModification != '') {
+            $scheduleManager->removeScheduleModificationById($removedScheduleModification);
+        }
+        
         //On réinitialise les evenements
         $arrayWeeks = $scheduleManager->getArrayWeeks();
         foreach ($arrayWeeks as $indexWeek => $week) {
