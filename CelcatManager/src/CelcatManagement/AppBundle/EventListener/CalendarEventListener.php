@@ -41,27 +41,14 @@ class CalendarEventListener {
             $this->schedulerManager->parseAllSchedule($path);
         }
 
-        $arrayWeeks = $this->schedulerManager->getArrayWeeks();
-
-        foreach ($arrayWeeks as $indexWeek => $week) {
-            foreach ($week->getArrayDays() as $indexDay => $day) {
-                foreach ($day->getArrayEvents() as $indexEvents => $event) {
-                    if (!$event->isDeleted()) {
-
-                        if (in_array($event->getId(), $this->arrayIdTest)) {
-                            $event->addProfessor('PILLIE RAPHAEL');
-                            $event->addProfessor('POTTIER PIERRE-MARIE');
-                            $event->addProfessor('DAOUDI MOHAMED');
-                            $event->addFormation('2314');
-                        }
-                        $calendarEvent->addEvent($event);
-                    }
-                }
-            }
-        }
+        $this->feedCalendarEvent($calendarEvent);
     }
-
+    
     public function refreshEvents(CalendarEvent $calendarEvent) {
+        $this->feedCalendarEvent($calendarEvent);
+    }
+    
+    public function feedCalendarEvent(CalendarEvent $calendarEvent) {
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
@@ -80,5 +67,6 @@ class CalendarEventListener {
             }
         }
     }
+
 
 }
