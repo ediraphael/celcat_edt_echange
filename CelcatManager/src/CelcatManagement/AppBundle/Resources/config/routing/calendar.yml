@@ -31,3 +31,9 @@ swap_two_events:
     defaults: { _controller: CelcatManagementAppBundle:Calendar:swapTwoEvents }
     options:
         expose: true
+        
+calendar_modifications:
+    pattern: /calendar-modifications
+    defaults: { _controller: CelcatManagementAppBundle:Calendar:loadCalendarModifications }
+    options:
+        expose: true
