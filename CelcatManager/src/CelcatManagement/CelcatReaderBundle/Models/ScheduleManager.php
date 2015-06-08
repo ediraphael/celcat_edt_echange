@@ -26,7 +26,7 @@ class ScheduleManager {
         } else {
             $this->arrayWeeks = array();
             $this->scheduleModifications = array();
-            $_SESSION['schedulerManager'] = serialize($this);
+            $this->save();
         }
     }
 
@@ -36,12 +36,12 @@ class ScheduleManager {
 
     public function setArrayWeeks($arrayWeeks) {
         $this->arrayWeeks = $arrayWeeks;
-        $_SESSION['schedulerManager'] = serialize($this);
+        $this->save();
     }
 
     public function addWeek($week) {
         $this->arrayWeeks[] = $week;
-        $_SESSION['schedulerManager'] = serialize($this);
+        $this->save();
     }
 
     public function freeWeeks() {
@@ -119,6 +119,7 @@ class ScheduleManager {
                     $this->addWeek($week);
                 }
             }
+            $this->save();
         } catch (Exception $e) {
             print_r($e);
         }
@@ -196,7 +197,7 @@ class ScheduleManager {
         } catch (Exception $e) {
             print_r($e);
         }
-        $_SESSION['schedulerManager'] = serialize($this);
+        $this->save();
     }
 
     /**
@@ -217,7 +218,7 @@ class ScheduleManager {
             $this->parseWeeks($file_contents);
             $this->parseEvents($file_contents, $formation_id);
         }
-        $_SESSION['schedulerManager'] = serialize($this);
+        $this->save();
     }
 
     /**
@@ -269,7 +270,7 @@ class ScheduleManager {
             $scheduleModification->setSwapModification($eventSource, $eventDestination);
             $this->addScheduleModification($scheduleModification);
 
-            $_SESSION['schedulerManager'] = serialize($this);
+            $this->save();
             return true;
         } else {
             return false;
@@ -301,14 +302,14 @@ class ScheduleManager {
                                 ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id, $user)) {
                     $event_source->setBgColor("orange");
                     $event_destination->setBgColor("");
-                    $_SESSION['schedulerManager'] = serialize($this);
+                    $this->save();
                     return false;
                 }
             }
         }
         $event_source->setBgColor("orange");
         $event_destination->setBgColor("green");
-        $_SESSION['schedulerManager'] = serialize($this);
+        $this->save();
         return true;
     }
     
