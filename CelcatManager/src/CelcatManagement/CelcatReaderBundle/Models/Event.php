@@ -6,13 +6,52 @@ use \Doctrine\Common\Collections\ArrayCollection;
 
 class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
+    /**
+     *
+     * @var string 
+     */
     private $room;
+
+    /**
+     *
+     * @var string 
+     */
     private $category;
+
+    /**
+     *
+     * @var string
+     */
     private $day;
+
+    /**
+     *
+     * @var string 
+     */
     private $week;
+
+    /**
+     *
+     * @var string 
+     */
     private $module;
+
+    /**
+     *
+     * @var ArrayCollection 
+     */
     private $professors;
+
+    /**
+     *
+     * @var group 
+     */
     private $group;
+
+    /**
+     *
+     * @var string 
+     */
     private $note;
 
     /**
@@ -20,7 +59,18 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var ArrayCollection 
      */
     private $formations;
+
+    /**
+     *
+     * @var boolean 
+     */
     private $isDeleted = false;
+    
+    /**
+     *
+     * @var Event 
+     */
+    private $replacementEvent;
 
     function __construct() {
         parent::__construct("", new \DateTime(), new \DateTime());
@@ -57,14 +107,13 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function addFormation($formation) {
-        if(is_array($formation) || $formation instanceof ArrayCollection) {
+        if (is_array($formation) || $formation instanceof ArrayCollection) {
             foreach ($formation as $form) {
-                if($form != '' && !$this->formations->contains($form)) {
+                if ($form != '' && !$this->formations->contains($form)) {
                     $this->formations->add($form);
                 }
             }
-        }
-        elseif ($formation != '' && !$this->formations->contains($formation)) {
+        } elseif ($formation != '' && !$this->formations->contains($formation)) {
             $this->formations->add($formation);
         }
     }
@@ -144,20 +193,19 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setProfessors($professors) {
         $this->professors = $professors;
     }
-    
+
     public function addProfessor($professor) {
-        if(is_array($professor) || $professor instanceof ArrayCollection) {
+        if (is_array($professor) || $professor instanceof ArrayCollection) {
             foreach ($professor as $prof) {
-                if($prof != '' && !$this->professors->contains($prof)) {
+                if ($prof != '' && !$this->professors->contains($prof)) {
                     $this->professors->add($prof);
                 }
             }
-        }
-        elseif ($professor != '' && !$this->professors->contains($professor)) {
+        } elseif ($professor != '' && !$this->professors->contains($professor)) {
             $this->professors->add($professor);
         }
     }
-    
+
     public function removeProfessor($professor) {
         $this->professors->removeElement($professor);
     }
