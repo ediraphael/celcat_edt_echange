@@ -103,9 +103,14 @@ class CalendarController extends Controller {
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
         $scheduleModifications = $scheduleManager->getScheduleModifications();
         
+        $return_events = array();
+        foreach ($scheduleModifications as $cle => $scheduleModification) {
+            $return_events[$cle] = $scheduleModification->toArray();
+        }
+        
         $response = new \Symfony\Component\HttpFoundation\Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($scheduleModifications));
+        $response->setContent(json_encode($return_events));
 
         return $response;
     }
