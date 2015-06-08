@@ -254,6 +254,9 @@ class ScheduleManager {
             $eventSource->replaceBy($newEventSource);
             $eventDestination->replaceBy($newEventDestination);
             
+            $this->addModifiedEvent($eventSource);
+            $this->addModifiedEvent($eventDestination);
+            
             $_SESSION['schedulerManager'] = serialize($this);
             return true;
         } else {
