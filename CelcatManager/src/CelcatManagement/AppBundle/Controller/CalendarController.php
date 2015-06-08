@@ -98,6 +98,17 @@ class CalendarController extends Controller {
 
         return $response;
     }
+    
+    public function loadCalendarModificationAction(Request $request) {
+        $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
+        $scheduleModifications = $scheduleManager->getScheduleModifications();
+        
+        $response = new \Symfony\Component\HttpFoundation\Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($scheduleModifications));
+
+        return $response;
+    }
 
     public function loadEventCalendarAction(Request $request) {
         $ldapManager = $this->get('ldap_manager');
