@@ -65,12 +65,18 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var boolean 
      */
     private $isDeleted = false;
-    
+
     /**
      *
      * @var boolean 
      */
     private $isSwapable = false;
+
+    /**
+     *
+     * @var boolean 
+     */
+    private $isEventSource = false;
 
     /**
      *
@@ -244,14 +250,14 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setNote($note) {
         $this->note = $note;
     }
-    
+
     public function setBgColor($color) {
-        if($this->hasReplacementEvent()) {
+        if ($this->hasReplacementEvent()) {
             $this->replacementEvent->setBgColor($color);
         }
         parent::setBgColor($color);
     }
-    
+
     public function getIsSwapable() {
         return $this->isSwapable;
     }
@@ -263,17 +269,39 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function swapable() {
         $this->isSwapable = true;
-    }   
+    }
 
     public function unswapable() {
         $this->isSwapable = false;
     }
-    
+
     public function isSwapable() {
         return $this->isSwapable;
     }
+
+    public function getIsEventSource() {
+        return $this->isEventSource;
+    }
+
+    public function setIsEventSource($isEventSource) {
+        $this->isEventSource = $isEventSource;
+        return $this;
+    }
+
+    public function eventSource() {
+        $this->isEventSource = true;
+    }    
     
-        /**
+    public function unEventSource() {
+        $this->isEventSource = false;
+    }
+    
+    public function isEventSource() {
+        return $this->isEventSource;
+    }
+    
+    
+    /**
      * Convert calendar event details to an array
      * 
      * @return array $event 
@@ -292,8 +320,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['week'] = $this->week;
             $event['isSwapable'] = $this->isSwapable;
             $event['canClick'] = $canClick;
-        }
-        else {
+        } else {
             $event = $this->replacementEvent->toArray($canClick);
         }
         return $event;
