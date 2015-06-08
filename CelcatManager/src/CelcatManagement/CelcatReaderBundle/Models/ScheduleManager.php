@@ -11,13 +11,21 @@ class ScheduleManager {
      * @var Week[] 
      */
     private $arrayWeeks;
+    
+    /**
+     *
+     * @var Event[] 
+     */
+    private $modifiedEvents;
 
     function __construct() {
         if (isset($_SESSION['schedulerManager'])) {
             $scheduleur = unserialize($_SESSION['schedulerManager']);
             $this->arrayWeeks = $scheduleur->getArrayWeeks();
+            $this->modifiedEvents = $scheduleur->getModifiedEvents();
         } else {
             $this->arrayWeeks = array();
+            $this->modifiedEvents = array();
             $_SESSION['schedulerManager'] = serialize($this);
         }
     }
@@ -71,7 +79,17 @@ class ScheduleManager {
         }
         return null;
     }
+    
+    public function getModifiedEvents() {
+        return $this->modifiedEvents;
+    }
 
+    public function setModifiedEvents(array $modifiedEvents) {
+        $this->modifiedEvents = $modifiedEvents;
+        return $this;
+    }
+
+    
     /**
      * 
      * @param type $file_contents
@@ -212,16 +230,23 @@ class ScheduleManager {
     }
 
     /**
-     * @param type $event_source
-     * @param type $event_destination
+     * @param Event $eventSource
+     * @param Event $eventDestination
      */
-    public function swapEvent($event_source, $event_destination) {
-        $result_remove_source = $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->removeEvent($event_source->getId());
-        $result_remove_destination = $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->removeEvent($event_destination->getId());
-//        $this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())->addEvent($event_destination);
-//        $this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->addEvent($event_source);
-        $_SESSION['schedulerManager'] = serialize($this);
-        if ($result_remove_source && $result_remove_destination) {
+    public function swapEvent(Event $eventSource, Event $eventDestination) {
+        if (!$eventSource->hasReplacementEvent() && !$eventDestination->hasReplacementEvent()) {
+            $newEventSource = clone $eventSource;
+            $newEventDestination = clone $eventDestination;
+            
+            $newEventSource->setStartDatetime($eventDestination->getStartDatetime());
+            $newEventDestination->setStartDatetime($eventSource->getStartDatetime());
+            $newEventSource->setEndDatetime($eventDestination->getEndDatetime());
+            $newEventDestination->setEndDatetime($eventSource->getEndDatetime());
+            
+            $eventSource->replaceBy($newEventSource);
+            $eventDestination->replaceBy($newEventDestination);
+            
+            $_SESSION['schedulerManager'] = serialize($this);
             return true;
         } else {
             return false;
