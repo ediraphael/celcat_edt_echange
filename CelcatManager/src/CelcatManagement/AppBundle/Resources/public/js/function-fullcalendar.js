@@ -202,10 +202,10 @@ $(function () {
         editable: false,
         timeFormat: {
             // for agendaWeek and agendaDay
-            agenda: 'h:mm', // 5:00 - 6:30
+            agenda: 'HH:mm', // 5:00 - 6:30
 
             // for all other views
-            '': 'h:mm'         // 7p
+            '': 'HH:mm'         // 7p
         },
         eventClick: function (calEvent, jsEvent, view) {
             if(calEvent.canClick || (two_selected_events.length > 0))
