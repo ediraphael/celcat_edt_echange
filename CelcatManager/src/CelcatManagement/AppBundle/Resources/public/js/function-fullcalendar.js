@@ -165,7 +165,7 @@ function swapTwoEvents(event_source, event_destination)
         {
             if (response)
             {
-                loadCalendarEvents($('#groupe_select'));
+                refreshCalendarEvents();
                 two_selected_events = [];
             }
             else {
@@ -255,7 +255,7 @@ $(function () {
                             two_selected_events.splice(0, 1);
                             two_selected_events.splice(1, 1);
                             two_selected_events = [];
-                            loadCalendarEvents($('#groupe_select'));
+                            refreshCalendarEvents();
                         }
                     }
                 }
@@ -264,7 +264,7 @@ $(function () {
                 {
                     if (two_selected_events.length == 0)
                     { 
-                        loadCalendarEvents($('#groupe_select'));
+                        refreshCalendarEvents();
                     }
                 }
             }
