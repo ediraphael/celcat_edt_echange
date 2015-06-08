@@ -88,6 +88,14 @@ class ScheduleManager {
         $this->modifiedEvents = $modifiedEvents;
         return $this;
     }
+    
+    public function addModifiedEvent(Event $modifiedEvent) {
+        $this->modifiedEvents[$modifiedEvent->getId()] = $modifiedEvent;
+    }
+    
+    public function removeModifiedEvent(Event $modifiedEvent) {
+        unset($this->modifiedEvents[$modifiedEvent->getId()]);
+    }
 
     
     /**
