@@ -99,7 +99,7 @@ class CalendarController extends Controller {
         return $response;
     }
     
-    public function loadCalendarModificationAction(Request $request) {
+    public function loadCalendarModificationsAction(Request $request) {
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
         $scheduleModifications = $scheduleManager->getScheduleModifications();
         
