@@ -9,6 +9,13 @@ use Doctrine\ORM\EntityManager;
 class CalendarEventListener {
 
     private $schedulerManager;
+    private $arrayIdTest = array(
+        '265036',
+        '269660',
+        '274487',
+        '274495',
+        '265415',
+    );
 
     public function __construct() {
         $this->schedulerManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
@@ -25,9 +32,8 @@ class CalendarEventListener {
                 $path = $url . $calendar . '.xml';
                 $this->schedulerManager->parseAllSchedule($path);
             }
-        }
-        else {
-            if(!preg_match('/\?/', $url)) {
+        } else {
+            if (!preg_match('/\?/', $url)) {
                 $path = $url . $calendars . '.xml';
             } else {
                 $path = $url;
@@ -37,19 +43,12 @@ class CalendarEventListener {
 
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
 
-        $arrayIdTest = array(
-            '265036',
-            '269660',
-            '274487',
-            '274495',
-            '265415',
-        );
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $event) {
                     if (!$event->isDeleted()) {
-                        
-                        if(in_array($event->getId(), $arrayIdTest)) {
+
+                        if (in_array($event->getId(), $this->arrayIdTest)) {
                             $event->addProfessor('PILLIE RAPHAEL');
                             $event->addProfessor('POTTIER PIERRE-MARIE');
                             $event->addProfessor('DAOUDI MOHAMED');
@@ -68,6 +67,13 @@ class CalendarEventListener {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $event) {
                     if (!$event->isDeleted()) {
+
+                        if (in_array($event->getId(), $this->arrayIdTest)) {
+                            $event->addProfessor('PILLIE RAPHAEL');
+                            $event->addProfessor('POTTIER PIERRE-MARIE');
+                            $event->addProfessor('DAOUDI MOHAMED');
+                            $event->addFormation('2314');
+                        }
                         $calendarEvent->addEvent($event);
                     }
                 }
