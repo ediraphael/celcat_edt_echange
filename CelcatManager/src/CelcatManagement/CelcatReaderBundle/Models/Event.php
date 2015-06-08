@@ -321,6 +321,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['isSwapable'] = $this->isSwapable;
             $event['isEventSource'] = $this->isEventSource;
             $event['canClick'] = $canClick;
+            $event['editable'] = $this->isEventSource;
         } else {
             $event = $this->replacementEvent->toArray($canClick);
         }
