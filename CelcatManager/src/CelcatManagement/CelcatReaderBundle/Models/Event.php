@@ -238,8 +238,16 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function setNote($note) {
         $this->note = $note;
     }
+    
+    public function setBgColor($color) {
+        if($this->hasReplacementEvent()) {
+            $this->replacementEvent->setBgColor($color);
+        }
+        parent::setBgColor($color);
+    }
+   
 
-    /**
+        /**
      * Convert calendar event details to an array
      * 
      * @return array $event 
