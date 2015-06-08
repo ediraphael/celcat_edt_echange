@@ -157,7 +157,7 @@ class CalendarController extends Controller {
         $current_user = $this->getUser();
         foreach ($obj_events_destination as $obj_event_destination) {
             $event_destination = $schedulerManager->getWeekByTag($obj_event_destination['week'])->getDayById($obj_event_destination['day'])->getEventById($obj_event_destination['id']);
-            $event_destination->setBgColor("green");
+            //$event_destination->setBgColor("green");
             $result[] = array("id" => $event_destination->getId(), "result" => $schedulerManager->canSwapEvent($event_source, $event_destination, $current_user));
         }
 
