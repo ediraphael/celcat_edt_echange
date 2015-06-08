@@ -53,21 +53,33 @@ class CalendarEventListener {
 
     public function feedCalendarEvent(CalendarEvent $calendarEvent) {
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
+        $calendars = $calendarEvent->getRequest()->request->get('calendars');
+        $calendars[] = $calendarEvent->getUser()->getIdentifier();
         foreach ($arrayWeeks as $indexWeek => $week) {
             foreach ($week->getArrayDays() as $indexDay => $day) {
                 foreach ($day->getArrayEvents() as $indexEvents => $event) {
-                    if (!$event->isDeleted()) {
-                        if (in_array($event->getId(), $this->arrayIdTest)) {
-                            $event->addProfessor('PILLIE RAPHAEL');
-                            $event->addProfessor('POTTIER PIERRE-MARIE');
-                            $event->addProfessor('DAOUDI MOHAMED');
-                            $event->addFormation('2314');
-                        }
+                    if (in_array($event->getId(), $this->arrayIdTest)) {
+                        $event->addProfessor('PILLIE RAPHAEL');
+                        $event->addProfessor('POTTIER PIERRE-MARIE');
+                        $event->addProfessor('DAOUDI MOHAMED');
+                        $event->addFormation('2314');
+                    }
 
-                        if ($event->hasReplacementEvent()) {
-                            $event->setBgColor("purple");        
+                    $event->delete();
+                    if (is_array($calendars)) {
+                        foreach ($calendars as $calendar) {
+                            if (in_array($calendar, $event->getFormations()->toArray())) {
+                                $event->undelete();
+                            }
                         }
-                        
+                    }
+
+                    if ($event->hasReplacementEvent()) {
+                        $event->setBgColor("purple");
+                        $event->undelete();
+                    }
+
+                    if (!$event->isDeleted()) {
                         $calendarEvent->addEvent($event);
                     }
                 }
