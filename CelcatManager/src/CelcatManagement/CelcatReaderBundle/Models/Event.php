@@ -65,7 +65,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var boolean 
      */
     private $isDeleted = false;
-    
+
     /**
      *
      * @var Event 
@@ -96,6 +96,27 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function setIsDeleted($isDeleted) {
         $this->isDeleted = $isDeleted;
+    }
+
+    public function replaceBy(Event $replacementEvent) {
+        $this->replacementEvent = $replacementEvent;
+    }
+
+    public function deleteReplacementEvent() {
+        $this->replacementEvent = null;
+    }
+    
+    public function hasReplacementEvent() {
+        return $this->replacementEvent != null;
+    }
+
+    public function getReplacementEvent() {
+        return $this->replacementEvent;
+    }
+
+    public function setReplacementEvent(Event $replacementEvent) {
+        $this->replacementEvent = $replacementEvent;
+        return $this;
     }
 
     public function getFormations() {
@@ -224,6 +245,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @return array $event 
      */
     public function toArray($canClick = true) {
+        if($this->re)
         $event = parent::toArray();
         $event['room'] = $this->room;
         $event['category'] = $this->category;
