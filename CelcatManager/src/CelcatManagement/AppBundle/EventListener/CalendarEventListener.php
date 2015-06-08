@@ -64,8 +64,7 @@ class CalendarEventListener {
                         $event->addProfessor('DAOUDI MOHAMED');
                         $event->addFormation('2314');
                     }
-
-                    $event->delete();
+                    
                     if (is_array($calendars)) {
                         foreach ($calendars as $calendar) {
                             if (in_array($calendar, $event->getFormations()->toArray())) {
@@ -73,7 +72,17 @@ class CalendarEventListener {
                             }
                         }
                     }
-
+                    $event->setBgColor("");
+                    if($event->isSwapable()) {
+                        $event->setBgColor("green");
+                        $event->undelete();
+                    }
+                    
+                    if($event->isEventSource()) {
+                        $event->setBgColor("orange");
+                        $event->undelete();
+                    }
+                    
                     if ($event->hasReplacementEvent()) {
                         $event->setBgColor("purple");
                         $event->undelete();
