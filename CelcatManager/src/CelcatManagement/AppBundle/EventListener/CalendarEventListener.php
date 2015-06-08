@@ -46,11 +46,11 @@ class CalendarEventListener {
 
         $this->feedCalendarEvent($calendarEvent);
     }
-    
+
     public function refreshEvents(CalendarEvent $calendarEvent) {
         $this->feedCalendarEvent($calendarEvent);
     }
-    
+
     public function feedCalendarEvent(CalendarEvent $calendarEvent) {
         $arrayWeeks = $this->schedulerManager->getArrayWeeks();
         foreach ($arrayWeeks as $indexWeek => $week) {
@@ -63,9 +63,9 @@ class CalendarEventListener {
                             $event->addProfessor('DAOUDI MOHAMED');
                             $event->addFormation('2314');
                         }
-                        
-                        if($event->hasReplacementEvent()) {
-                            $event->setBgColor("purple");
+
+                        if ($event->hasReplacementEvent()) {
+                            $event->setBgColor("purple");        
                         }
                         
                         $calendarEvent->addEvent($event);
@@ -74,6 +74,5 @@ class CalendarEventListener {
             }
         }
     }
-
 
 }
