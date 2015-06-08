@@ -165,8 +165,8 @@ function swapTwoEvents(event_source, event_destination)
         {
             if (response)
             {
-                loadCalendarEvents($('#groupe_select'));
                 two_selected_events = [];
+                loadCalendarEvents($('#groupe_select'));
             }
             else {
                 alert("Une erreur s'est produite lors du chagement des créneaux");
@@ -208,7 +208,7 @@ $(function () {
             '': 'h:mm'         // 7p
         },
         eventClick: function (calEvent, jsEvent, view) {
-            if(calEvent.canClick || (two_selected_events.length > 0))
+            if((calEvent.canClick || (two_selected_events.length > 0)) && calEvent.backgroundColor != "purple")
             {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
