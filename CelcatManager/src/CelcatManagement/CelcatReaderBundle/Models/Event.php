@@ -154,18 +154,30 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function removeFormation($formation) {
         $this->formations->removeElement($formation);
     }
-    
+
     public function containsFormations($formations) {
-        if(is_array($formations) || $formations instanceof ArrayCollection) {
+        if (is_array($formations) || $formations instanceof ArrayCollection) {
             $contains = false;
             foreach ($formations as $formation) {
                 $contains = $contains || $this->formations->contains($formation);
             }
             return $contains;
-        }
-        else {
+        } else {
             return $this->formations->contains($formations);
         }
+    }
+
+    public function isEventCrossed(Event $event) {
+        if ($event->getStartDatetime() >= $this->getStartDatetime() && $event->getStartDatetime() < $this->getEndDatetime()) {
+            return true;
+        }
+        if ($event->getEndDatetime() > $this->getStartDatetime() && $event->getEndDatetime() <= $this->getEndDatetime()) {
+            return true;
+        }
+        if ($event->getStartDatetime() <= $this->getStartDatetime() && $event->getEndDatetime() >= $this->getEndDatetime()) {
+            return true;
+        }
+        return false;
     }
 
     public function getId() {
@@ -303,17 +315,16 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function eventSource() {
         $this->isEventSource = true;
-    }    
-    
+    }
+
     public function unEventSource() {
         $this->isEventSource = false;
     }
-    
+
     public function isEventSource() {
         return $this->isEventSource;
     }
-    
-    
+
     /**
      * Convert calendar event details to an array
      * 
