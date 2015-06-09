@@ -90,12 +90,25 @@ class CalendarController extends Controller {
         $eventSourceJs = $request->request->get('event_source');
         $eventDestinationJs = $request->request->get('event_destination');
         $removedScheduleModification = $request->request->get('removed_schedule_modification');
-
+        $dropedEventModification = $request->request->get('droped_event_modification');
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
 
         if ($removedScheduleModification != null && $removedScheduleModification != '') {
             $scheduleManager->removeScheduleModificationById($removedScheduleModification);
+        }
+
+        if ($dropedEventModification != null && $dropedEventModification != '') {
+            $eventModifiedJs = json_decode($dropedEventModification);
+            $eventSource = $scheduleManager->getWeekByTag($eventModifiedJs->week)->getDayById($eventModifiedJs->day)->getEventById($eventModifiedJs->id);
+            $eventSource->deleteReplacementEvent();
+            $replacementEvent = clone $eventSource;
+            $replacementEvent->setStartDatetime(new \DateTime($eventModifiedJs->start));
+            $replacementEvent->setEndDatetime(new \DateTime($eventModifiedJs->end));
+            $eventSource->replaceBy($replacementEvent);
+            $scheduleModification = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleModification();
+            $scheduleModification->setDropModification($eventSource);
+            $scheduleManager->addScheduleModification($scheduleModification);
         }
 
         //On réinitialise les evenements
@@ -151,7 +164,7 @@ class CalendarController extends Controller {
         foreach ($events as $event) {
             $return_events[] = $event->toArray($this->userOwnThisEvent($event, $user, $ldapManager));
         }
-        
+
 //        ps    rint_r($return_events);
 
         $response->setContent(json_encode($return_events));
