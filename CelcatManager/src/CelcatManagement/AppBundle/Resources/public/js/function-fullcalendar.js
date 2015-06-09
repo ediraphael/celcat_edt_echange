@@ -1,5 +1,6 @@
 var two_selected_events = new Array();
 var removed_schedule_modification = null;
+var droped_event_modification = null;
 
 function refreshCalendarEvents() {
     removeCalendarEvents();
@@ -53,11 +54,14 @@ function refreshCalendarEventSource() {
             week: two_selected_events[1].week,
             formations: two_selected_events[1].formations
         };
-
     }
 
     if (removed_schedule_modification) {
         data['removed_schedule_modification'] = removed_schedule_modification;
+    }
+    
+    if(droped_event_modification) {
+        data['droped_event_modification'] = droped_event_modification;
     }
 
     eventSources =
@@ -154,21 +158,21 @@ $(function () {
             agenda: 'HH:mm',
             '': 'HH:mm'
         },
-        eventClick: function (calEvent, jsEvent, view) {
-            if ((calEvent.canClick || (two_selected_events.length > 0)) && calEvent.backgroundColor != "purple") {
+        eventClick: function (event, jsEvent, view) {
+            if ((event.canClick || (two_selected_events.length > 0)) && event.backgroundColor != "purple") {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
-                if (calEvent.backgroundColor === "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == calEvent.id)) {
+                if (event.backgroundColor === "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == event.id)) {
 
                     two_selected_events = new Array();
                 }
                 else {
-                    two_selected_events.push(calEvent);
+                    two_selected_events.push(event);
                 }
 
                 if (two_selected_events.length == 2) {
 
-                    if (calEvent.backgroundColor === "green") {
+                    if (event.backgroundColor === "green") {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
                             two_selected_events = new Array();
                         }
@@ -184,6 +188,12 @@ $(function () {
                     refreshCalendarEvents();
                 }
             }
+        },
+        eventDrop: function (event, delta, revertFunc) {
+            console.log(event);
+            droped_event_modification = JSON.stringify(event);
+            refreshCalendarEvents();
+            droped_event_modification = null;
         }
     });
 
