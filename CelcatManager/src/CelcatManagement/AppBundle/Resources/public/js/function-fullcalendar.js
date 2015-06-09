@@ -1,5 +1,5 @@
 var two_selected_events = new Array();
-var removed_schedule_modification = null; 
+var removed_schedule_modification = null;
 
 function refreshCalendarEvents() {
     removeCalendarEvents();
@@ -17,6 +17,12 @@ function addCalendarEventSource(calendarFile) {
                     // A way to add custom filters to your event listeners
                     data: {
                         calendars: calendarFile
+                    },
+                    beforeSend: function () {
+                        $("#loading").show();
+                    },
+                    success: function () {
+                        $("#loading").hide();
                     },
                     error: function () {
                         //   alert('There was an error while fetching Google Calendar!');
@@ -49,8 +55,8 @@ function refreshCalendarEventSource() {
         };
 
     }
-    
-    if(removed_schedule_modification) {
+
+    if (removed_schedule_modification) {
         data['removed_schedule_modification'] = removed_schedule_modification;
     }
 
@@ -60,6 +66,12 @@ function refreshCalendarEventSource() {
                 type: 'POST',
                 // A way to add custom filters to your event listeners
                 data: data,
+                beforeSend: function () {
+                    $("#loading").show();
+                },
+                success: function () {
+                    $("#loading").hide();
+                },
                 error: function () {
                     //   alert('There was an error while fetching Google Calendar!');
                 }
@@ -98,7 +110,7 @@ function loadCalendarModifications()
             for (i = 0; i < response.length; i++) {
                 $('#schedule_modification_container').append("" +
                         "<div class=\"alert alert-info alert-dismissible\" role=\"alert\">" +
-                        "<button type\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onClick=\"removeScheduleModification('"+response[i].firstEvent.id+"')\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "<button type\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onClick=\"removeScheduleModification('" + response[i].firstEvent.id + "')\"><span aria-hidden=\"true\">&times;</span></button>" +
                         "<strong>" + response[i].modificationType + "</strong>  " + response[i].firstEvent.title + " <-> " + response[i].secondEvent.title +
                         "</div>"
                         );
@@ -148,23 +160,23 @@ $(function () {
                 $(this).toggleClass("selected_event");
                 if (calEvent.backgroundColor === "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == calEvent.id)) {
 
-                    two_selected_events  = new Array();
+                    two_selected_events = new Array();
                 }
                 else {
                     two_selected_events.push(calEvent);
                 }
 
                 if (two_selected_events.length == 2) {
-     
+
                     if (calEvent.backgroundColor === "green") {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
-                            two_selected_events  = new Array();
+                            two_selected_events = new Array();
                         }
                         refreshCalendarEvents();
-                        two_selected_events  = new Array();
+                        two_selected_events = new Array();
                     }
                     else {
-                        two_selected_events.splice(1,1);
+                        two_selected_events.splice(1, 1);
                         $(this).toggleClass("selected_event");
                     }
                 }
