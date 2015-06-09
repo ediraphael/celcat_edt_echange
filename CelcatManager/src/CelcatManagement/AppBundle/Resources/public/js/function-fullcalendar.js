@@ -94,7 +94,6 @@ function loadCalendarModifications()
         },
         success: function (response)
         {
-            console.log(response);
             $('#schedule_modification_container').html('');
             for (i = 0; i < response.length; i++) {
                 $('#schedule_modification_container').append("" +
