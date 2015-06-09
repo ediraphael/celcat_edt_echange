@@ -162,7 +162,7 @@ $(function () {
             if ((event.canClick || (two_selected_events.length > 0)) && event.backgroundColor != "purple") {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
-                if (event.backgroundColor === "orange" || (two_selected_events.length > 0 && two_selected_events[0].id == event.id)) {
+                if (event.isEventSource === "1" || (two_selected_events.length > 0 && two_selected_events[0].id == event.id)) {
 
                     two_selected_events = new Array();
                 }
@@ -172,7 +172,7 @@ $(function () {
 
                 if (two_selected_events.length == 2) {
 
-                    if (event.backgroundColor === "green") {
+                    if (event.canClick === "1") {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
                             two_selected_events = new Array();
                         }
