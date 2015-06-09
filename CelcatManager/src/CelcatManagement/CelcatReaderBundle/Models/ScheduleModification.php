@@ -32,7 +32,7 @@ class ScheduleModification {
         $this->secondEvent = $secondEvent;
         $this->modificationType = 'swap';
     }
-    
+
     /**
      * 
      * @return boolean
@@ -40,7 +40,7 @@ class ScheduleModification {
     public function isSwapModification() {
         return $this->modificationType == 'swap';
     }
-    
+
     /**
      * Fonction to set a resize modification
      * @param \CelcatManagement\CelcatReaderBundle\Models\Event $event Original event, with his modification in his replacementEvent attribut
@@ -50,7 +50,7 @@ class ScheduleModification {
         $this->secondEvent = null;
         $this->modificationType = 'resize';
     }
-    
+
     /**
      * 
      * @return boolean
@@ -58,7 +58,7 @@ class ScheduleModification {
     public function isResizeModification() {
         return $this->modificationType == 'resize';
     }
-    
+
     /**
      * Fonction to set a drop modification
      * @param \CelcatManagement\CelcatReaderBundle\Models\Event $event Original event, with his modification in his replacementEvent attribut
@@ -68,7 +68,7 @@ class ScheduleModification {
         $this->secondEvent = null;
         $this->modificationType = 'drop';
     }
-    
+
     /**
      * 
      * @return boolean
@@ -88,13 +88,18 @@ class ScheduleModification {
     public function getModificationType() {
         return $this->modificationType;
     }
-    
+
     public function toArray() {
         $array = array();
         $array['firstEvent'] = $this->firstEvent->toArray();
-        $array['secondEvent'] = $this->secondEvent->toArray();
+        if ($this->secondEvent != null && $this->secondEvent != '') {
+            $array['secondEvent'] = $this->secondEvent->toArray();
+        } else {
+            $array['secondEvent'] = '';
+        }
         $array['modificationType'] = $this->modificationType;
-        
+
         return $array;
     }
+
 }
