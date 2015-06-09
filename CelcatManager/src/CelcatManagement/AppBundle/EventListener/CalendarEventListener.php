@@ -75,17 +75,19 @@ class CalendarEventListener {
                     $event->setBgColor("");
                     if($event->isSwapable()) {
                         $event->setBgColor("green");
-                        $event->undelete();
                     }
+                    
+                    if(!$event->isSwapable() && !in_array($calendarEvent->getUser()->getIdentifier(), $event->getFormations()->toArray())) {
+                        $event->setBgColor('red');
+                    }
+                   
                     
                     if($event->isEventSource()) {
                         $event->setBgColor("orange");
-                        $event->undelete();
                     }
                     
                     if ($event->hasReplacementEvent()) {
                         $event->setBgColor("purple");
-                        $event->undelete();
                     }
 
                     if (!$event->isDeleted()) {
