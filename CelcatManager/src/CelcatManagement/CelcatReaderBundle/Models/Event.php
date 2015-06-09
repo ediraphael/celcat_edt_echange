@@ -168,8 +168,8 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function isEventCrossed(Event $event) {
-        return $event->getStartDatetime() <= $this->getEndDatetime() && $event->getEndDatetime() >= $this->getStartDatetime() ||
-                $this->getStartDatetime() <= $event->getEndDatetime() && $this->getEndDatetime() >= $event->getStartDatetime();
+        return $event->getStartDatetime() < $this->getEndDatetime() && $event->getEndDatetime() > $this->getStartDatetime() ||
+                $this->getStartDatetime() < $event->getEndDatetime() && $this->getEndDatetime() > $event->getStartDatetime();
     }
 
     public function getId() {
