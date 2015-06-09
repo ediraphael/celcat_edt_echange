@@ -109,7 +109,9 @@ class ScheduleManager {
         foreach ($this->scheduleModifications as $scheduleModification) {
             if ($scheduleModification->getFirstEvent()->getId() == $eventId) {
                 $scheduleModification->getFirstEvent()->deleteReplacementEvent();
-                $scheduleModification->getSecondEvent()->deleteReplacementEvent();
+                if ($scheduleModification->getSecondEvent() != null && $scheduleModification->getSecondEvent() != '') {
+                    $scheduleModification->getSecondEvent()->deleteReplacementEvent();
+                }
                 $this->removeScheduleModification($scheduleModification);
             }
         }
@@ -382,7 +384,7 @@ class ScheduleManager {
         $newEventDestination->setEndDatetime($newEndDateTimeDestination);
 
 
-        if($newEventDestination->isEventCrossed($newEventSource)) {
+        if ($newEventDestination->isEventCrossed($newEventSource)) {
             return false;
         }
 
