@@ -88,6 +88,7 @@ class CalendarEventListener {
                     
                     if ($event->hasReplacementEvent()) {
                         $event->setBgColor("purple");
+                        $event->undelete();
                     }
 
                     if (!$event->isDeleted()) {
