@@ -93,11 +93,11 @@ class CalendarController extends Controller {
 
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
-        
-        if($removedScheduleModification != null && $removedScheduleModification != '') {
+
+        if ($removedScheduleModification != null && $removedScheduleModification != '') {
             $scheduleManager->removeScheduleModificationById($removedScheduleModification);
         }
-        
+
         //On réinitialise les evenements
         $arrayWeeks = $scheduleManager->getArrayWeeks();
         foreach ($arrayWeeks as $indexWeek => $week) {
@@ -109,7 +109,7 @@ class CalendarController extends Controller {
                 }
             }
         }
-       
+
 
         // On verifie si on vient de faire un click sur un premier evenement
         if ($eventSourceJs != null && $eventSourceJs != '' && ($eventDestinationJs == null || $eventDestinationJs == '')) {
@@ -119,17 +119,11 @@ class CalendarController extends Controller {
                 foreach ($week->getArrayDays() as $indexDay => $day) {
                     foreach ($day->getArrayEvents() as $indexEvents => $event) {
                         if ($event->getId() != $eventSource->getId()) {
-                            if ($scheduleManager->canSwapEvent($eventSource, $event, $user)) {
-                                $event->swapable();
-                                $event->undelete();
-                            } 
-                            else {
-                                $formations = $event->getFormations()->toArray();
-                                foreach ($formations as $formation) {
-                                    if(in_array($formation, $eventSource->getFormations()->toArray())) {
-                                        $event->undelete();
-                                    }
+                            if ($event->containsFormations($eventSource->getFormations())) {
+                                if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
+                                    $event->swapable();
                                 }
+                                $event->undelete();
                             }
                         } else {
                             $event->eventSource();
@@ -139,7 +133,7 @@ class CalendarController extends Controller {
                 }
             }
         }
-        
+
         if ($eventSourceJs != null && $eventSourceJs != '' && $eventDestinationJs != null && $eventDestinationJs != '') {
             $eventSource = $scheduleManager->getWeekByTag($eventSourceJs['week'])->getDayById($eventSourceJs['day'])->getEventById($eventSourceJs['id']);
             $eventDestination = $scheduleManager->getWeekByTag($eventDestinationJs['week'])->getDayById($eventDestinationJs['day'])->getEventById($eventDestinationJs['id']);
@@ -147,7 +141,7 @@ class CalendarController extends Controller {
         }
 
 
-         $scheduleManager->save();
+        $scheduleManager->save();
         $events = $this->container->get('event_dispatcher')->dispatch(CalendarEvent::CONFIGURE_REFRESH, new CalendarEvent($startDatetime, $endDatetime, $request, $this->getUser()))->getEvents();
 
         $response = new \Symfony\Component\HttpFoundation\Response();
@@ -157,7 +151,8 @@ class CalendarController extends Controller {
         foreach ($events as $event) {
             $return_events[] = $event->toArray($this->userOwnThisEvent($event, $user, $ldapManager));
         }
-
+        
+//        ps    rint_r($return_events);
 
         $response->setContent(json_encode($return_events));
 
@@ -179,4 +174,5 @@ class CalendarController extends Controller {
 
         return $response;
     }
+
 }
