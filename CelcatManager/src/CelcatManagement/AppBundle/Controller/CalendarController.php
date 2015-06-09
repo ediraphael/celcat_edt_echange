@@ -121,6 +121,7 @@ class CalendarController extends Controller {
                         if ($event->getId() != $eventSource->getId()) {
                             if ($scheduleManager->canSwapEvent($eventSource, $event, $user)) {
                                 $event->swapable();
+                                $event->undelete();
                             } 
                             else {
                                 $formations = $event->getFormations()->toArray();
@@ -132,6 +133,7 @@ class CalendarController extends Controller {
                             }
                         } else {
                             $event->eventSource();
+                            $event->undelete();
                         }
                     }
                 }
