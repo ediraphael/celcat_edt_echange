@@ -18,14 +18,22 @@ class ScheduleManager {
      */
     private $scheduleModifications;
 
+    /**
+     *  
+     * @var \Doctrine\Common\Collections\ArrayCollection 
+     */
+    private $loadedFormations;
+
     function __construct() {
         if (isset($_SESSION['schedulerManager'])) {
             $scheduleur = unserialize($_SESSION['schedulerManager']);
             $this->arrayWeeks = $scheduleur->getArrayWeeks();
             $this->scheduleModifications = $scheduleur->getScheduleModifications();
+            $this->loadedFormations = $scheduleur->getLoadedFormations();
         } else {
             $this->arrayWeeks = array();
             $this->scheduleModifications = array();
+            $this->loadedFormations = new \Doctrine\Common\Collections\ArrayCollection();
             $this->save();
         }
     }
@@ -99,12 +107,26 @@ class ScheduleManager {
 
     public function removeScheduleModificationById($eventId) {
         foreach ($this->scheduleModifications as $scheduleModification) {
-            if($scheduleModification->getFirstEvent()->getId() == $eventId) {
+            if ($scheduleModification->getFirstEvent()->getId() == $eventId) {
                 $scheduleModification->getFirstEvent()->deleteReplacementEvent();
                 $scheduleModification->getSecondEvent()->deleteReplacementEvent();
                 $this->removeScheduleModification($scheduleModification);
             }
         }
+    }
+
+    public function getLoadedFormations() {
+        return $this->loadedFormations;
+    }
+
+    public function setLoadedFormations(\Doctrine\Common\Collections\ArrayCollection $loadedFormations) {
+        $this->loadedFormations = $loadedFormations;
+        return $this;
+    }
+
+    public function addLoadedFormation($loadedFormation) {
+        $this->loadedFormations->add($loadedFormation);
+        return $this;
     }
 
     /**
@@ -113,6 +135,7 @@ class ScheduleManager {
      */
     public function parseWeeks($file_contents) {
         try {
+            $todayDate = new \DateTime();
             $crawler = new Crawler();
             $crawler->addXmlContent($file_contents);
             $return_value = $crawler->filterXPath("//span");
@@ -125,7 +148,13 @@ class ScheduleManager {
                     $week->setId($crawler->filterXPath("//title")->text());
                     $week->setDescription($crawler->filterXPath("//description")->text());
                     $week->setTag($crawler->filterXPath("//alleventweeks")->text());
-                    $this->addWeek($week);
+
+                    $weekDate = new \DateTime(str_replace('/', '-', $week->getDate()));
+                    $diff = $weekDate->diff($todayDate);
+                    /* @var $diff \DateInterval */
+                    if ($diff->days * ($diff->invert ? 1 : -1) > -8) {
+                        $this->addWeek($week);
+                    }
                 }
             }
             $this->save();
@@ -288,37 +317,96 @@ class ScheduleManager {
 
     /**
      * 
-     * @param type $event_source
-     * @param type $event_destination
+     * @param Event $eventSource
+     * @param Event $eventDestination
      * @return boolean
      */
-    public function canSwapEvent(&$event_source, &$event_destination, $user) {
-        $array_formations_ids = array();
-        foreach ($this->getWeekByTag($event_destination->getWeek())->getDayById($event_destination->getDay())->getArrayEvents() as $event) {
-            if ($event->getId() == $event_destination->getId()) {
-                $array_formations_ids[] = $event->getFormations();
+    public function canSwapEvent(Event &$eventSource, Event &$eventDestination, $user, \Symfony\Component\DependencyInjection\Container $container) {
+        //On charge des données initial
+        $urlStudendPath = $container->getParameter('celcat.url') . $container->getParameter('celcat.studentPath');
+        $urlTeacherPath = $container->getParameter('celcat.url') . $container->getParameter('celcat.teacherPath') . $container->getParameter('celcat.teacherFileGet');
+        $todayArg = $container->getParameter('celcat.teacherFileArgumentKey') . '=' . mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+        $fileArg = $container->getParameter('celcat.teacherFileArgumentId');
+        $ldapManager = $container->get('ldap_manager');
+        /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
+
+        //Si l'emploi du temps de destination n'a pas de prof, on le retire
+        if ($eventDestination->getProfessors()->isEmpty()) {
+            return false;
+        }
+
+        //On récupère les formations
+        $eventDestinationFormations = $eventDestination->getFormations();
+        $eventSourceFormations = $eventSource->getFormations();
+
+        //Ainsi que les nom de formations pour les profs
+        $eventDestinationProfessors = $eventDestination->getProfessors();
+        $professorFormations = array();
+        foreach ($eventDestinationProfessors as $professors) {
+            $userProfessor = $ldapManager->getUserByFullName($professors);
+            if ($userProfessor != null && $userProfessor->getIdentifier() != '') {
+                $professorFormations[] = $userProfessor->getIdentifier();
             }
         }
-        foreach ($array_formations_ids as $formation_ids) {
-            foreach ($formation_ids as $formation_id) {
-                $duree_event_destination = gmdate('H:i', strtotime($event_destination->getEndTime()) - strtotime($event_destination->getStartTime()));
-                $hours = explode(":", $duree_event_destination)[0];
-                $minutes = explode(":", $duree_event_destination)[1];
-                $convert = strtotime("+$hours hours", strtotime($event_source->getStartTime()));
-                $convert = strtotime("+$minutes minutes", $convert);
-                $calculated_end_time = date('H:i', $convert);
-                if (!$this->getWeekByTag($event_source->getWeek())->getDayById($event_source->getDay())
-                                ->canAddEvent($event_source->getId(), $event_source->getStartTime(), $calculated_end_time, $formation_id, $user)) {
-                    $event_source->setBgColor("orange");
-                    $event_destination->setBgColor("");
-                    $this->save();
-                    return false;
+
+        // On charge toutes les formations necessaire
+        $formations = array_merge($eventDestinationFormations->toArray(), $eventSourceFormations->toArray(), $professorFormations);
+        foreach ($formations as $formation) {
+            if (!$this->loadedFormations->contains($formation)) {
+                $url = '';
+                if ($formation[0] == 'g') {
+                    $url = $urlStudendPath . $formation . '.xml';
+                } else {
+                    $url = $urlTeacherPath . '?' . $fileArg . '=' . $formation . '&' . $todayArg;
+                }
+                $this->parseAllSchedule($url);
+            }
+        }
+
+        $newEventSource = clone $eventSource;
+        $newEventDestination = clone $eventDestination;
+
+        $startSource = $eventSource->getStartDatetime();
+        $startDestinaton = $eventDestination->getStartDatetime();
+        $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
+        $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
+
+        $newEventSource->setStartDatetime($startDestinaton);
+        $newEndDateTimeSource = clone $startDestinaton;
+        $newEndDateTimeSource->add($durationDestination);
+        $newEventSource->setEndDatetime($newEndDateTimeSource);
+
+        $newEventDestination->setStartDatetime($startSource);
+        $newEndDateTimeDestination = clone $startSource;
+        $newEndDateTimeDestination->add($durationSource);
+        $newEventDestination->setEndDatetime($newEndDateTimeDestination);
+
+
+        if($newEventDestination->isEventCrossed($newEventSource)) {
+            return false;
+        }
+
+        foreach ($this->getWeekByTag($newEventSource->getWeek())->getDayById($newEventSource->getDay())->getArrayEvents() as $event) {
+            if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
+                if ($event->containsFormations($newEventDestination->getFormations())) {
+                    if ($event->isEventCrossed($newEventDestination)) {
+                        return false;
+                    }
                 }
             }
         }
-        $event_source->setBgColor("orange");
-        $event_destination->setBgColor("green");
-        $this->save();
+
+
+        foreach ($this->getWeekByTag($newEventDestination->getWeek())->getDayById($newEventDestination->getDay())->getArrayEvents() as $event) {
+            if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
+                if ($event->containsFormations($newEventSource->getFormations())) {
+                    if ($event->isEventCrossed($newEventSource)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
