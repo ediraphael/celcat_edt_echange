@@ -90,6 +90,11 @@ class Week {
         $this->arrayDays[] = $day;
     }
 
+    /**
+     * 
+     * @param type $dayId
+     * @return Day|null
+     */
     public function getDayById($dayId) {
         if(isset($this->arrayDays[$dayId]) && $this->arrayDays != '') {
             return $this->arrayDays[$dayId];
