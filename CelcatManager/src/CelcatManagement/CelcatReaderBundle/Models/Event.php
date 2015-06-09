@@ -154,6 +154,19 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function removeFormation($formation) {
         $this->formations->removeElement($formation);
     }
+    
+    public function containsFormations($formations) {
+        if(is_array($formations) || $formations instanceof ArrayCollection) {
+            $contains = false;
+            foreach ($formations as $formation) {
+                $contains = $contains || $this->formations->contains($formation);
+            }
+            return $contains;
+        }
+        else {
+            return $this->formations->contains($formations);
+        }
+    }
 
     public function getId() {
         return $this->id;
