@@ -66,8 +66,10 @@ class CalendarEventListener {
                     }
 
                     if (is_array($calendars)) {
-                        if ($event->containsFormations($calendars)) {
-                            $event->undelete();
+                        foreach ($calendars as $calendar) {
+                            if ($event->getFormations()->contains($calendar)) {
+                                $event->undelete();
+                            }
                         }
                     }
                     $event->setBgColor("");
