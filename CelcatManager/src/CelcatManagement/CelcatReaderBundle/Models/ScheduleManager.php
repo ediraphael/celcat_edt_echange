@@ -396,7 +396,7 @@ class ScheduleManager {
 
         foreach ($this->getWeekByTag($newEventSource->getWeek())->getDayById($newEventSource->getDay())->getArrayEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventDestination->getFormations()) && $event->containsProfessors($newEventDestination->getProfessors())) {
+                if ($event->containsFormations($newEventDestination->getFormations())) {
                     if ($event->isEventCrossed($newEventDestination)) {
                         return false;
                     }
@@ -407,7 +407,7 @@ class ScheduleManager {
 
         foreach ($this->getWeekByTag($newEventDestination->getWeek())->getDayById($newEventDestination->getDay())->getArrayEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventSource->getFormations()) && $event->containsProfessors($newEventSource->getProfessors())) {
+                if ($event->containsFormations($newEventSource->getFormations())) {
                     if ($event->isEventCrossed($newEventSource)) {
                         return false;
                     }
