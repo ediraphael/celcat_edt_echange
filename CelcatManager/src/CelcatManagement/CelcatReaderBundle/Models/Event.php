@@ -323,14 +323,14 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function eventSource() {
-        if($this->hasReplacementEvent()) {
+        if ($this->hasReplacementEvent()) {
             $this->replacementEvent->eventSource();
         }
         $this->isEventSource = true;
     }
 
     public function unEventSource() {
-        if($this->hasReplacementEvent()) {
+        if ($this->hasReplacementEvent()) {
             $this->replacementEvent->unEventSource();
         }
         $this->isEventSource = false;
@@ -347,6 +347,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      */
     public function toArray($canClick = true) {
         if (!$this->hasReplacementEvent()) {
+            $todayDate = new \DateTime();
             $event = parent::toArray();
             $event['room'] = $this->room;
             $event['category'] = $this->category;
@@ -359,7 +360,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['week'] = $this->week;
             $event['isSwapable'] = $this->isSwapable;
             $event['isEventSource'] = $this->isEventSource;
-            $event['canClick'] = $canClick || $this->isSwapable || $this->isEventSource;
+            $event['canClick'] = ($canClick || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
             $event['editable'] = $this->isEventSource;
         } else {
             $event = $this->replacementEvent->toArray($canClick);
