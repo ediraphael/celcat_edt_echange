@@ -145,7 +145,7 @@ $(function () {
             right: 'today'
         },
         defaultView: 'agendaWeek',
-        allDaySlot: true,
+        allDaySlot: false,
         slotDuration: '00:30:00',
         axisFormat: 'HH:mm',
         maxTime: '21:00',
