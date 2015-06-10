@@ -88,6 +88,20 @@ class ScheduleManager {
         return null;
     }
 
+    /**
+     * 
+     * @param type $weeknumber
+     * @return null|Week
+     */
+    public function getWeekByWeeknumber($weeknumber) {
+        foreach ($this->arrayWeeks as $week) {
+            if ($week->getWeeknumber() == $weeknumber) {
+                return $week;
+            }
+        }
+        return null;
+    }
+    
     public function getScheduleModifications() {
         return $this->scheduleModifications;
     }
