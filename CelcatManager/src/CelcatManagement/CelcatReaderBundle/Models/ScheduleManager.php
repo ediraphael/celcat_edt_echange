@@ -98,7 +98,16 @@ class ScheduleManager {
     }
 
     public function addScheduleModification(ScheduleModification $scheduleModification) {
-        $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
+        if (isset($this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()]) && $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] != '') {
+            if($scheduleModification->isSwapModification()) {
+                $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
+            }
+            elseif ($scheduleModification->isDropModification() && $scheduleModification->isResizeModification()) {
+                $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()]->setFirstEvent($scheduleModification->getFirstEvent());
+            }
+        } else {
+            $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
+        }
     }
 
     public function removeScheduleModification(ScheduleModification $scheduleModification) {
@@ -287,7 +296,7 @@ class ScheduleManager {
      * @param Event $eventDestination
      */
     public function swapEvent(Event $eventSource, Event $eventDestination) {
-        if (!$eventSource->hasReplacementEvent() && !$eventDestination->hasReplacementEvent()) {
+        
             $newEventSource = clone $eventSource;
             $newEventDestination = clone $eventDestination;
 
@@ -316,9 +325,7 @@ class ScheduleManager {
 
             $this->save();
             return true;
-        } else {
-            return false;
-        }
+       
     }
 
     /**
@@ -334,15 +341,15 @@ class ScheduleManager {
         $todayArg = $container->getParameter('celcat.teacherFileArgumentKey') . '=' . mktime(0, 0, 0, date("m"), date("d"), date("Y"));
         $fileArg = $container->getParameter('celcat.teacherFileArgumentId');
         $ldapManager = $container->get('ldap_manager');
-        $todatDate = new \DateTime();
+        $todayDate = new \DateTime();
         /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
 
         //Si l'emploi du temps de destination n'a pas de prof, on le retire
         if ($eventDestination->getProfessors()->isEmpty()) {
             return false;
         }
-        
-        if($eventDestination->getStartDatetime() < $todatDate) {
+
+        if ($eventDestination->getStartDatetime() < $todayDate) {
             return false;
         }
 
