@@ -77,7 +77,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var boolean 
      */
     private $isEventSource = false;
-    
     private $isClickable = false;
 
     /**
@@ -189,6 +188,22 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function getEndTime() {
         return $this->getEndDatetime()->format("H:i");
+    }
+
+    public function getStartDatetime() {
+        if ($this->hasReplacementEvent()) {
+            return $this->replacementEvent->getStartDatetime();
+        } else {
+            return parent::getStartDatetime();
+        }
+    }
+
+    public function getEndDatetime() {
+        if ($this->hasReplacementEvent()) {
+            return $this->replacementEvent->getEndDatetime();
+        } else {
+            return parent::getEndDatetime();
+        }
     }
 
     public function getRoom() {
@@ -341,12 +356,12 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     public function isEventSource() {
         return $this->isEventSource;
     }
-    
+
     public function clickable() {
         $this->isClickable = true;
         return $this;
     }
-    
+
     public function unclickable() {
         $this->isClickable = false;
         return $this;
