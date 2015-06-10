@@ -91,6 +91,7 @@ class CalendarController extends Controller {
         $eventDestinationJs = $request->request->get('event_destination');
         $removedScheduleModification = $request->request->get('removed_schedule_modification');
         $dropedEventModification = $request->request->get('droped_event_modification');
+        $resizedEventModification = $request->request->get('resized_event_modification');
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
 
@@ -108,6 +109,20 @@ class CalendarController extends Controller {
             $eventSource->replaceBy($replacementEvent);
             $scheduleModification = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleModification();
             $scheduleModification->setDropModification($eventSource);
+            $scheduleManager->addScheduleModification($scheduleModification);
+        }
+        
+        if ($resizedEventModification != null && $resizedEventModification != '') {
+            $eventModifiedJs = json_decode($resizedEventModification);
+            
+            $eventSource = $scheduleManager->getWeekByTag($eventModifiedJs->week)->getDayById($eventModifiedJs->day)->getEventById($eventModifiedJs->id);
+            $eventSource->deleteReplacementEvent();
+            $replacementEvent = clone $eventSource;
+            $replacementEvent->setStartDatetime(new \DateTime($eventModifiedJs->start));
+            $replacementEvent->setEndDatetime(new \DateTime($eventModifiedJs->end));
+            $eventSource->replaceBy($replacementEvent);
+            $scheduleModification = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleModification();
+            $scheduleModification->setResizeModification($eventSource);
             $scheduleManager->addScheduleModification($scheduleModification);
         }
 
