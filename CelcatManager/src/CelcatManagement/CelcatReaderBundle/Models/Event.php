@@ -159,12 +159,17 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         if (is_array($formations) || $formations instanceof ArrayCollection) {
             $contains = false;
             foreach ($formations as $formation) {
-                $contains = $contains || $this->formations->contains($formation);
+                if ($formation[0] == 'g') {
+                    $contains = $contains || $this->formations->contains($formation);
+                }
             }
             return $contains;
         } else {
-            return $this->formations->contains($formations);
+            if ($formations[0] == 'g') {
+                return $this->formations->contains($formations);
+            }
         }
+        return false;
     }
 
     public function isEventCrossed(Event $event) {
@@ -260,6 +265,18 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->professors->removeElement($professor);
     }
 
+    public function containsProfessors($professors) {
+        if (is_array($professors) || $professors instanceof ArrayCollection) {
+            $contains = false;
+            foreach ($professors as $professor) {
+                $contains = $contains || $this->professors->contains($professor);
+            }
+            return $contains;
+        } else {
+            return $this->professors->contains($professors);
+        }
+    }
+
     public function setGroup($group) {
         $this->group = $group;
     }
@@ -306,10 +323,16 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function eventSource() {
+        if($this->hasReplacementEvent()) {
+            $this->replacementEvent->eventSource();
+        }
         $this->isEventSource = true;
     }
 
     public function unEventSource() {
+        if($this->hasReplacementEvent()) {
+            $this->replacementEvent->unEventSource();
+        }
         $this->isEventSource = false;
     }
 
@@ -336,7 +359,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['week'] = $this->week;
             $event['isSwapable'] = $this->isSwapable;
             $event['isEventSource'] = $this->isEventSource;
-            $event['canClick'] = $canClick;
+            $event['canClick'] = $canClick || $this->isSwapable || $this->isEventSource;
             $event['editable'] = $this->isEventSource;
         } else {
             $event = $this->replacementEvent->toArray($canClick);
