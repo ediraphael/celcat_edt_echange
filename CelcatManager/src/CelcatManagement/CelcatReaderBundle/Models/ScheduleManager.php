@@ -364,8 +364,6 @@ class ScheduleManager {
         $formations = array_merge($eventDestinationFormations->toArray(), $eventSourceFormations->toArray(), $professorFormations);
         foreach ($formations as $formation) {
             if (!$this->loadedFormations->contains($formation)) {
-//                echo 'cii ' . $formation . ' 
-//                    ';
                 $url = '';
                 if ($formation[0] == 'g') {
                     $url = $urlStudendPath . $formation . '.xml';
