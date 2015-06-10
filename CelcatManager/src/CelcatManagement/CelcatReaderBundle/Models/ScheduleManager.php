@@ -233,6 +233,7 @@ class ScheduleManager {
                     if ($crawler->filterXPath("//prettytimes")->count() > 0) {
                         $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
                     }
+                    $event->delete();
                     $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
                 }
             }
