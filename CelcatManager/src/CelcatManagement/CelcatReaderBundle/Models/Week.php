@@ -13,6 +13,7 @@ class Week {
     private $id;
     private $tag;
     private $date;
+    private $weeknumber;
 
     function __construct() {
         $this->arrayDays = array();
@@ -130,6 +131,15 @@ class Week {
             $tab_free_events[$day->getName()] = $day->getFreeEventsList($start_time, $end_time);
         }
         return $tab_free_events;
+    }
+    
+    public function getWeeknumber() {
+        return $this->weeknumber;
+    }
+
+    public function setWeeknumber($weeknumber) {
+        $this->weeknumber = $weeknumber;
+        return $this;
     }
 
 }
