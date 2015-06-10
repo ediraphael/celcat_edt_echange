@@ -156,6 +156,8 @@ class ScheduleManager {
                 if (!$this->weekExists($crawler->filterXPath("//title")->text())) {
                     $week = new Week();
                     $week->setDate($crawler->attr("date"));
+                    $date = new \DateTime(str_replace("/", "-", $week->getDate()));
+                    $week->setWeeknumber($date->format("W"));
                     $week->setId($crawler->filterXPath("//title")->text());
                     $week->setDescription($crawler->filterXPath("//description")->text());
                     $week->setTag($crawler->filterXPath("//alleventweeks")->text());
@@ -300,8 +302,8 @@ class ScheduleManager {
             $newEventSource = clone $eventSource;
             $newEventDestination = clone $eventDestination;
 
-            $startSource = $eventSource->getStartDatetime();
-            $startDestinaton = $eventDestination->getStartDatetime();
+            $startSource = clone $eventSource->getStartDatetime();
+            $startDestinaton = clone $eventDestination->getStartDatetime();
             $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
             $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
 
@@ -384,8 +386,8 @@ class ScheduleManager {
         $newEventSource = clone $eventSource;
         $newEventDestination = clone $eventDestination;
 
-        $startSource = $eventSource->getStartDatetime();
-        $startDestinaton = $eventDestination->getStartDatetime();
+        $startSource = clone $eventSource->getStartDatetime();
+        $startDestinaton = clone $eventDestination->getStartDatetime();
         $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
         $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
 
