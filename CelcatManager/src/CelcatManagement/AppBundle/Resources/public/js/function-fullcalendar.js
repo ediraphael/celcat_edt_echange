@@ -1,6 +1,7 @@
 var two_selected_events = new Array();
 var removed_schedule_modification = null;
 var droped_event_modification = null;
+var resized_event_modification = null;
 
 function refreshCalendarEvents() {
     removeCalendarEvents();
@@ -62,6 +63,10 @@ function refreshCalendarEventSource() {
     
     if(droped_event_modification) {
         data['droped_event_modification'] = droped_event_modification;
+    }
+    
+    if(resized_event_modification) {
+        data['resized_event_modification'] = resized_event_modification;
     }
 
     eventSources =
@@ -195,6 +200,12 @@ $(function () {
             droped_event_modification = JSON.stringify(event);
             refreshCalendarEvents();
             droped_event_modification = null;
+        },
+        eventResizeStop: function (event, delta, revertFunc) {
+            console.log(event);
+            resized_event_modification = JSON.stringify(event);
+            refreshCalendarEvents();
+            resized_event_modification = null;
         }
     });
 
