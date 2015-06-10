@@ -173,7 +173,7 @@ $(function () {
 
                 if (two_selected_events.length == 2) {
 
-                    if (event.canClick) {
+                    if (event.canClick && event.isSwapable) {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
                             two_selected_events = new Array();
                         }
