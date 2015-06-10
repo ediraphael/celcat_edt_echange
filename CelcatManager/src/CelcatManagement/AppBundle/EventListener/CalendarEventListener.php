@@ -90,6 +90,10 @@ class CalendarEventListener {
                     if ($event->isEventSource()) {
                         $event->setBgColor("orange");
                     }
+                    
+                    if($event->canClick()) {
+                        $event->setCssClass('clickable');
+                    }
 
                     if (!$event->isDeleted()) {
                         $calendarEvent->addEvent($event);
