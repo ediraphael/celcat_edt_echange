@@ -26,3 +26,7 @@
     left: 50%;
     z-index: 100;
 }
+
+.clickable {
+    border-width: 3px !important;
+}
