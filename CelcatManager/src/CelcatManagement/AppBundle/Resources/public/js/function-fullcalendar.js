@@ -159,7 +159,8 @@ $(function () {
             '': 'HH:mm'
         },
         eventClick: function (event, jsEvent, view) {
-            if ((event.canClick || (two_selected_events.length > 0)) && event.backgroundColor != "purple") {
+            console.log(event);
+            if ((event.canClick || (two_selected_events.length > 0))) {
                 var arrayEvents = new Array();
                 $(this).toggleClass("selected_event");
                 if (event.isEventSource === "1" || (two_selected_events.length > 0 && two_selected_events[0].id == event.id)) {
@@ -172,7 +173,7 @@ $(function () {
 
                 if (two_selected_events.length == 2) {
 
-                    if (event.canClick === "1") {
+                    if (event.canClick) {
                         if (!confirm("Voulez vous vraiment échanger ces deux évennements?")) {
                             two_selected_events = new Array();
                         }
