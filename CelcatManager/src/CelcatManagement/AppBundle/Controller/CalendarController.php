@@ -164,9 +164,7 @@ class CalendarController extends Controller {
         foreach ($events as $event) {
             $return_events[] = $event->toArray($this->userOwnThisEvent($event, $user, $ldapManager));
         }
-
-//        ps    rint_r($return_events);
-
+        
         $response->setContent(json_encode($return_events));
 
         return $response;
