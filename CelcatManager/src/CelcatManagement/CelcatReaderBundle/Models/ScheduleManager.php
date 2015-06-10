@@ -196,43 +196,45 @@ class ScheduleManager {
             foreach ($return_value as $node) {
                 $crawler = new Crawler();
                 $crawler->add($node);
-                $event = new Event();
-                $event->addFormation($formation_id);
-                $event->setId($crawler->attr("id"));
+                if ($this->getWeekByTag($crawler->filterXPath("//rawweeks")->text()) != null) {
+                    $event = new Event();
+                    $event->addFormation($formation_id);
+                    $event->setId($crawler->attr("id"));
 //                $event->setBgColor($crawler->attr("colour"));
-                $event->setWeek($crawler->filterXPath("//rawweeks")->text());
-                if ($crawler->filterXPath("//room/item")->count() > 0) {
-                    $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
-                }
-                $event->setCategory($crawler->filterXPath("//category")->text());
-                $event->setDay($crawler->filterXPath("//day")->text());
-
-                $startDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//starttime")->text());
-                $startDateTime->modify("+" . $event->getDay() . " days");
-                $endDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//endtime")->text());
-                $endDateTime->modify("+" . $event->getDay() . " days");
-
-                $event->setStartDatetime($startDateTime);
-                $event->setEndDatetime($endDateTime);
-                if ($crawler->filterXPath("//group/item")->count() > 0) {
-                    $event->setGroup($this->parseEventNodeItems($crawler, "//group/item"));
-                }
-                if ($crawler->filterXPath("//module/item")->count() > 0) {
-                    $event->setModule($this->parseEventNodeItems($crawler, "//module/item"));
-                }
-                if ($crawler->filterXPath("//notes")->count() > 0) {
-                    $event->setNote($this->parseEventNodeItems($crawler, "//notes"));
-                }
-                if ($crawler->filterXPath("//staff/item")->count() > 0) {
-                    $professors = explode(";", $this->parseEventNodeItems($crawler, "//staff/item"));
-                    foreach ($professors as $professor) {
-                        $event->addProfessor($professor);
+                    $event->setWeek($crawler->filterXPath("//rawweeks")->text());
+                    if ($crawler->filterXPath("//room/item")->count() > 0) {
+                        $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
                     }
+                    $event->setCategory($crawler->filterXPath("//category")->text());
+                    $event->setDay($crawler->filterXPath("//day")->text());
+
+                    $startDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//starttime")->text());
+                    $startDateTime->modify("+" . $event->getDay() . " days");
+                    $endDateTime = new \DateTime(str_replace("/", "-", $this->getWeekByTag($event->getWeek())->getDate()) . ' ' . $crawler->filterXPath("//endtime")->text());
+                    $endDateTime->modify("+" . $event->getDay() . " days");
+
+                    $event->setStartDatetime($startDateTime);
+                    $event->setEndDatetime($endDateTime);
+                    if ($crawler->filterXPath("//group/item")->count() > 0) {
+                        $event->setGroup($this->parseEventNodeItems($crawler, "//group/item"));
+                    }
+                    if ($crawler->filterXPath("//module/item")->count() > 0) {
+                        $event->setModule($this->parseEventNodeItems($crawler, "//module/item"));
+                    }
+                    if ($crawler->filterXPath("//notes")->count() > 0) {
+                        $event->setNote($this->parseEventNodeItems($crawler, "//notes"));
+                    }
+                    if ($crawler->filterXPath("//staff/item")->count() > 0) {
+                        $professors = explode(";", $this->parseEventNodeItems($crawler, "//staff/item"));
+                        foreach ($professors as $professor) {
+                            $event->addProfessor(trim($professor));
+                        }
+                    }
+                    if ($crawler->filterXPath("//prettytimes")->count() > 0) {
+                        $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
+                    }
+                    $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
                 }
-                if ($crawler->filterXPath("//prettytimes")->count() > 0) {
-                    $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
-                }
-                $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
             }
         } catch (Exception $e) {
             print_r($e);
@@ -253,11 +255,12 @@ class ScheduleManager {
             preg_match("/\=([0-9]+)&/", $url, $matches);
             $formation_id = $matches[1];
         }
-        if ($formation_id[0] == 'g') {
-            $file_contents = file_get_contents($url);
-            $this->parseWeeks($file_contents);
-            $this->parseEvents($file_contents, $formation_id);
-        }
+//        if ($formation_id[0] == 'g') {
+        $file_contents = file_get_contents($url);
+        $this->parseWeeks($file_contents);
+        $this->parseEvents($file_contents, $formation_id);
+//        }
+        $this->addLoadedFormation($formation_id);
         $this->save();
     }
 
@@ -355,6 +358,8 @@ class ScheduleManager {
         $formations = array_merge($eventDestinationFormations->toArray(), $eventSourceFormations->toArray(), $professorFormations);
         foreach ($formations as $formation) {
             if (!$this->loadedFormations->contains($formation)) {
+//                echo 'cii ' . $formation . ' 
+//                    ';
                 $url = '';
                 if ($formation[0] == 'g') {
                     $url = $urlStudendPath . $formation . '.xml';
@@ -390,7 +395,7 @@ class ScheduleManager {
 
         foreach ($this->getWeekByTag($newEventSource->getWeek())->getDayById($newEventSource->getDay())->getArrayEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventDestination->getFormations())) {
+                if ($event->containsFormations($newEventDestination->getFormations()) && $event->containsProfessors($newEventDestination->getProfessors())) {
                     if ($event->isEventCrossed($newEventDestination)) {
                         return false;
                     }
@@ -401,7 +406,7 @@ class ScheduleManager {
 
         foreach ($this->getWeekByTag($newEventDestination->getWeek())->getDayById($newEventDestination->getDay())->getArrayEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventSource->getFormations())) {
+                if ($event->containsFormations($newEventSource->getFormations()) && $event->containsProfessors($newEventSource->getProfessors())) {
                     if ($event->isEventCrossed($newEventSource)) {
                         return false;
                     }
