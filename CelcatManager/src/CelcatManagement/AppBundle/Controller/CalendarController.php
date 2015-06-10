@@ -132,7 +132,7 @@ class CalendarController extends Controller {
                 foreach ($week->getArrayDays() as $indexDay => $day) {
                     foreach ($day->getArrayEvents() as $indexEvents => $event) {
                         if ($event->getId() != $eventSource->getId()) {
-                            if ($event->containsFormations($eventSource->getFormations())) {
+                            if ($event->containsFormations($eventSource->getFormations(),true)) {
                                 if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
                                     $event->swapable();
                                 }
