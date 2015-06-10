@@ -6286,31 +6286,31 @@ TimeGrid.mixin({
 						''
 						) +
 					(event.room ?
-						'<div class="fc-title">' +
+						'<div class="fc-room">' +
 							htmlEscape(event.room) +
 						'</div>' :
 						''
 						) +
 					(event.module ?
-						'<div class="fc-title">' +
+						'<div class="fc-module">' +
 							htmlEscape(event.module) +
 						'</div>' :
 						''
 						) +
 					(event.professors ?
-						'<div class="fc-title">' +
+						'<div class="fc-professors">' +
 							htmlEscape(event.professors) +
 						'</div>' :
 						''
 						) +
 					(event.group ?
-						'<div class="fc-title">' +
+						'<div class="fc-group">' +
 							htmlEscape(event.group) +
 						'</div>' :
 						''
 						) +
 					(event.note ?
-						'<div class="fc-title">' +
+						'<div class="fc-note">' +
 							htmlEscape(event.note) +
 						'</div>' :
 						''
