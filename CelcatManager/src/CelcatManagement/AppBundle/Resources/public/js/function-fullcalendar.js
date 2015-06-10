@@ -118,10 +118,22 @@ function loadCalendarModifications()
         {
             $('#schedule_modification_container').html('');
             for (i = 0; i < response.length; i++) {
+                var chaine1 = response[i].firstEvent.title +" "+(response[i].firstEvent.group?"("+response[i].firstEvent.group+")":"");
+                var chaine2 =  response[i].secondEvent?response[i].secondEvent.title +" "+ (response[i].secondEvent.group?"("+response[i].secondEvent.group+")":""):"";
+                var icone = "";
+                if(response[i].modificationType === "swap") {
+                    icone = " <i class=\"glyphicon glyphicon-resize-horizontal\"></i> ";
+                }   
+                else if (response[i].modificationType === "drop") {
+                    icone = " <i class=\"glyphicon glyphicon-object-align-left\"></i> ";
+                }
+                else if(response[i].modificationType === "resize") {
+                    icone = " <i class=\"glyphicon glyphicon-object-align-top\"></i> ";
+                }
                 $('#schedule_modification_container').append("" +
                         "<div class=\"alert alert-info alert-dismissible\" role=\"alert\">" +
                         "<button type\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\" onClick=\"removeScheduleModification('" + response[i].firstEvent.id + "')\"><span aria-hidden=\"true\">&times;</span></button>" +
-                        "<strong>" + response[i].modificationType + "</strong>  " + response[i].firstEvent.title + " <-> " + response[i].secondEvent.title +
+                        chaine1+icone+chaine2+
                         "</div>"
                         );
             }
@@ -210,7 +222,7 @@ $(function () {
         },
         eventMouseover: function (event) {
             var dateDebut = new Date(event.start);
-            var dateFin = new Date(event.end);
+            var dateFin = new Date(event.end);  
             $(this).popover({
                 trigger: 'hover',
                 title: event.title,
