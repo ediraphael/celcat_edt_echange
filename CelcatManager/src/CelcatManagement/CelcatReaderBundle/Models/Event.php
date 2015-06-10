@@ -155,17 +155,17 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->formations->removeElement($formation);
     }
 
-    public function containsFormations($formations) {
+    public function containsFormations($formations, $withoutProfessor = false) {
         if (is_array($formations) || $formations instanceof ArrayCollection) {
             $contains = false;
             foreach ($formations as $formation) {
-                if ($formation[0] == 'g') {
+                if ($formation[0] == 'g' || !$withoutProfessor) {
                     $contains = $contains || $this->formations->contains($formation);
                 }
             }
             return $contains;
         } else {
-            if ($formations[0] == 'g') {
+            if ($formations[0] == 'g' || !$withoutProfessor) {
                 return $this->formations->contains($formations);
             }
         }
