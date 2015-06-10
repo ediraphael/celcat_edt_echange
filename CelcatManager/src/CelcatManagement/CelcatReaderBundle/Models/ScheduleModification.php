@@ -89,6 +89,16 @@ class ScheduleModification {
         return $this->modificationType;
     }
 
+    public function setFirstEvent(Event $firstEvent) {
+        $this->firstEvent = $firstEvent;
+        return $this;
+    }
+
+    public function setSecondEvent(Event $secondEvent) {
+        $this->secondEvent = $secondEvent;
+        return $this;
+    }
+
     public function toArray() {
         $array = array();
         $array['firstEvent'] = $this->firstEvent->toArray();
