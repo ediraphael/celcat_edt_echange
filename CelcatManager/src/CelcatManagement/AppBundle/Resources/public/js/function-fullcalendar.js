@@ -60,12 +60,12 @@ function refreshCalendarEventSource() {
     if (removed_schedule_modification) {
         data['removed_schedule_modification'] = removed_schedule_modification;
     }
-    
-    if(droped_event_modification) {
+
+    if (droped_event_modification) {
         data['droped_event_modification'] = droped_event_modification;
     }
-    
-    if(resized_event_modification) {
+
+    if (resized_event_modification) {
         data['resized_event_modification'] = resized_event_modification;
     }
 
@@ -87,6 +87,7 @@ function refreshCalendarEventSource() {
             }
     ;
     $('#calendar-holder').fullCalendar('addEventSource', eventSources);
+    $('.popover').remove();
 
 }
 
@@ -201,12 +202,32 @@ $(function () {
             refreshCalendarEvents();
             droped_event_modification = null;
         },
-        eventResizeStop: function (event, delta, revertFunc) {
+        eventResize: function (event, delta, revertFunc) {
             console.log(event);
             resized_event_modification = JSON.stringify(event);
             refreshCalendarEvents();
             resized_event_modification = null;
-        }
+        },
+        eventMouseover: function (event) {
+            var dateDebut = new Date(event.start);
+            var dateFin = new Date(event.end);
+            $(this).popover({
+                trigger: 'hover',
+                title: event.title,
+                content: 'Debut: ' + dateDebut.toLocaleString() + '<br />' +
+                        'Fin:' + dateFin.toLocaleString() + '<br />'+
+                        'Salle:' + event.room + '<br />'+
+                        'Module: ' + event.module + '<br />'+
+                        'Prof:' + event.professors + '<br />'+
+                        'Groupe:' + event.group + '<br />'+
+                        'Note:' + event.note
+                ,
+                html: true,
+                container: "body"
+            });
+
+
+        },
     });
 
 });
