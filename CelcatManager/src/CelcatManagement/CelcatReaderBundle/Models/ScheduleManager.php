@@ -334,10 +334,15 @@ class ScheduleManager {
         $todayArg = $container->getParameter('celcat.teacherFileArgumentKey') . '=' . mktime(0, 0, 0, date("m"), date("d"), date("Y"));
         $fileArg = $container->getParameter('celcat.teacherFileArgumentId');
         $ldapManager = $container->get('ldap_manager');
+        $todatDate = new \DateTime();
         /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
 
         //Si l'emploi du temps de destination n'a pas de prof, on le retire
         if ($eventDestination->getProfessors()->isEmpty()) {
+            return false;
+        }
+        
+        if($eventDestination->getStartDatetime() < $todatDate) {
             return false;
         }
 
