@@ -68,7 +68,7 @@ class CalendarController extends Controller {
                 $event->setBgColor("");
                 $ownEvent = $this->userOwnThisEvent($event, $current_user, $ldapManager);
             }
-            $return_events[] = $event->toArray($ownEvent);
+            $return_events[] = $event->toArray();
         }
 
         $response->setContent(json_encode($return_events));
@@ -119,6 +119,12 @@ class CalendarController extends Controller {
                     $event->unEventSource();
                     $event->unswapable();
                     $event->delete();
+                    if ($event->containsFormations($user->getIdentifier())) {
+                        $event->clickable();
+                    }
+                    else {
+                        $event->unclickable();
+                    }
                 }
             }
         }
@@ -132,7 +138,7 @@ class CalendarController extends Controller {
                 foreach ($week->getArrayDays() as $indexDay => $day) {
                     foreach ($day->getArrayEvents() as $indexEvents => $event) {
                         if ($event->getId() != $eventSource->getId()) {
-                            if ($event->containsFormations($eventSource->getFormations(),true)) {
+                            if ($event->containsFormations($eventSource->getFormations(), true)) {
                                 if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
                                     $event->swapable();
                                 }
@@ -162,9 +168,9 @@ class CalendarController extends Controller {
 
         $return_events = array();
         foreach ($events as $event) {
-            $return_events[] = $event->toArray($this->userOwnThisEvent($event, $user, $ldapManager));
+            $return_events[] = $event->toArray();
         }
-        
+
         $response->setContent(json_encode($return_events));
 
         return $response;
