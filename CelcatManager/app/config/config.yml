@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: parameters_ldap.yml }
     - { resource: parameters_celcat.yml }
+    - { resource: parameters_mail.yml }
     - { resource: security.yml }
     - { resource: services.yml }
 
