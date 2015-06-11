@@ -1,0 +1,54 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Event modification</h1>
+{% endblock %}
+
+{% block body -%}
+
+    <div class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_eventmodification'} } %}
+        </span>
+        <span>
+            {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_eventmodification_edit', { 'id': entity.id }) } %}
+        </span>
+        <span>
+            {% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_eventmodification_delete', { 'id': entity.id }) } %}
+        </span>
+    </div>
+    <div id="categorie_principal" class="table-responsive">
+        <table class="record_properties  table table-striped table-hover">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ entity.id }}</td>
+                </tr>
+                <tr>
+                    <th>Eventid</th>
+                    <td>{{ entity.eventId }}</td>
+                </tr>
+                <tr>
+                    <th>Eventtitre</th>
+                    <td>{{ entity.eventTitre }}</td>
+                </tr>
+                <tr>
+                    <th>Professors</th>
+                    <td>{{ entity.professors }}</td>
+                </tr>
+                <tr>
+                    <th>Groupes</th>
+                    <td>{{ entity.groupes }}</td>
+                </tr>
+                <tr>
+                    <th>Dateinitial</th>
+                    <td>{{ entity.dateInitial|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <th>Datefinal</th>
+                    <td>{{ entity.dateFinal|date('Y-m-d H:i:s') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
