@@ -37,17 +37,36 @@ class EventModification
     /**
      * @var \DateTime
      */
-    private $dateInitial;
+    private $startDateTimeInitial;
 
     /**
      * @var \DateTime
      */
-    private $dateFinal;
+    private $endDateTimeInitial;
+
+    /**
+     * @var \DateTime
+     */
+    private $startDateTimeFinal;
+
+    /**
+     * @var \DateTime
+     */
+    private $endDateTimeFinal;
     
     public function __construct() {
         $this->groupes = array();
         $this->professors = array();
         
+    }
+    
+    public function feedByEvent(\CelcatManagement\CelcatReaderBundle\Models\Event $event) {
+        $element = clone $event;
+        $this->eventId = $element->getId();
+        $this->eventTitre = $element->getTitle();
+        $this->professors = $element->getProfessors()->toArray();
+        $this->groupes = $element->getGroup();
+        $this->dateFinal = $element->getStartDatetime();
     }
 
     
@@ -152,50 +171,96 @@ class EventModification
     {
         return $this->groupes;
     }
-
+    
     /**
-     * Set dateInitial
+     * Set startDateTimeInitial
      *
-     * @param \DateTime $dateInitial
+     * @param \DateTime $startDateTimeInitial
      * @return EventModification
      */
-    public function setDateInitial($dateInitial)
+    public function setStartDateTimeInitial($startDateTimeInitial)
     {
-        $this->dateInitial = $dateInitial;
+        $this->startDateTimeInitial = $startDateTimeInitial;
 
         return $this;
     }
 
     /**
-     * Get dateInitial
+     * Get startDateTimeInitial
      *
      * @return \DateTime 
      */
-    public function getDateInitial()
+    public function getStartDateTimeInitial()
     {
-        return $this->dateInitial;
+        return $this->startDateTimeInitial;
     }
 
     /**
-     * Set dateFinal
+     * Set endDateTimeInitial
      *
-     * @param \DateTime $dateFinal
+     * @param \DateTime $endDateTimeInitial
      * @return EventModification
      */
-    public function setDateFinal($dateFinal)
+    public function setEndDateTimeInitial($endDateTimeInitial)
     {
-        $this->dateFinal = $dateFinal;
+        $this->endDateTimeInitial = $endDateTimeInitial;
 
         return $this;
     }
 
     /**
-     * Get dateFinal
+     * Get endDateTimeInitial
      *
      * @return \DateTime 
      */
-    public function getDateFinal()
+    public function getEndDateTimeInitial()
     {
-        return $this->dateFinal;
+        return $this->endDateTimeInitial;
+    }
+
+    /**
+     * Set startDateTimeFinal
+     *
+     * @param \DateTime $startDateTimeFinal
+     * @return EventModification
+     */
+    public function setStartDateTimeFinal($startDateTimeFinal)
+    {
+        $this->startDateTimeFinal = $startDateTimeFinal;
+
+        return $this;
+    }
+
+    /**
+     * Get startDateTimeFinal
+     *
+     * @return \DateTime 
+     */
+    public function getStartDateTimeFinal()
+    {
+        return $this->startDateTimeFinal;
+    }
+
+    /**
+     * Set endDateTimeFinal
+     *
+     * @param \DateTime $endDateTimeFinal
+     * @return EventModification
+     */
+    public function setEndDateTimeFinal($endDateTimeFinal)
+    {
+        $this->endDateTimeFinal = $endDateTimeFinal;
+
+        return $this;
+    }
+
+    /**
+     * Get endDateTimeFinal
+     *
+     * @return \DateTime 
+     */
+    public function getEndDateTimeFinal()
+    {
+        return $this->endDateTimeFinal;
     }
 }
