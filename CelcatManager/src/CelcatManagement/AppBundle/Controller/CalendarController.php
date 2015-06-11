@@ -96,7 +96,9 @@ class CalendarController extends Controller {
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
 
-        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
+        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
+            'canceled' => 0
+        ));
         /* @var $entities \CelcatManagement\AppBundle\Entity\ScheduleModification[] */
         foreach ($entities as $entity) {
             $idFirstEvent = $entity->getFirstEvent()->getEventId();
