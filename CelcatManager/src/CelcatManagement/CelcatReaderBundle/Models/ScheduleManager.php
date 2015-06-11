@@ -146,14 +146,14 @@ class ScheduleManager {
             }
         }
     }
-    
+
     public function removeScheduleModificationByEntityId($id) {
         foreach ($this->scheduleModifications as $scheduleModification) {
-            if($scheduleModification->getId() == $id) {
+            if ($scheduleModification->getId() == $id) {
                 $this->removeScheduleModificationById($scheduleModification->getFirstEvent()->getId());
             }
         }
-    } 
+    }
 
     public function getLoadedFormations() {
         return $this->loadedFormations;
@@ -191,7 +191,10 @@ class ScheduleManager {
     }
 
     public function getEventById($eventId) {
-        return $this->events[$eventId];
+        if (isset($this->events[$eventId])) {
+            return $this->events[$eventId];
+        }
+        return null;
     }
 
     /**
@@ -403,8 +406,8 @@ class ScheduleManager {
         if ($eventDestination->getStartDatetime() < $todayDate) {
             return false;
         }
-        
-        if($eventSource->isSwaped()) {
+
+        if ($eventSource->isSwaped()) {
             return false;
         }
 
