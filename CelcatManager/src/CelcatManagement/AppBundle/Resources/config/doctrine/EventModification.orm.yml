@@ -1,0 +1,30 @@
+CelcatManagement\AppBundle\Entity\EventModification:
+    type: entity
+    table: event_modification
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        eventId:
+            type: string
+            length: 20
+            column: event_id
+        eventTitre:
+            type: string
+            length: 50
+            column: event_titre
+        professors:
+            type: array
+        groupes:
+            type: array
+        dateInitial:
+            type: date
+            column: date_initial
+        dateFinal:
+            type: date
+            column: date_final
+        
+    lifecycleCallbacks: {  }
