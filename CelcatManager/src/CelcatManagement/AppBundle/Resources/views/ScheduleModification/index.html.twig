@@ -44,7 +44,11 @@
                         <td>{{ entity.secondEvent?entity.secondEvent.startDateTimeInitial|date('H:i:s'):'' }} - {{ entity.secondEvent?entity.secondEvent.endDateTimeInitial|date('H:i:s'):'' }}</td>
                         <td>{{ entity.canceled?'Oui':'Non' }}</td>
                         <td>{{ entity.validated?'Oui':'Non' }}</td>
-                        <td>{% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_delete', { 'id': entity.id }) } %}</td>
+                        <td>
+                            {% if not entity.validated and not entity.canceled X%}
+                                {% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_delete', { 'id': entity.id }) } %}
+                            {% endif  %}
+                        </td>
                     </tr>
                     <tr>
                         <td></td>
