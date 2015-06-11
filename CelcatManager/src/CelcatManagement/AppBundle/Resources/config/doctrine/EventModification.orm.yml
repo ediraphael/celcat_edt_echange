@@ -20,11 +20,18 @@ CelcatManagement\AppBundle\Entity\EventModification:
             type: array
         groupes:
             type: array
-        dateInitial:
+        startDateTimeInitial:
             type: date
-            column: date_initial
-        dateFinal:
+            column: start_datetime_initial
+        endDateTimeInitial:
             type: date
-            column: date_final
+            column: end_datetime_initial
+        startDateTimeFinal:
+            type: date
+            column: start_datetime_final
+        endDateTimeFinal:
+            type: date
+            column: end_datetime_final
+        
         
     lifecycleCallbacks: {  }
