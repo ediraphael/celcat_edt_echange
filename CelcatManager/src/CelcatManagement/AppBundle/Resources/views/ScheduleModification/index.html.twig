@@ -10,14 +10,13 @@
         <table class="records_list  table table-striped table-hover">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Utilisateur</th>
                     <th>Titre</th>
                     <th>Prof.</th>
                     <th>Groupes</th>
                     <th>Dates</th>
                     <th>Heures</th>
-                    <th>Annulé</th>
+                    <th><i class="glyphicon glyphicon-resize-horizontal"></i></th>
                     <th>Titre</th>
                     <th>Prof.</th>
                     <th>Groupes</th>
@@ -31,19 +30,13 @@
             <tbody>
                 {% for entity in entities %}
                     <tr>
-                        <td>
-                            <div>
-                                {% include 'Action/action-visualiser.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_show', { 'id': entity.id }) } %}
-                                {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_edit', { 'id': entity.id }) } %}
-                            </div>
-                        </td>
                         <td>{{ entity.user }}</td>
                         <td>{{ entity.firstEvent.eventTitre }}</td>
                         <td>{{ entity.firstEvent.professors|join('; ') }}</td>
                         <td>{{ entity.firstEvent.groupes|join(',') }}</td>
                         <td>{{ entity.firstEvent.startDateTimeInitial|date('d-m-Y') }}</td>
                         <td>{{ entity.firstEvent.startDateTimeInitial|date('H:i:s') }} - {{ entity.firstEvent.endDateTimeInitial|date('H:i:s') }}</td>
-                        <td>{{ entity.canceled }}</td>
+                        <td></td>
                         <td>{{ entity.secondEvent.eventTitre|default }}</td>
                         <td>{{ entity.secondEvent.professors|default|join('; ') }}</td>
                         <td>{{ entity.secondEvent.groupes|default|join(',') }}</td>
