@@ -1,0 +1,22 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Calendrier modification création</h1>
+{% endblock %}
+
+{% block body -%}
+    <p class="record_actions">
+        <span>
+            {% include 'Action/action.html.twig' with { 'typeAction' : 'retour-liste', 'action' : {'hrefpath': 'celcat_management_app_modelmail'} } %}
+        </span>
+    </p>
+    {{ form_stylesheet(form) }}
+    {{ form_javascript(form) }}
+    {{ form(form, { 'attr': {'class':'ajax-form form-horizontal  ui-tabs ui-widget ui-widget-content ui-corner-all'} } ) }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+{% endblock %}
