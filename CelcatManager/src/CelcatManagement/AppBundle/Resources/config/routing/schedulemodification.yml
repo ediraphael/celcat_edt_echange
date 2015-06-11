@@ -1,0 +1,30 @@
+celcat_management_app_schedulemodification:
+    path:     /
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:index" }
+
+celcat_management_app_schedulemodification_show:
+    path:     /{id}/show
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:show" }
+
+celcat_management_app_schedulemodification_new:
+    path:     /new
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:new" }
+
+celcat_management_app_schedulemodification_create:
+    path:     /create
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:create" }
+    methods:  POST
+
+celcat_management_app_schedulemodification_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:edit" }
+
+celcat_management_app_schedulemodification_update:
+    path:     /{id}/update
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:update" }
+    methods:  [POST, PUT]
+
+celcat_management_app_schedulemodification_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:delete" }
+    methods:  [GET, POST, DELETE]

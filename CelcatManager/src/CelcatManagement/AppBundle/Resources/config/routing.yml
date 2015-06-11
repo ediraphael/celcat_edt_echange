@@ -1,3 +1,7 @@
+celcat_management_app_schedulemodification:
+    resource: "@CelcatManagementAppBundle/Resources/config/routing/schedulemodification.yml"
+    prefix:   /schedulemodification
+
 celcat_management_app_eventmodification:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/eventmodification.yml"
     prefix:   /eventmodification
