@@ -15,6 +15,11 @@ class UserMail extends Mail
     private $id;
     
     /**
+     * @var string
+     */
+    private $user;
+    
+    /**
      * @var boolean
      */
     private $sended = false;
@@ -78,5 +83,28 @@ class UserMail extends Mail
     public function getSended()
     {
         return $this->sended;
+    }
+
+    /**
+     * Set user
+     *
+     * @param string $user
+     * @return UserMail
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return string 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

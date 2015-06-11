@@ -8,6 +8,8 @@ CelcatManagement\AppBundle\Entity\UserMail:
             generator:
                 strategy: AUTO
     fields:
+        user:
+            type: string
         sended:
             type: boolean
         sendDate:
