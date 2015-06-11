@@ -1,0 +1,38 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Liste des modification calendrier</h1>
+{% endblock %}
+
+{% block body -%}
+
+    <div class="table-responsive">
+        <table class="records_list  table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>User</th>
+                    <th>Canceled</th>
+                    <th>Validated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td>
+                            <div>
+                                {% include 'Action/action-visualiser.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_show', { 'id': entity.id }) } %}
+                                {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_edit', { 'id': entity.id }) } %}
+                            </div>
+                        </td>
+                        <td>{{ entity.user }}</td>
+                        <td>{{ entity.canceled }}</td>
+                        <td>{{ entity.validated }}</td>
+                        <td>{% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_delete', { 'id': entity.id }) } %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
