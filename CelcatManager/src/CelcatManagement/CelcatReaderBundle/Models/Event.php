@@ -112,7 +112,11 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function replaceBy(Event $replacementEvent) {
-        $this->replacementEvent = $replacementEvent;
+        if ($this->hasReplacementEvent()) {
+            $this->replacementEvent->replaceBy($replacementEvent);
+        } else {
+            $this->replacementEvent = $replacementEvent;
+        }
     }
 
     public function deleteReplacementEvent() {
@@ -120,7 +124,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function hasReplacementEvent() {
-        return $this->replacementEvent != null;
+        return $this->replacementEvent instanceof Event;
     }
 
     public function getReplacementEvent() {
@@ -174,8 +178,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function isEventCrossed(Event $event) {
-        return $event->getStartDatetime() < $this->getEndDatetime() && $event->getEndDatetime() > $this->getStartDatetime() ||
-                $this->getStartDatetime() < $event->getEndDatetime() && $this->getEndDatetime() > $event->getStartDatetime();
+        return $event->getStartDatetime() < $this->getEndDatetime() && $event->getEndDatetime() > $this->getStartDatetime();
     }
 
     public function getId() {
@@ -194,7 +197,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         if ($this->hasReplacementEvent()) {
             return $this->replacementEvent->getStartDatetime();
         } else {
-            return parent::getStartDatetime();
+            return $this->startDatetime;
         }
     }
 
@@ -202,7 +205,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         if ($this->hasReplacementEvent()) {
             return $this->replacementEvent->getEndDatetime();
         } else {
-            return parent::getEndDatetime();
+            return $this->endDatetime;
         }
     }
 
@@ -215,10 +218,16 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function getDay() {
+        if ($this->hasReplacementEvent()) {
+            return $this->replacementEvent->day;
+        }
         return $this->day;
     }
 
     public function getWeek() {
+        if ($this->hasReplacementEvent()) {
+            return $this->replacementEvent->week;
+        }
         return $this->week;
     }
 
@@ -379,7 +388,6 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      */
     public function toArray() {
         if (!$this->hasReplacementEvent()) {
-            $todayDate = new \DateTime();
             $event = parent::toArray();
             $event['room'] = $this->room;
             $event['category'] = $this->category;
