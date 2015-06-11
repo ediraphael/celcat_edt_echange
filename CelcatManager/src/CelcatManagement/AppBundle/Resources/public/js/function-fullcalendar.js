@@ -160,7 +160,7 @@ $(function () {
         header: {
             left: 'prev, next',
             center: 'title',
-            right: 'today'
+            right: 'today, month, agendaWeek'
         },
         defaultView: 'agendaWeek',
         allDaySlot: false,
