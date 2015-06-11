@@ -78,17 +78,6 @@ class MailerController extends Controller {
             //$result = $this->get('mailer')->send($message, $failed);
             $email->setSended(true);
 
-            $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
-                'user' => $user->getUsername(),
-                'mailed' => 0,
-                'validated' => 1,
-                'canceled' => 0
-            ));
-            /* @var $entities \CelcatManagement\AppBundle\Entity\ScheduleModification[] */
-            foreach ($entities as $entity) {
-                $entity->setMailed(true);
-            }
-
             $em->persist($email);
             $em->flush();
             return $this->redirect($this->generateUrl('celcat_management_app_mailer_send_unsend'));
