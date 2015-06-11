@@ -356,6 +356,8 @@ class ScheduleManager {
         $newEndDateTimeDestination->add($durationSource);
         $newEventDestination->setEndDatetime($newEndDateTimeDestination);
 
+        $newEventSource->swaped();
+        $newEventDestination->swaped();
         $newEventSource->deleteReplacementEvent();
         $eventSource->replaceBy($newEventSource);
         $eventDestination->replaceBy($newEventDestination);
@@ -391,6 +393,10 @@ class ScheduleManager {
         }
 
         if ($eventDestination->getStartDatetime() < $todayDate) {
+            return false;
+        }
+        
+        if($eventSource->isSwaped()) {
             return false;
         }
 
