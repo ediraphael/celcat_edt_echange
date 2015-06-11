@@ -102,8 +102,12 @@ class CalendarController extends Controller {
         if ($dropedEventModification != null && $dropedEventModification != '') {
             $eventModifiedJs = json_decode($dropedEventModification);
             $eventSource = $scheduleManager->getEventById($eventModifiedJs->id);
+            $eventSourceIsSwaped = $eventSource->isSwaped();
             $eventSource->deleteReplacementEvent();
             $replacementEvent = clone $eventSource;
+            if ($eventSourceIsSwaped) {
+                $replacementEvent->swaped();
+            }
             $startDatetime = new \DateTime($eventModifiedJs->start);
             $replacementEvent->setStartDatetime($startDatetime);
             $replacementEvent->setEndDatetime(new \DateTime($eventModifiedJs->end));
@@ -118,8 +122,12 @@ class CalendarController extends Controller {
             $eventModifiedJs = json_decode($resizedEventModification);
 
             $eventSource = $scheduleManager->getEventById($eventModifiedJs->id);
+            $eventSourceIsSwaped = $eventSource->isSwaped();
             $eventSource->deleteReplacementEvent();
             $replacementEvent = clone $eventSource;
+            if ($eventSourceIsSwaped) {
+                $replacementEvent->swaped();
+            }
             $replacementEvent->setStartDatetime(new \DateTime($eventModifiedJs->start));
             $replacementEvent->setEndDatetime(new \DateTime($eventModifiedJs->end));
             $eventSource->replaceBy($replacementEvent);
