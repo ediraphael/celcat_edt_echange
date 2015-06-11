@@ -1,0 +1,43 @@
+{% extends 'CelcatManagementAppBundle::layout.html.twig' %}
+
+{% block titre %}
+    <h1>Liste des events modifiés</h1>
+{% endblock %}
+
+{% block body -%}
+
+    <div class="table-responsive">
+        <table class="records_list  table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Eventid</th>
+                    <th>Eventtitre</th>
+                    <th>Professors</th>
+                    <th>Groupes</th>
+                    <th>Dateinitial</th>
+                    <th>Datefinal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td><div>
+                                {% include 'Action/action-visualiser.html.twig' with { 'href' :  path('celcat_management_app_eventmodification_show', { 'id': entity.id }) } %}
+                                {% include 'Action/action-modifier.html.twig' with { 'href' :  path('celcat_management_app_eventmodification_edit', { 'id': entity.id }) } %}
+                            </div>
+                        </td>
+                        <td>{{ entity.eventId }}</td>
+                        <td>{{ entity.eventTitre }}</td>
+                        <td>{{ entity.professors }}</td>
+                        <td>{{ entity.groupes }}</td>
+                        <td>{% if entity.dateInitial %}{{ entity.dateInitial|date('d-m-Y H:i:s') }}{% endif %}</td>
+                        <td>{% if entity.dateFinal %}{{ entity.dateFinal|date('d-m-Y H:i:s') }}{% endif %}</td>
+                        <td>{% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_eventmodification_delete', { 'id': entity.id }) } %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
