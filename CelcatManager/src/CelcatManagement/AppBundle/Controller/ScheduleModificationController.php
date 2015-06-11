@@ -4,37 +4,68 @@ namespace CelcatManagement\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use CelcatManagement\AppBundle\Entity\ScheduleModification;
 use CelcatManagement\AppBundle\Form\ScheduleModificationType;
+use CelcatManagement\AppBundle\Entity\EventModification;
 
 /**
  * ScheduleModification controller.
  *
  */
-class ScheduleModificationController extends Controller
-{
+class ScheduleModificationController extends Controller {
 
     /**
      * Lists all ScheduleModification entities.
      *
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:index.html.twig', array(
-            'entities' => $entities,
+                    'entities' => $entities,
         ));
     }
+
+    public function createFromScheduleManagerAction(Request $request) {
+        $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
+        $user = $this->getUser();
+        /* @var $user \CelcatManagement\AppBundle\Security\User */
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($scheduleManager->getScheduleModifications() as $scheduleModification) {
+            if ($scheduleModification->getId() == '') {
+                $firstEvent = $scheduleModification->getFirstEvent();
+                $secondEvent = $scheduleModification->getSecondEvent();
+
+                $scheduleModificationEm = new ScheduleModification();
+                $scheduleModificationEm->setUser($user->getUsername());
+
+                $firstEventEm = new EventModification();
+                $firstEventEm->feedByEvent($firstEvent);
+                $scheduleModificationEm->setFirstEvent($firstEventEm);
+                if ($secondEvent != null) {
+                    $secondEventEm = new EventModification();
+                    $secondEventEm->feedByEvent($secondEvent);
+                    $scheduleModificationEm->setSecondEvent($secondEventEm);
+                }
+                $em->persist($scheduleModificationEm);
+                $em->flush();
+                $scheduleModification->setId($scheduleModificationEm->getId());
+            }
+        }
+        $scheduleManager->save();
+        
+        
+        return $this->indexAction();
+    }
+
     /**
      * Creates a new ScheduleModification entity.
      *
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         $entity = new ScheduleModification();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -48,8 +79,8 @@ class ScheduleModificationController extends Controller
         }
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+                    'entity' => $entity,
+                    'form' => $form->createView(),
         ));
     }
 
@@ -60,8 +91,7 @@ class ScheduleModificationController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(ScheduleModification $entity)
-    {
+    private function createCreateForm(ScheduleModification $entity) {
         $form = $this->createForm(new ScheduleModificationType(), $entity, array(
             'action' => $this->generateUrl('celcat_management_app_schedulemodification_create'),
             'method' => 'POST',
@@ -76,14 +106,13 @@ class ScheduleModificationController extends Controller
      * Displays a form to create a new ScheduleModification entity.
      *
      */
-    public function newAction()
-    {
+    public function newAction() {
         $entity = new ScheduleModification();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+                    'entity' => $entity,
+                    'form' => $form->createView(),
         ));
     }
 
@@ -91,8 +120,7 @@ class ScheduleModificationController extends Controller
      * Finds and displays a ScheduleModification entity.
      *
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->find($id);
@@ -104,8 +132,8 @@ class ScheduleModificationController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -113,8 +141,7 @@ class ScheduleModificationController extends Controller
      * Displays a form to edit an existing ScheduleModification entity.
      *
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->find($id);
@@ -127,21 +154,20 @@ class ScheduleModificationController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a ScheduleModification entity.
-    *
-    * @param ScheduleModification $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(ScheduleModification $entity)
-    {
+     * Creates a form to edit a ScheduleModification entity.
+     *
+     * @param ScheduleModification $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(ScheduleModification $entity) {
         $form = $this->createForm(new ScheduleModificationType(), $entity, array(
             'action' => $this->generateUrl('celcat_management_app_schedulemodification_update', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -151,12 +177,12 @@ class ScheduleModificationController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing ScheduleModification entity.
      *
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->find($id);
@@ -176,17 +202,17 @@ class ScheduleModificationController extends Controller
         }
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'entity' => $entity,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a ScheduleModification entity.
      *
      */
-    public function deleteAction(Request $request, $id)
-    {
+    public function deleteAction(Request $request, $id) {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -212,13 +238,13 @@ class ScheduleModificationController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('celcat_management_app_schedulemodification_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
+                        ->setAction($this->generateUrl('celcat_management_app_schedulemodification_delete', array('id' => $id)))
+                        ->setMethod('DELETE')
+                        ->add('submit', 'submit', array('label' => 'Delete'))
+                        ->getForm()
         ;
     }
+
 }
