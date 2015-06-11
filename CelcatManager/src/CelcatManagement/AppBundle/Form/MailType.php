@@ -29,7 +29,6 @@ class MailType extends AbstractType {
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('user', 'hidden');
         if ($this->fromAddress != '') {
             $builder
                     ->add('fromAddress', 'email', array(
