@@ -45,7 +45,7 @@
                         <td>{{ entity.canceled?'Oui':'Non' }}</td>
                         <td>{{ entity.validated?'Oui':'Non' }}</td>
                         <td>
-                            {% if not entity.validated and not entity.canceled X%}
+                            {% if not entity.validated and not entity.canceled %}
                                 {% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_delete', { 'id': entity.id }) } %}
                             {% endif  %}
                         </td>
