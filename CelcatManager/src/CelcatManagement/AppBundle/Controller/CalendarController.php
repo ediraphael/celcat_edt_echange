@@ -101,21 +101,23 @@ class CalendarController extends Controller {
 
         if ($dropedEventModification != null && $dropedEventModification != '') {
             $eventModifiedJs = json_decode($dropedEventModification);
-            $eventSource = $scheduleManager->getWeekByTag($eventModifiedJs->week)->getDayById($eventModifiedJs->day)->getEventById($eventModifiedJs->id);
+            $eventSource = $scheduleManager->getEventById($eventModifiedJs->id);
             $eventSource->deleteReplacementEvent();
             $replacementEvent = clone $eventSource;
-            $replacementEvent->setStartDatetime(new \DateTime($eventModifiedJs->start));
+            $startDatetime = new \DateTime($eventModifiedJs->start);
+            $replacementEvent->setStartDatetime($startDatetime);
             $replacementEvent->setEndDatetime(new \DateTime($eventModifiedJs->end));
+
             $eventSource->replaceBy($replacementEvent);
             $scheduleModification = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleModification();
             $scheduleModification->setDropModification($eventSource);
             $scheduleManager->addScheduleModification($scheduleModification);
         }
-        
+
         if ($resizedEventModification != null && $resizedEventModification != '') {
             $eventModifiedJs = json_decode($resizedEventModification);
-            
-            $eventSource = $scheduleManager->getWeekByTag($eventModifiedJs->week)->getDayById($eventModifiedJs->day)->getEventById($eventModifiedJs->id);
+
+            $eventSource = $scheduleManager->getEventById($eventModifiedJs->id);
             $eventSource->deleteReplacementEvent();
             $replacementEvent = clone $eventSource;
             $replacementEvent->setStartDatetime(new \DateTime($eventModifiedJs->start));
@@ -127,50 +129,40 @@ class CalendarController extends Controller {
         }
 
         //On réinitialise les evenements
-        $arrayWeeks = $scheduleManager->getArrayWeeks();
-        foreach ($arrayWeeks as $indexWeek => $week) {
-            foreach ($week->getArrayDays() as $indexDay => $day) {
-                foreach ($day->getArrayEvents() as $indexEvents => $event) {
-                    $event->unEventSource();
-                    $event->unswapable();
-                    $event->delete();
-                    if ($event->containsFormations($user->getIdentifier())) {
-                        $event->clickable();
-                    }
-                    else {
-                        $event->unclickable();
-                    }
-                }
+        foreach ($scheduleManager->getEvents() as $indexEvents => $event) {
+            $event->unEventSource();
+            $event->unswapable();
+            $event->delete();
+            if ($event->containsFormations($user->getIdentifier())) {
+                $event->clickable();
+            } else {
+                $event->unclickable();
             }
         }
-
 
         // On verifie si on vient de faire un click sur un premier evenement
         if ($eventSourceJs != null && $eventSourceJs != '' && ($eventDestinationJs == null || $eventDestinationJs == '')) {
             //Dans ce cas on recherche tout ce qui sont swapable
-            $eventSource = $scheduleManager->getWeekByTag($eventSourceJs['week'])->getDayById($eventSourceJs['day'])->getEventById($eventSourceJs['id']);
-            foreach ($arrayWeeks as $indexWeek => $week) {
-                foreach ($week->getArrayDays() as $indexDay => $day) {
-                    foreach ($day->getArrayEvents() as $indexEvents => $event) {
-                        if ($event->getId() != $eventSource->getId()) {
-                            if ($event->containsFormations($eventSource->getFormations(), true)) {
-                                if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
-                                    $event->swapable();
-                                }
-                                $event->undelete();
-                            }
-                        } else {
-                            $event->eventSource();
-                            $event->undelete();
+            $eventSource = $scheduleManager->getEventById($eventSourceJs['id']);
+
+            foreach ($scheduleManager->getEvents() as $indexEvents => $event) {
+                if ($event->getId() != $eventSource->getId()) {
+                    if ($event->containsFormations($eventSource->getFormations(), true)) {
+                        if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
+                            $event->swapable();
                         }
+                        $event->undelete();
                     }
+                } else {
+                    $event->eventSource();
+                    $event->undelete();
                 }
             }
         }
 
         if ($eventSourceJs != null && $eventSourceJs != '' && $eventDestinationJs != null && $eventDestinationJs != '') {
-            $eventSource = $scheduleManager->getWeekByTag($eventSourceJs['week'])->getDayById($eventSourceJs['day'])->getEventById($eventSourceJs['id']);
-            $eventDestination = $scheduleManager->getWeekByTag($eventDestinationJs['week'])->getDayById($eventDestinationJs['day'])->getEventById($eventDestinationJs['id']);
+            $eventSource = $scheduleManager->getEventById($eventSourceJs['id']);
+            $eventDestination = $scheduleManager->getEventById($eventDestinationJs['id']);
             $scheduleManager->swapEvent($eventSource, $eventDestination);
         }
 
