@@ -1,0 +1,7 @@
+
+parameters:
+    mailer_transport: smtp
+    mailer_host: mailout.univ-angers.fr
+    mailer_user: 
+    mailer_password: 
+    mail.celcat_admin_mail: raphael.pillie@gmail.com
