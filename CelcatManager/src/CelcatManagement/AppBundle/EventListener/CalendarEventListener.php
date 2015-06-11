@@ -73,6 +73,7 @@ class CalendarEventListener {
                 }
             }
             $event->setBgColor("");
+            $event->setCssClass('');
             if ($event->isSwapable()) {
                 $event->setBgColor("green");
             }
@@ -84,7 +85,6 @@ class CalendarEventListener {
             if ($event->hasReplacementEvent()) {
                 $event->setBgColor("purple");
                 $event->undelete();
-                $event->setCssClass('');
             }
 
             if ($event->isEventSource()) {
@@ -94,11 +94,12 @@ class CalendarEventListener {
             if ($event->canClick()) {
                 $event->setCssClass('clickable');
             }
-            
+
 
             if (!$event->isDeleted()) {
                 $calendarEvent->addEvent($event);
             }
         }
     }
+
 }
