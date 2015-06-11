@@ -38,6 +38,11 @@ class ScheduleModificationController extends Controller {
             'validated' => 1,
             'canceled' => 0
         ));
+        
+        if(count($entities) == 0) {
+            return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification'));
+        }
+        
         /* @var $entities ScheduleModification */
         $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
             'name' => 'schedule_modification'
