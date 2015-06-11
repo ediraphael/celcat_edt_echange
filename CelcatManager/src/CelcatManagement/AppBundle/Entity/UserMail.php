@@ -15,6 +15,11 @@ class UserMail extends Mail
     private $id;
     
     /**
+     * @var boolean
+     */
+    private $sended;
+    
+    /**
      * @var \DateTime
      */
     private $sendDate = 'CURRENT_TIMESTAMP';
@@ -51,5 +56,27 @@ class UserMail extends Mail
     {
         return $this->sendDate;
     }
-    
+
+    /**
+     * Set sended
+     *
+     * @param boolean $sended
+     * @return UserMail
+     */
+    public function setSended($sended)
+    {
+        $this->sended = $sended;
+
+        return $this;
+    }
+
+    /**
+     * Get sended
+     *
+     * @return boolean 
+     */
+    public function getSended()
+    {
+        return $this->sended;
+    }
 }
