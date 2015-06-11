@@ -66,7 +66,11 @@ class EventModification
         $this->eventTitre = $element->getTitle();
         $this->professors = $element->getProfessors()->toArray();
         $this->groupes = $element->getGroup();
-        $this->dateFinal = $element->getStartDatetime();
+        $this->startDateTimeFinal = $element->getStartDatetime();
+        $this->endDateTimeFinal = $element->getEndDatetime();
+        $element->deleteReplacementEvent();
+        $this->startDateTimeInitial = $element->getStartDatetime();
+        $this->endDateTimeInitial = $element->getEndDatetime();
     }
 
     
