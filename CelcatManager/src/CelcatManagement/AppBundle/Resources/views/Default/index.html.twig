@@ -1,13 +1,13 @@
 {% extends 'CelcatManagementAppBundle::layout.html.twig' %}
 {% block titre %}
-    <h1>Accueil</h1>
+    <div>
+        <h1 class="title-calendar">Accueil</h1>
+        <h1 class="btn-save" ><a href="#" class="glyphicon glyphicon-floppy-save" ></a></h1>
+    </div>
 {% endblock %}
 {% block body %}
     <div id="schedule_modification_container" >
-        {#<div class="alert alert-info alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong>Warning!</strong> Better check yourself, you're not looking too good.
-        </div>#}
+
     </div>
     <div id="loading">
         <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..." />
