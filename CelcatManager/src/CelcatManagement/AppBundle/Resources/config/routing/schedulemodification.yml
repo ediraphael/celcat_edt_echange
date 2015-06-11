@@ -36,3 +36,7 @@ celcat_management_app_schedulemodification_delete:
 celcat_management_app_schedulemodification_send_mail:
     path:     /mail
     defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:sendModificationMail" }
+
+celcat_management_app_schedulemodification_send_ask_mail:
+    path:     /mail_ask
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:sendAskMail" }
