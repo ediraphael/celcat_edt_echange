@@ -8,6 +8,7 @@ use CelcatManagement\AppBundle\Entity\ScheduleModification;
 use CelcatManagement\AppBundle\Form\ScheduleModificationType;
 use CelcatManagement\AppBundle\Entity\EventModification;
 use CelcatManagement\AppBundle\Entity\UserMail;
+
 /**
  * ScheduleModification controller.
  *
@@ -38,51 +39,123 @@ class ScheduleModificationController extends Controller {
             'validated' => 1,
             'canceled' => 0
         ));
-        
-        if(count($entities) == 0) {
-            return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification'));
+
+        if (count($entities) != 0) {
+            /* @var $entities ScheduleModification */
+            $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
+                'name' => 'schedule_modification'
+            ));
+            /* @var $modelMail \CelcatManagement\AppBundle\Entity\ModelMail */
+            $mail = new UserMail();
+
+            $textModification = '';
+            foreach ($entities as $entity) {
+                $string = $entity->getFirstEvent()->getEventTitre() .
+                        ' ' . $entity->getFirstEvent()->getGroupes() .
+                        ' ' . $entity->getFirstEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeInitial()->format('H:i:s') .
+                        ' ==> ' . $entity->getFirstEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeFinal()->format('H:i:s');
+                if ($entity->getSecondEvent() != null) {
+                    $string .= "<br /> " . $entity->getSecondEvent()->getEventTitre() .
+                            ' ' . $entity->getSecondEvent()->getGroupes() .
+                            ' ' . $entity->getSecondEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
+                            ' - ' . $entity->getSecondEvent()->getEndDateTimeInitial()->format('H:i:s') .
+                            ' ==> ' . $entity->getSecondEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
+                            ' - ' . $entity->getSecondEvent()->getEndDateTimeFinal()->format('H:i:s');
+                }
+
+                $textModification .= "<br />" . $string;
+            }
+
+            $textMail = $modelMail->getBody();
+            $textMail = preg_replace('/\[schedule_modification\]/', $textModification, $textMail);
+            $textMail = preg_replace('/\[user_fullname\]/', $user->getFullName(), $textMail);
+
+            $mail->setUser($user->getUsername());
+            $mail->setFromAddress($user->getMail());
+            $mail->setToAddress($this->container->getParameter('mail.celcat_admin_mail'));
+            $mail->setSubject($modelMail->getSubject());
+            $mail->setBody($textMail);
+            $em->persist($mail);
+            $em->flush();
         }
-        
+
+        return $this->redirect($this->generateUrl('celcat_management_app_mailer_send_unsend'));
+    }
+
+    public function sendAskMailAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        /* @var $user \CelcatManagement\AppBundle\Security\User */
+        $ldapManager = $this->get('ldap_manager');
+        /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
+        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
+            'user' => $user->getUsername(),
+            'mailed' => 0,
+            'validated' => 0,
+            'canceled' => 0
+        ));
+
+        if (count($entities) == 0) {
+            return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
+        }
+
         /* @var $entities ScheduleModification */
         $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
             'name' => 'schedule_modification'
         ));
         /* @var $modelMail \CelcatManagement\AppBundle\Entity\ModelMail */
-        $mail = new UserMail();
+
 
         $textModification = '';
         foreach ($entities as $entity) {
-            $string = $entity->getFirstEvent()->getEventTitre() .
-                    ' ' . $entity->getFirstEvent()->getGroupes() .
-                    ' ' . $entity->getFirstEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
-                    ' - ' . $entity->getFirstEvent()->getEndDateTimeInitial()->format('H:i:s') .
-                    ' ==> ' . $entity->getFirstEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
-                    ' - ' . $entity->getFirstEvent()->getEndDateTimeFinal()->format('H:i:s');
             if ($entity->getSecondEvent() != null) {
+                $mail = new UserMail();
+                $string = $entity->getFirstEvent()->getEventTitre() .
+                        ' ' . $entity->getFirstEvent()->getGroupes() .
+                        ' ' . $entity->getFirstEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeInitial()->format('H:i:s') .
+                        ' ==> ' . $entity->getFirstEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeFinal()->format('H:i:s');
                 $string .= "<br /> " . $entity->getSecondEvent()->getEventTitre() .
                         ' ' . $entity->getSecondEvent()->getGroupes() .
                         ' ' . $entity->getSecondEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
                         ' - ' . $entity->getSecondEvent()->getEndDateTimeInitial()->format('H:i:s') .
                         ' ==> ' . $entity->getSecondEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
                         ' - ' . $entity->getSecondEvent()->getEndDateTimeFinal()->format('H:i:s');
-            }
 
-            $textModification .= "<br />" . $string;
+
+                $textModification .= "<br />" . $string;
+
+                $textMail = $modelMail->getBody();
+                $textMail = preg_replace('/\[schedule_modification\]/', $textModification, $textMail);
+                $textMail = preg_replace('/\[user_fullname\]/', $user->getFullName(), $textMail);
+
+
+                $toAdresse = '';
+                foreach ($entity->getSecondEvent()->getProfessors() as $professor) {
+                    $userProfessor = $ldapManager->getUserByFullName($professor);
+                    if ($userProfessor != null) {
+                        $toAdresse .= $toAdresse != '' ? '; ' : '';
+                        $toAdresse .= $userProfessor->getMail();
+                    }
+                }
+                if ($toAdresse != '') {
+                    $mail->setUser($user->getUsername());
+                    $mail->setFromAddress($user->getMail());
+                    $mail->setToAddress($toAdresse);
+                    $mail->setSubject($modelMail->getSubject());
+                    $mail->setBody($textMail);
+                    $em->persist($mail);
+                    $em->flush();
+                }
+            }
         }
 
-        $textMail = $modelMail->getBody();
-        $textMail = preg_replace('/\[schedule_modification\]/', $textModification, $textMail);
-        $textMail = preg_replace('/\[user_fullname\]/', $user->getFullName(), $textMail);
-        
-        $mail->setUser($user->getUsername());
-        $mail->setFromAddress($user->getMail());
-        $mail->setToAddress($this->container->getParameter('mail.celcat_admin_mail'));
-        $mail->setSubject($modelMail->getSubject());
-        $mail->setBody($textMail);
-        $em->persist($mail);
-        $em->flush();
-        
-        return $this->redirect($this->generateUrl('celcat_management_app_mailer_send_unsend'));
+
+
+        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
     }
 
     public function createFromScheduleManagerAction(Request $request) {
@@ -116,7 +189,7 @@ class ScheduleModificationController extends Controller {
         }
         $scheduleManager->save();
 
-        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
+        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_ask_mail'));
     }
 
     /**
