@@ -19,7 +19,6 @@ CelcatManagement\AppBundle\Entity\ScheduleModification:
     oneToOne:
         firstEvent:
             targetEntity: EventModification
-            inversedBy: scheduleModification
             joinColumn:
                 name: id_first_event
                 referencedColumnName: id
@@ -27,7 +26,6 @@ CelcatManagement\AppBundle\Entity\ScheduleModification:
             cascade: [persist]
         secondEvent:
             targetEntity: EventModification
-            inversedBy: scheduleModification
             joinColumn:
                 name: id_second_event
                 referencedColumnName: id
