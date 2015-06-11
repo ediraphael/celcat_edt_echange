@@ -14,6 +14,12 @@ class ScheduleManager {
 
     /**
      *
+     * @var Event[] 
+     */
+    private $events;
+
+    /**
+     *
      * @var ScheduleModification[] 
      */
     private $scheduleModifications;
@@ -30,8 +36,10 @@ class ScheduleManager {
             $this->arrayWeeks = $scheduleur->getArrayWeeks();
             $this->scheduleModifications = $scheduleur->getScheduleModifications();
             $this->loadedFormations = $scheduleur->getLoadedFormations();
+            $this->events = $scheduleur->getEvents();
         } else {
             $this->arrayWeeks = array();
+            $this->events = array();
             $this->scheduleModifications = array();
             $this->loadedFormations = new \Doctrine\Common\Collections\ArrayCollection();
             $this->save();
@@ -101,7 +109,7 @@ class ScheduleManager {
         }
         return null;
     }
-    
+
     public function getScheduleModifications() {
         return $this->scheduleModifications;
     }
@@ -113,10 +121,9 @@ class ScheduleManager {
 
     public function addScheduleModification(ScheduleModification $scheduleModification) {
         if (isset($this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()]) && $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] != '') {
-            if($scheduleModification->isSwapModification()) {
+            if ($scheduleModification->isSwapModification()) {
                 $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()] = $scheduleModification;
-            }
-            elseif ($scheduleModification->isDropModification() && $scheduleModification->isResizeModification()) {
+            } elseif ($scheduleModification->isDropModification() && $scheduleModification->isResizeModification()) {
                 $this->scheduleModifications[$scheduleModification->getFirstEvent()->getId()]->setFirstEvent($scheduleModification->getFirstEvent());
             }
         } else {
@@ -152,6 +159,31 @@ class ScheduleManager {
     public function addLoadedFormation($loadedFormation) {
         $this->loadedFormations->add($loadedFormation);
         return $this;
+    }
+
+    public function getEvents() {
+        return $this->events;
+    }
+
+    public function setEvents(array $events) {
+        $this->events = $events;
+        return $this;
+    }
+
+    public function addEvent(Event $event) {
+        if (isset($this->events[$event->getId()]) && $this->events[$event->getId()] != '') {
+            $this->events[$event->getId()]->addFormation($event->getFormations());
+        } else {
+            $this->events[$event->getId()] = $event;
+        }
+    }
+
+    public function removeEvent(Event $event) {
+        unset($this->events[$event->getId()]);
+    }
+
+    public function getEventById($eventId) {
+        return $this->events[$eventId];
     }
 
     /**
@@ -225,7 +257,6 @@ class ScheduleManager {
                     $event = new Event();
                     $event->addFormation($formation_id);
                     $event->setId($crawler->attr("id"));
-//                $event->setBgColor($crawler->attr("colour"));
                     $event->setWeek($crawler->filterXPath("//rawweeks")->text());
                     if ($crawler->filterXPath("//room/item")->count() > 0) {
                         $event->setRoom($this->parseEventNodeItems($crawler, "//room/item"));
@@ -259,7 +290,7 @@ class ScheduleManager {
                         $event->setTitle($this->parseEventNodeItems($crawler, "//prettytimes"));
                     }
                     $event->delete();
-                    $this->getWeekByTag($event->getWeek())->getDayById($event->getDay())->addEvent($event);
+                    $this->addEvent($event);
                 }
             }
         } catch (Exception $e) {
@@ -281,11 +312,9 @@ class ScheduleManager {
             preg_match("/\=([0-9]+)&/", $url, $matches);
             $formation_id = $matches[1];
         }
-//        if ($formation_id[0] == 'g') {
         $file_contents = file_get_contents($url);
         $this->parseWeeks($file_contents);
         $this->parseEvents($file_contents, $formation_id);
-//        }
         $this->addLoadedFormation($formation_id);
         $this->save();
     }
@@ -297,10 +326,6 @@ class ScheduleManager {
      * @return type
      */
     public function getFreeEventsList($event_source, $event_destination) {
-//        $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
-//                ->getDayById($event_destination->getDay())
-//                    ->getFreeEventsList($event_destination->getStart_time(), $event_destination
-//                        ->getEnd_time(), $event_destination->getFormation());
         $tab_free_events = $this->getWeekByTag($event_destination->getWeek())
                 ->getWeekFreeEventsList($event_destination
                 ->getStartTime(), $event_destination->getEndTime());
@@ -312,36 +337,36 @@ class ScheduleManager {
      * @param Event $eventDestination
      */
     public function swapEvent(Event $eventSource, Event $eventDestination) {
-        
-            $newEventSource = clone $eventSource;
-            $newEventDestination = clone $eventDestination;
 
-            $startSource = clone $eventSource->getStartDatetime();
-            $startDestinaton = clone $eventDestination->getStartDatetime();
-            $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
-            $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
+        $newEventSource = clone $eventSource;
+        $newEventDestination = clone $eventDestination;
 
-            $newEventSource->setStartDatetime($startDestinaton);
-            $newEndDateTimeSource = clone $startDestinaton;
-            $newEndDateTimeSource->add($durationDestination);
-            $newEventSource->setEndDatetime($newEndDateTimeSource);
+        $startSource = clone $eventSource->getStartDatetime();
+        $startDestinaton = clone $eventDestination->getStartDatetime();
+        $durationSource = $eventDestination->getStartDatetime()->diff($eventDestination->getEndDatetime(), true);
+        $durationDestination = $eventSource->getStartDatetime()->diff($eventSource->getEndDatetime(), true);
 
-            $newEventDestination->setStartDatetime($startSource);
-            $newEndDateTimeDestination = clone $startSource;
-            $newEndDateTimeDestination->add($durationSource);
-            $newEventDestination->setEndDatetime($newEndDateTimeDestination);
+        $newEventSource->setStartDatetime($startDestinaton);
+        $newEndDateTimeSource = clone $startDestinaton;
+        $newEndDateTimeSource->add($durationDestination);
+        $newEventSource->setEndDatetime($newEndDateTimeSource);
 
-            $eventSource->replaceBy($newEventSource);
-            $eventDestination->replaceBy($newEventDestination);
+        $newEventDestination->setStartDatetime($startSource);
+        $newEndDateTimeDestination = clone $startSource;
+        $newEndDateTimeDestination->add($durationSource);
+        $newEventDestination->setEndDatetime($newEndDateTimeDestination);
+
+        $newEventSource->deleteReplacementEvent();
+        $eventSource->replaceBy($newEventSource);
+        $eventDestination->replaceBy($newEventDestination);
 
 
-            $scheduleModification = new ScheduleModification();
-            $scheduleModification->setSwapModification($eventSource, $eventDestination);
-            $this->addScheduleModification($scheduleModification);
+        $scheduleModification = new ScheduleModification();
+        $scheduleModification->setSwapModification($eventSource, $eventDestination);
+        $this->addScheduleModification($scheduleModification);
 
-            $this->save();
-            return true;
-       
+        $this->save();
+        return true;
     }
 
     /**
@@ -416,26 +441,30 @@ class ScheduleManager {
         $newEventDestination->setEndDatetime($newEndDateTimeDestination);
 
 
-        if ($newEventDestination->isEventCrossed($newEventSource)) {
-            return false;
-        }
+//        if ($newEventDestination->isEventCrossed($newEventSource)) {
+//            return false;
+//        }
 
-        foreach ($this->getWeekByTag($newEventSource->getWeek())->getDayById($newEventSource->getDay())->getArrayEvents() as $event) {
+        foreach ($this->getEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventDestination->getFormations())) {
-                    if ($event->isEventCrossed($newEventDestination)) {
-                        return false;
+                if ($event->getStartDatetime()->format('z') == $newEventDestination->getStartDatetime()->format('z')) {
+                    if ($event->containsFormations($newEventDestination->getFormations())) {
+                        if ($event->isEventCrossed($newEventDestination)) {
+                            return false;
+                        }
                     }
                 }
             }
         }
 
 
-        foreach ($this->getWeekByTag($newEventDestination->getWeek())->getDayById($newEventDestination->getDay())->getArrayEvents() as $event) {
+        foreach ($this->getEvents() as $event) {
             if ($event->getId() != $newEventSource->getId() && $event->getId() != $newEventDestination->getId()) {
-                if ($event->containsFormations($newEventSource->getFormations())) {
-                    if ($event->isEventCrossed($newEventSource)) {
-                        return false;
+                if ($event->getStartDatetime()->format('z') == $newEventSource->getStartDatetime()->format('z')) {
+                    if ($event->containsFormations($newEventSource->getFormations())) {
+                        if ($event->isEventCrossed($newEventSource)) {
+                            return false;
+                        }
                     }
                 }
             }
