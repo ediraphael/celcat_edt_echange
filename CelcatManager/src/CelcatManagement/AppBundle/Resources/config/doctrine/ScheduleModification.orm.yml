@@ -1,0 +1,34 @@
+CelcatManagement\AppBundle\Entity\ScheduleModification:
+    type: entity
+    table: schedule_modification
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        user:
+            type: string
+            length: 20
+            column: event_id
+        canceled:
+            type: boolean
+        validated:
+            type: boolean
+    oneToOne:
+        firstEvent:
+            targetEntity: EventModification
+            inversedBy: scheduleModification
+            joinColumn:
+                name: id_first_event
+                referencedColumnName: id
+            nullable: false
+        secondEvent:
+            targetEntity: EventModification
+            inversedBy: scheduleModification
+            joinColumn:
+                name: id_second_event
+                referencedColumnName: id
+            nullable: true
+    lifecycleCallbacks: {  }
