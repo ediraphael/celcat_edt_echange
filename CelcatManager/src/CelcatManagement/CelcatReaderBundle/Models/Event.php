@@ -425,6 +425,7 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
             $event['day'] = $this->day;
             $event['week'] = $this->week;
             $event['isSwapable'] = $this->isSwapable;
+            $event['isClickable'] = $this->isClickable;
             $event['isEventSource'] = $this->isEventSource;
             $event['isSwaped'] = $this->isSwaped;
             $event['canClick'] = $this->canClick();
