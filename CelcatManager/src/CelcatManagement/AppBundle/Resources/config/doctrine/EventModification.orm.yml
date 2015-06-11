@@ -21,16 +21,16 @@ CelcatManagement\AppBundle\Entity\EventModification:
         groupes:
             type: array
         startDateTimeInitial:
-            type: date
+            type: datetime
             column: start_datetime_initial
         endDateTimeInitial:
-            type: date
+            type: datetime
             column: end_datetime_initial
         startDateTimeFinal:
-            type: date
+            type: datetime
             column: start_datetime_final
         endDateTimeFinal:
-            type: date
+            type: datetime
             column: end_datetime_final
         
         
