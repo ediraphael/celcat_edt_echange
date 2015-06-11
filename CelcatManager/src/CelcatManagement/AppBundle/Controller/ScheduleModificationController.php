@@ -50,6 +50,9 @@ class ScheduleModificationController extends Controller {
                     $secondEventEm->feedByEvent($secondEvent);
                     $scheduleModificationEm->setSecondEvent($secondEventEm);
                 }
+                else {
+                    $scheduleModificationEm->setValidated(true);
+                }
                 $em->persist($scheduleModificationEm);
                 $em->flush();
                 $scheduleModification->setId($scheduleModificationEm->getId());
@@ -213,20 +216,19 @@ class ScheduleModificationController extends Controller {
      *
      */
     public function deleteAction(Request $request, $id) {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find ScheduleModification entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->find($id);
+        /* @var $entity ScheduleModification */
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find ScheduleModification entity.');
         }
+        
+        $entity->setCanceled(true);
+        $em->flush();
+        $scheduleManager->removeScheduleModificationByEntityId($entity->getId());
+        $scheduleManager->save();
 
         return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification'));
     }
