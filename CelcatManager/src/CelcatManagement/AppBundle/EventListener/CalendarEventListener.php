@@ -72,10 +72,10 @@ class CalendarEventListener {
                     }
                 }
             }
-            $event->setBgColor("");
+            $event->setBgColor('');
             $event->setCssClass('');
             if ($event->isSwapable()) {
-                $event->setBgColor("green");
+                $event->setBgColor('green');
             }
 
             if (!$event->isSwapable() && !in_array($calendarEvent->getUser()->getIdentifier(), $event->getFormations()->toArray())) {
@@ -83,12 +83,12 @@ class CalendarEventListener {
             }
 
             if ($event->hasReplacementEvent()) {
-                $event->setBgColor("purple");
+                $event->setBgColor('purple');
                 $event->undelete();
             }
 
             if ($event->isEventSource()) {
-                $event->setBgColor("orange");
+                $event->setBgColor('orange');
             }
 
             if ($event->canClick()) {
