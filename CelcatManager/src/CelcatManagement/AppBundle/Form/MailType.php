@@ -51,7 +51,7 @@ class MailType extends AbstractType {
         }
         if ($this->toAddress != '') {
             $builder
-                    ->add('toAddress', 'email', array(
+                    ->add('toAddress', 'text', array(
                         'label' => 'A',
                         'data' => $this->toAddress,
                         'read_only' => true,
@@ -62,7 +62,7 @@ class MailType extends AbstractType {
         }
         else {
             $builder
-                    ->add('toAddress', 'email', array(
+                    ->add('toAddress', 'text', array(
                         'label' => 'A',
                         'widget_addon_prepend' => array(
                             'text' => '@',
