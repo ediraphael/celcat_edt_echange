@@ -1,3 +1,7 @@
+celcat_management_app_eventmodification:
+    resource: "@CelcatManagementAppBundle/Resources/config/routing/eventmodification.yml"
+    prefix:   /eventmodification
+
 celcat_management_app_modelmail:
     resource: "@CelcatManagementAppBundle/Resources/config/routing/modelmail.yml"
     prefix:   /modelmail

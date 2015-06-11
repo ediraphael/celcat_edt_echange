@@ -1,0 +1,30 @@
+celcat_management_app_eventmodification:
+    path:     /
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:index" }
+
+celcat_management_app_eventmodification_show:
+    path:     /{id}/show
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:show" }
+
+celcat_management_app_eventmodification_new:
+    path:     /new
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:new" }
+
+celcat_management_app_eventmodification_create:
+    path:     /create
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:create" }
+    methods:  POST
+
+celcat_management_app_eventmodification_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:edit" }
+
+celcat_management_app_eventmodification_update:
+    path:     /{id}/update
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:update" }
+    methods:  [POST, PUT]
+
+celcat_management_app_eventmodification_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "CelcatManagementAppBundle:EventModification:delete" }
+    methods:  [GET, POST, DELETE]
