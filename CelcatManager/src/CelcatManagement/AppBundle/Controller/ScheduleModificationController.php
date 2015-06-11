@@ -60,8 +60,7 @@ class ScheduleModificationController extends Controller {
         }
         $scheduleManager->save();
         
-        
-        return $this->indexAction();
+        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification'));
     }
 
     /**
