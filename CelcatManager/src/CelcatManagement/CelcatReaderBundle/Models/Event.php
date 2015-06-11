@@ -77,7 +77,18 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
      * @var boolean 
      */
     private $isEventSource = false;
+
+    /**
+     *
+     * @var boolean
+     */
     private $isClickable = false;
+    
+    /**
+     *
+     * @var boolean 
+     */
+    private $isSwaped = false;
 
     /**
      *
@@ -375,7 +386,22 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
         $this->isClickable = false;
         return $this;
     }
+    
+    public function isSwaped() {
+        if($this->hasReplacementEvent()) {
+            return $this->replacementEvent->isSwaped();
+        }
+        return $this->isSwaped;
+    }
 
+    public function swaped() {
+        $this->isSwaped = true;
+    }
+    
+    public function unswaped() {
+        $this->isSwaped = false;
+    }
+    
     public function canClick() {
         $todayDate = new \DateTime();
         return ($this->isClickable || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
