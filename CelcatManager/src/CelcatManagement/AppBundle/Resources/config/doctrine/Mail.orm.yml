@@ -7,7 +7,7 @@ CelcatManagement\AppBundle\Entity\Mail:
             column: from_address
         toAddress:
             type: string
-            length: 70
+            length: 250
             column: to_address
         subject:
             type: string
