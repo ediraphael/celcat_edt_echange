@@ -5,3 +5,11 @@ celcat_management_app_mailer:
 celcat_management_app_mailer_send:
     pattern: /send
     defaults: {_controller: CelcatManagementAppBundle:Mailer:send }
+    
+celcat_management_app_mailer_sendmodification:
+    pattern: /send
+    defaults: {_controller: CelcatManagementAppBundle:Mailer:sendModification }
+    
+celcat_management_app_mailer_send_unsend:
+    pattern: /send_unsend
+    defaults: {_controller: CelcatManagementAppBundle:Mailer:sendUnsendedMail }
