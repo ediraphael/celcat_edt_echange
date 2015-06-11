@@ -197,6 +197,7 @@ $(function () {
                         }
                         refreshCalendarEvents();
                         two_selected_events = new Array();
+                        refreshCalendarEvents();
                     }
                     else {
                         two_selected_events.splice(1, 1);
