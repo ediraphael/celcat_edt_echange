@@ -22,12 +22,12 @@ class ScheduleModification
     /**
      * @var boolean
      */
-    private $canceled;
+    private $canceled = false;
 
     /**
      * @var boolean
      */
-    private $validated;
+    private $validated = false;
 
     /**
      * @var \CelcatManagement\AppBundle\Entity\EventModification
