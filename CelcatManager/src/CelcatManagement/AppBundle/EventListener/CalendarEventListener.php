@@ -19,6 +19,7 @@ class CalendarEventListener {
         '202374',
         '202375',
         '265426',
+        '276884',
     );
 
     public function __construct() {
@@ -53,54 +54,51 @@ class CalendarEventListener {
     }
 
     public function feedCalendarEvent(CalendarEvent $calendarEvent) {
-        $arrayWeeks = $this->schedulerManager->getArrayWeeks();
         $calendars = $calendarEvent->getRequest()->request->get('calendars');
         $calendars[] = $calendarEvent->getUser()->getIdentifier();
-        foreach ($arrayWeeks as $indexWeek => $week) {
-            foreach ($week->getArrayDays() as $indexDay => $day) {
-                foreach ($day->getArrayEvents() as $indexEvents => $event) {
-                    if (in_array($event->getId(), $this->arrayIdTest)) {
-                        $event->addProfessor('PILLIE RAPHAEL');
-                        $event->addProfessor('POTTIER PIERRE-MARIE');
-                        $event->addProfessor('DAOUDI MOHAMED');
-                        $event->addFormation('2314');
-                    }
 
-                    if (is_array($calendars)) {
-                        foreach ($calendars as $calendar) {
-                            if ($event->getFormations()->contains($calendar)) {
-                                $event->undelete();
-                            }
-                        }
-                    }
-                    $event->setBgColor("");
-                    if ($event->isSwapable()) {
-                        $event->setBgColor("green");
-                    }
+        foreach ($this->schedulerManager->getEvents() as $indexEvents => $event) {
+            if (in_array($event->getId(), $this->arrayIdTest)) {
+                $event->addProfessor('PILLIE RAPHAEL');
+                $event->addProfessor('POTTIER PIERRE-MARIE');
+                $event->addProfessor('DAOUDI MOHAMED');
+                $event->addFormation('2314');
+            }
 
-                    if (!$event->isSwapable() && !in_array($calendarEvent->getUser()->getIdentifier(), $event->getFormations()->toArray())) {
-                        $event->setBgColor('red');
-                    }
-
-                    if ($event->hasReplacementEvent()) {
-                        $event->setBgColor("purple");
+            if (is_array($calendars)) {
+                foreach ($calendars as $calendar) {
+                    if ($event->getFormations()->contains($calendar)) {
                         $event->undelete();
-                    }
-
-                    if ($event->isEventSource()) {
-                        $event->setBgColor("orange");
-                    }
-                    
-                    if($event->canClick()) {
-                        $event->setCssClass('clickable');
-                    }
-
-                    if (!$event->isDeleted()) {
-                        $calendarEvent->addEvent($event);
                     }
                 }
             }
+            $event->setBgColor("");
+            if ($event->isSwapable()) {
+                $event->setBgColor("green");
+            }
+
+            if (!$event->isSwapable() && !in_array($calendarEvent->getUser()->getIdentifier(), $event->getFormations()->toArray())) {
+                $event->setBgColor('red');
+            }
+
+            if ($event->hasReplacementEvent()) {
+                $event->setBgColor("purple");
+                $event->undelete();
+                $event->setCssClass('');
+            }
+
+            if ($event->isEventSource()) {
+                $event->setBgColor("orange");
+            }
+
+            if ($event->canClick()) {
+                $event->setCssClass('clickable');
+            }
+            
+
+            if (!$event->isDeleted()) {
+                $calendarEvent->addEvent($event);
+            }
         }
     }
-
 }
