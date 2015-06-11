@@ -40,8 +40,8 @@
                         <td>{{ entity.secondEvent.eventTitre|default }}</td>
                         <td>{{ entity.secondEvent.professors|default|join('; ') }}</td>
                         <td>{{ entity.secondEvent.groupes|default|join(',') }}</td>
-                        <td>{{ entity.secondEvent.startDateTimeInitial|default|date('d-m-Y') }}</td>
-                        <td>{{ entity.secondEvent.startDateTimeInitial|default|date('H:i:s') }} - {{ entity.secondEvent.endDateTimeInitial|default|date('H:i:s') }}</td>
+                        <td>{{ entity.secondEvent?entity.secondEvent.startDateTimeInitial|date('d-m-Y'):'' }}</td>
+                        <td>{{ entity.secondEvent?entity.secondEvent.startDateTimeInitial|date('H:i:s'):'' }} - {{ entity.secondEvent?entity.secondEvent.endDateTimeInitia|date('H:i:s'):'' }}</td>
                         <td>{{ entity.canceled?'Oui':'Non' }}</td>
                         <td>{{ entity.validated?'Oui':'Non' }}</td>
                         <td>{% include 'Action/action-supprimer.html.twig' with { 'href' :  path('celcat_management_app_schedulemodification_delete', { 'id': entity.id }) } %}</td>
