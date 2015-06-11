@@ -40,7 +40,7 @@ class ScheduleModificationController extends Controller {
             'canceled' => 0
         ));
 
-        if (count($entities) != 0) {
+        if (count($entities) != 0 && $entities != null) {
             /* @var $entities ScheduleModification */
             $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
                 'name' => 'schedule_modification'
@@ -66,11 +66,13 @@ class ScheduleModificationController extends Controller {
                 }
 
                 $textModification .= "<br />" . $string;
+                $entity->setMailed(true);
             }
 
             $textMail = $modelMail->getBody();
             $textMail = preg_replace('/\[schedule_modification\]/', $textModification, $textMail);
             $textMail = preg_replace('/\[user_fullname\]/', $user->getFullName(), $textMail);
+
 
             $mail->setUser($user->getUsername());
             $mail->setFromAddress($user->getMail());
@@ -97,13 +99,13 @@ class ScheduleModificationController extends Controller {
             'canceled' => 0
         ));
 
-        if (count($entities) == 0) {
+        if (count($entities) == 0 || $entities == null) {
             return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
         }
 
         /* @var $entities ScheduleModification */
         $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
-            'name' => 'schedule_modification'
+            'name' => 'schedule_user_ask'
         ));
         /* @var $modelMail \CelcatManagement\AppBundle\Entity\ModelMail */
 
@@ -141,15 +143,15 @@ class ScheduleModificationController extends Controller {
                         $toAdresse .= $userProfessor->getMail();
                     }
                 }
-                if ($toAdresse != '') {
-                    $mail->setUser($user->getUsername());
-                    $mail->setFromAddress($user->getMail());
-                    $mail->setToAddress($toAdresse);
-                    $mail->setSubject($modelMail->getSubject());
-                    $mail->setBody($textMail);
-                    $em->persist($mail);
-                    $em->flush();
-                }
+                $entity->setMailed(true);
+
+                $mail->setUser($user->getUsername());
+                $mail->setFromAddress($user->getMail());
+                $mail->setToAddress($toAdresse);
+                $mail->setSubject($modelMail->getSubject());
+                $mail->setBody($textMail);
+                $em->persist($mail);
+                $em->flush();
             }
         }
 
