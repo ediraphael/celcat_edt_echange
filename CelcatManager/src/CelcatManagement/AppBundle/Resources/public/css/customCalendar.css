@@ -1,3 +1,16 @@
+.title-calendar {
+    width: 75%; 
+    display: inline-block;
+}
+
+.btn-save {
+    width: 20%; 
+    float: right; 
+    text-align: right; 
+    text-decoration: none; 
+    margin-right: 5%;
+}
+
 .selected_event
 {
     border-color: red !important;
