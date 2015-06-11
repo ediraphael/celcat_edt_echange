@@ -3,6 +3,12 @@
 namespace CelcatManagement\CelcatReaderBundle\Models;
 
 class ScheduleModification {
+    
+    /**
+     *
+     * @var integer 
+     */
+    private $id;
 
     /**
      *
@@ -77,6 +83,15 @@ class ScheduleModification {
         return $this->modificationType == 'drop';
     }
 
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
+    
     public function getFirstEvent() {
         return $this->firstEvent;
     }
