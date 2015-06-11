@@ -66,6 +66,10 @@ class Day {
         }
         return null;
     }
+    
+    public function removeEventById($eventId) {
+        unset($this->arrayEvents[$eventId]);
+    }
 
     /**
      * 
@@ -89,6 +93,7 @@ class Day {
         } else {
             $this->arrayEvents[$event->getId()] = $event;
         }
+        return $this->arrayEvents[$event->getId()];
     }
 
     /**
