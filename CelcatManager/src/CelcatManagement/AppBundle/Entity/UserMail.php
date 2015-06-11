@@ -17,7 +17,7 @@ class UserMail extends Mail
     /**
      * @var boolean
      */
-    private $sended;
+    private $sended = false;
     
     /**
      * @var \DateTime
