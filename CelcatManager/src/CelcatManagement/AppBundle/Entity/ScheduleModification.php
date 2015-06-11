@@ -28,6 +28,11 @@ class ScheduleModification
      * @var boolean
      */
     private $validated = false;
+    
+    /**
+     * @var boolean
+     */
+    private $mailed = false;
 
     /**
      * @var \CelcatManagement\AppBundle\Entity\EventModification
@@ -163,5 +168,28 @@ class ScheduleModification
     public function getSecondEvent()
     {
         return $this->secondEvent;
+    }
+    
+    /**
+     * Set mailed
+     *
+     * @param boolean $mailed
+     * @return ScheduleModification
+     */
+    public function setMailed($mailed)
+    {
+        $this->mailed = $mailed;
+
+        return $this;
+    }
+
+    /**
+     * Get mailed
+     *
+     * @return boolean 
+     */
+    public function getMailed()
+    {
+        return $this->mailed;
     }
 }

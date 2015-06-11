@@ -16,6 +16,8 @@ CelcatManagement\AppBundle\Entity\ScheduleModification:
             type: boolean
         validated:
             type: boolean
+        mailed:
+            type: boolean
     oneToOne:
         firstEvent:
             targetEntity: EventModification
