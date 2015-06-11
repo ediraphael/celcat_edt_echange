@@ -146,6 +146,14 @@ class ScheduleManager {
             }
         }
     }
+    
+    public function removeScheduleModificationByEntityId($id) {
+        foreach ($this->scheduleModifications as $scheduleModification) {
+            if($scheduleModification->getId() == $id) {
+                $this->removeScheduleModificationById($scheduleModification->getFirstEvent()->getId());
+            }
+        }
+    } 
 
     public function getLoadedFormations() {
         return $this->loadedFormations;
