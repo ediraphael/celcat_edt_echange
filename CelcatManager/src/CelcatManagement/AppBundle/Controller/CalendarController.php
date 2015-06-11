@@ -83,6 +83,7 @@ class CalendarController extends Controller {
      * @return Response
      */
     public function refreshCalendarAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $ldapManager = $this->get('ldap_manager');
         $startDatetime = new \DateTime($request->request->get('start'));
@@ -94,6 +95,29 @@ class CalendarController extends Controller {
         $resizedEventModification = $request->request->get('resized_event_modification');
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
+
+        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
+        /* @var $entities \CelcatManagement\AppBundle\Entity\ScheduleModification[] */
+        foreach ($entities as $entity) {
+            $idFirstEvent = $entity->getFirstEvent()->getEventId();
+            $firstEvent = $scheduleManager->getEventById($idFirstEvent);
+            if ($firstEvent != null && !$firstEvent->hasReplacementEvent()) {
+                $replacementEvent = clone $firstEvent;
+                $replacementEvent->setStartDatetime($entity->getFirstEvent()->getStartDateTimeFinal());
+                $replacementEvent->setEndDatetime($entity->getFirstEvent()->getEndDateTimeFinal());
+                $firstEvent->replaceBy($replacementEvent);
+            }
+            if ($entity->getSecondEvent() != null) {
+                $idSecondEvent = $entity->getSecondEvent()->getEventId();
+                $secondEvent = $scheduleManager->getEventById($idSecondEvent);
+                if ($secondEvent != null && !$secondEvent->hasReplacementEvent()) {
+                    $replacementEvent = clone $secondEvent;
+                    $replacementEvent->setStartDatetime($entity->getSecondEvent()->getStartDateTimeFinal());
+                    $replacementEvent->setEndDatetime($entity->getSecondEvent()->getEndDateTimeFinal());
+                    $secondEvent->replaceBy($replacementEvent);
+                }
+            }
+        }
 
         if ($removedScheduleModification != null && $removedScheduleModification != '') {
             $scheduleManager->removeScheduleModificationById($removedScheduleModification);
@@ -137,14 +161,14 @@ class CalendarController extends Controller {
         }
 
         //On réinitialise les evenements
-        foreach ($scheduleManager->getEvents() as $indexEvents => $event) {
-            $event->unEventSource();
-            $event->unswapable();
-            $event->delete();
-            if ($event->containsFormations($user->getIdentifier())) {
-                $event->clickable();
+        foreach ($scheduleManager->getEvents() as $indexEvents => $firstEvent) {
+            $firstEvent->unEventSource();
+            $firstEvent->unswapable();
+            $firstEvent->delete();
+            if ($firstEvent->containsFormations($user->getIdentifier())) {
+                $firstEvent->clickable();
             } else {
-                $event->unclickable();
+                $firstEvent->unclickable();
             }
         }
 
@@ -153,17 +177,17 @@ class CalendarController extends Controller {
             //Dans ce cas on recherche tout ce qui sont swapable
             $eventSource = $scheduleManager->getEventById($eventSourceJs['id']);
 
-            foreach ($scheduleManager->getEvents() as $indexEvents => $event) {
-                if ($event->getId() != $eventSource->getId()) {
-                    if ($event->containsFormations($eventSource->getFormations(), true)) {
-                        if ($scheduleManager->canSwapEvent($eventSource, $event, $user, $this->container)) {
-                            $event->swapable();
+            foreach ($scheduleManager->getEvents() as $indexEvents => $firstEvent) {
+                if ($firstEvent->getId() != $eventSource->getId()) {
+                    if ($firstEvent->containsFormations($eventSource->getFormations(), true)) {
+                        if ($scheduleManager->canSwapEvent($eventSource, $firstEvent, $user, $this->container)) {
+                            $firstEvent->swapable();
                         }
-                        $event->undelete();
+                        $firstEvent->undelete();
                     }
                 } else {
-                    $event->eventSource();
-                    $event->undelete();
+                    $firstEvent->eventSource();
+                    $firstEvent->undelete();
                 }
             }
         }
@@ -182,8 +206,8 @@ class CalendarController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
 
         $return_events = array();
-        foreach ($events as $event) {
-            $return_events[] = $event->toArray();
+        foreach ($events as $firstEvent) {
+            $return_events[] = $firstEvent->toArray();
         }
 
         $response->setContent(json_encode($return_events));
