@@ -15,6 +15,10 @@ celcat_management_app_schedulemodification_create:
     defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:create" }
     methods:  POST
 
+celcat_management_app_schedulemodification_create_from_schedule_manager:
+    path:     /create-from-schedule
+    defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:createFromScheduleManager" }
+
 celcat_management_app_schedulemodification_edit:
     path:     /{id}/edit
     defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:edit" }
