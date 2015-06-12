@@ -40,3 +40,7 @@ celcat_management_app_schedulemodification_send_mail:
 celcat_management_app_schedulemodification_send_ask_mail:
     path:     /mail_ask
     defaults: { _controller: "CelcatManagementAppBundle:ScheduleModification:sendAskMail" }
+    
+celcat_management_app_schedulemodification_validation_needed:
+    path:   /validation
+    defaults:   { _controller: "CelcatManagementAppBundle:ScheduleModification:waitingValidation" }
