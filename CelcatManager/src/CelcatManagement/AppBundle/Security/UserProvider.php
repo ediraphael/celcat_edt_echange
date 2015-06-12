@@ -64,8 +64,12 @@ class UserProvider implements UserProviderInterface, UserFactoryInterface {
         $userLDAP = $this->ldapManager->searchUser($user->getUsername());
         $user->hydrateWithLDAP($userLDAP);
         
+            
         if($user->getUsername() == 'rpillie' || $user->getUsername() == 'mdaoudi' || $user->getUsername() == 'p.pottier') {
             $user->setGidNumber('22314');
+        }
+        elseif($user->isStudent()) {
+            $user->setRoles(array());
         }
         
         $userCalendarRepositoty = $this->entityManager->getRepository('CelcatManagementAppBundle:UserCalendars');
