@@ -194,6 +194,38 @@ class ScheduleModificationController extends Controller {
         return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_ask_mail'));
     }
 
+    public function waitingValidationAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        /* @var $user \CelcatManagement\AppBundle\Security\User */
+        $ldapManager = $this->get('ldap_manager');
+        /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
+        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
+            'mailed' => 1,
+            'validated' => 0,
+            'canceled' => 0
+        ));
+        /* @var $entities ScheduleModification */
+
+        $waitingEvent = array();
+        foreach ($entities as $entity) {
+            if ($entity->getSecondEvent() != null) {
+                foreach ($entity->getSecondEvent()->getProfessors() as $professor) {
+                    $userProfessor = $ldapManager->getUserByFullName($professor);
+                    if ($userProfessor != null) {
+                        if($userProfessor->getUsername() == $user->getUsername()) {
+                            $waitingEvent[] = $entity;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $this->render('CelcatManagementAppBundle:ScheduleModification:validation.html.twig', array(
+                    'entities' => $waitingEvent,
+        ));
+    }
+
     /**
      * Creates a new ScheduleModification entity.
      *
