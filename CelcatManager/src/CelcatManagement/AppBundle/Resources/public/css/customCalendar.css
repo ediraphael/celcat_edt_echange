@@ -34,6 +34,11 @@
     text-align: center;
 }
 
+#loading > span {
+    display: block;
+    margin-top: 15%;
+}
+
 #loading-image {
     position: absolute;
     top: 50%;
