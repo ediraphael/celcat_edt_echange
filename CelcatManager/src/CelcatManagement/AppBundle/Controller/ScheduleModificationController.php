@@ -19,13 +19,32 @@ class ScheduleModificationController extends Controller {
      * Lists all ScheduleModification entities.
      *
      */
-    public function indexAction() {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
+        $dql = "
+                SELECT sm FROM CelcatManagementAppBundle:ScheduleModification sm
+                ";
+        $query = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        /* @var $paginator \Knp\Component\Pager\Paginator */
+        $sortEtDirection = explode('|', $request->request->get('sort-direction', 'sm.id|desc'));
+        $sort = $sortEtDirection[0];
+        $direction = $sortEtDirection[1];
+
+        $paginator->setDefaultPaginatorOptions(
+                array(
+                    'defaultSortFieldName' => $sort,
+                    'defaultSortDirection' => $direction,
+                )
+        );
+        $pagination = $paginator->paginate(
+                $query, $request->request->get('page', 1)/* page number */, 10/* limit per page */
+        );
+//        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
 
         return $this->render('CelcatManagementAppBundle:ScheduleModification:index.html.twig', array(
-                    'entities' => $entities,
+                    'entities' => $pagination,
         ));
     }
 
