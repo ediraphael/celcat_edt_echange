@@ -18,7 +18,7 @@ function addCalendarEventSource(calendarFile) {
                     type: 'POST',
                     // A way to add custom filters to your event listeners
                     data: {
-                        calendars: calendarFile
+                        calendars: [calendarFile]
                     },
                     beforeSend: function () {
                         $("#loading").show();
