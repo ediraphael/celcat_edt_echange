@@ -104,6 +104,27 @@ class LDAPManager {
         
     }
     
+    function getUserByUsername($username = "") {
+         if($username == '' || $username == null) {
+            return null;
+        }
+        $searchResult = $this->searchUser($username);
+        $tabException = array(
+            'rpillie',
+            'mdaoudi',
+            'p.pottier'
+        );
+        while($searchResult->valid()) {
+            if($searchResult->current()->get('auaPopulation')->getValues()[0] != 'ETU'  || in_array($searchResult->current()->get('uid')->getValues()[0],$tabException)) {
+                $user = new \CelcatManagement\AppBundle\Security\User($searchResult->current()->get('uid')->getValues()[0], '', '', array());
+                $user->hydrateWithLDAP($searchResult);
+                return $user;
+            }
+            $searchResult->next();
+        }
+        return null;
+    }
+    
     function getUserByFullName($fullname = "") {
         if($fullname == '' || $fullname == null) {
             return null;
