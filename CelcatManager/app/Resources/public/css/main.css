@@ -37,3 +37,7 @@ section {
     margin-bottom: 0;
     margin-top: 5px;
 }
+
+.navigation {
+	text-align: right;
+}

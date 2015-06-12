@@ -70,5 +70,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="count">
+            <span>{{ entities.getTotalItemCount }} enregistrements</span>
+        </div>
+        <div class="navigation">
+            {{ knp_pagination_render(entities) }}
+        </div>
     </div>
 {% endblock %}

@@ -28,18 +28,15 @@ class ScheduleModificationController extends Controller {
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         /* @var $paginator \Knp\Component\Pager\Paginator */
-        $sortEtDirection = explode('|', $request->request->get('sort-direction', 'sm.id|desc'));
-        $sort = $sortEtDirection[0];
-        $direction = $sortEtDirection[1];
 
         $paginator->setDefaultPaginatorOptions(
                 array(
-                    'defaultSortFieldName' => $sort,
-                    'defaultSortDirection' => $direction,
+                    'defaultSortFieldName' => 'sm.id',
+                    'defaultSortDirection' => 'desc',
                 )
         );
         $pagination = $paginator->paginate(
-                $query, $request->request->get('page', 1)/* page number */, 10/* limit per page */
+                $query, $request->query->get('page', 1)/* page number */, 5/* limit per page */
         );
 //        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findAll();
 
