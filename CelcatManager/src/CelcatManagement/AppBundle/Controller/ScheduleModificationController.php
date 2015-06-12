@@ -110,8 +110,8 @@ class ScheduleModificationController extends Controller {
         /* @var $modelMail \CelcatManagement\AppBundle\Entity\ModelMail */
 
 
-        $textModification = '';
         foreach ($entities as $entity) {
+            $textModification = '';
             if ($entity->getSecondEvent() != null) {
                 $mail = new UserMail();
                 $string = $entity->getFirstEvent()->getEventTitre() .
@@ -156,6 +156,64 @@ class ScheduleModificationController extends Controller {
         }
 
 
+
+        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
+    }
+
+    public function sendValidationMailAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        /* @var $user \CelcatManagement\AppBundle\Security\User */
+        $ldapManager = $this->get('ldap_manager');
+        /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
+        $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
+            'user' => $user->getUsername(),
+            'mailed' => 0,
+            'validated' => 1,
+            'canceled' => 0
+        ));
+
+        if (count($entities) != 0 && $entities != null) {
+            /* @var $entities ScheduleModification */
+            $modelMail = $em->getRepository('CelcatManagementAppBundle:ModelMail')->findOneBy(array(
+                'name' => 'schedule_user_validation'
+            ));
+            /* @var $modelMail \CelcatManagement\AppBundle\Entity\ModelMail */
+            foreach ($entities as $entity) {
+                $mail = new UserMail();
+                $userEntity = $ldapManager->getUserByUsername($entity->getUser());
+                $textModification = '';
+                $string = $entity->getFirstEvent()->getEventTitre() .
+                        ' ' . $entity->getFirstEvent()->getGroupes() .
+                        ' ' . $entity->getFirstEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeInitial()->format('H:i:s') .
+                        ' ==> ' . $entity->getFirstEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
+                        ' - ' . $entity->getFirstEvent()->getEndDateTimeFinal()->format('H:i:s');
+                if ($entity->getSecondEvent() != null) {
+                    $string .= "<br /> " . $entity->getSecondEvent()->getEventTitre() .
+                            ' ' . $entity->getSecondEvent()->getGroupes() .
+                            ' ' . $entity->getSecondEvent()->getStartDateTimeInitial()->format('m-d-Y H:i:s') .
+                            ' - ' . $entity->getSecondEvent()->getEndDateTimeInitial()->format('H:i:s') .
+                            ' ==> ' . $entity->getSecondEvent()->getStartDateTimeFinal()->format('m-d-Y H:i:s') .
+                            ' - ' . $entity->getSecondEvent()->getEndDateTimeFinal()->format('H:i:s');
+                }
+
+                $textModification .= "<br />" . $string;
+
+                $textMail = $modelMail->getBody();
+                $textMail = preg_replace('/\[schedule_modification\]/', $textModification, $textMail);
+                $textMail = preg_replace('/\[user_fullname\]/', $user->getFullName(), $textMail);
+
+
+                $mail->setUser($user->getUsername());
+                $mail->setFromAddress($user->getMail());
+                $mail->setToAddress($userEntity->getMail());
+                $mail->setSubject($modelMail->getSubject());
+                $mail->setBody($textMail);
+                $em->persist($mail);
+                $em->flush();
+            }
+        }
 
         return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_mail'));
     }
@@ -213,17 +271,31 @@ class ScheduleModificationController extends Controller {
                 foreach ($entity->getSecondEvent()->getProfessors() as $professor) {
                     $userProfessor = $ldapManager->getUserByFullName($professor);
                     if ($userProfessor != null) {
-                        if($userProfessor->getUsername() == $user->getUsername()) {
+                        if ($userProfessor->getUsername() == $user->getUsername()) {
                             $waitingEvent[] = $entity;
                         }
                     }
                 }
             }
         }
-        
+
         return $this->render('CelcatManagementAppBundle:ScheduleModification:validation.html.twig', array(
                     'entities' => $waitingEvent,
         ));
+    }
+
+    public function validateAction(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findOneById($id);
+        /* @var $entity ScheduleModification */
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find ScheduleModification entity.');
+        }
+        $entity->setValidated(true);
+        $entity->setMailed(false);
+        $em->flush();
+        return $this->redirect($this->generateUrl('celcat_management_app_schedulemodification_send_validation_mail'));
     }
 
     /**
