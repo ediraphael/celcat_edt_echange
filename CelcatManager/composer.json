@@ -30,7 +30,8 @@
         "friendsofsymfony/jsrouting-bundle": "^1.5",
         "adesigns/calendar-bundle": "^1.1",
         "genemu/form-bundle": "2.2.*",
-        "egeloen/ckeditor-bundle": "~2.0"
+        "egeloen/ckeditor-bundle": "~2.0",
+        "knplabs/knp-paginator-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
