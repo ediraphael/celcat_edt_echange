@@ -55,8 +55,9 @@ class CalendarEventListener {
 
     public function feedCalendarEvent(CalendarEvent $calendarEvent) {
         $calendars = $calendarEvent->getRequest()->request->get('calendars');
-        $calendars[] = $calendarEvent->getUser()->getIdentifier();
-
+        if (count($calendars) == 0) {
+            $calendars[] = $calendarEvent->getUser()->getIdentifier();
+        }
         foreach ($this->schedulerManager->getEvents() as $indexEvents => $event) {
             if (in_array($event->getId(), $this->arrayIdTest)) {
                 $event->addProfessor('PILLIE RAPHAEL');
