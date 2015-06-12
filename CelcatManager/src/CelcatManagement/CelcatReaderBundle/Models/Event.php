@@ -378,12 +378,20 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function clickable() {
-        $this->isClickable = true;
+        if ($this->hasReplacementEvent()) {
+            $this->replacementEvent->clickable();
+        } else {
+            $this->isClickable = true;
+        }
         return $this;
     }
 
     public function unclickable() {
-        $this->isClickable = false;
+        if ($this->hasReplacementEvent()) {
+            $this->replacementEvent->unclickable();
+        } else {
+            $this->isClickable = false;
+        }
         return $this;
     }
 
