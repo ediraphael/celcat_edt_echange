@@ -190,6 +190,10 @@ class User implements UserInterface {
 
         return $this;
     }
+    
+    public function isStudent() {
+        return $this->group == 'ETU';
+    }
 
     public function eraseCredentials() {
         
