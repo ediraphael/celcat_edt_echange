@@ -96,6 +96,11 @@ class CalendarController extends Controller {
 
         $scheduleManager = new \CelcatManagement\CelcatReaderBundle\Models\ScheduleManager();
 
+        if ($removedScheduleModification != null && $removedScheduleModification != '') {
+            $scheduleManager->removeScheduleModificationById($removedScheduleModification);
+        }
+        
+        
         $entities = $em->getRepository('CelcatManagementAppBundle:ScheduleModification')->findBy(array(
             'canceled' => 0
         ));
@@ -121,9 +126,7 @@ class CalendarController extends Controller {
             }
         }
 
-        if ($removedScheduleModification != null && $removedScheduleModification != '') {
-            $scheduleManager->removeScheduleModificationById($removedScheduleModification);
-        }
+        
 
         if ($dropedEventModification != null && $dropedEventModification != '') {
             $eventModifiedJs = json_decode($dropedEventModification);
