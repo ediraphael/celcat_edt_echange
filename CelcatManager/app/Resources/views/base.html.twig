@@ -46,15 +46,20 @@
                         <div class="collapse navbar-collapse">
 
                             <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="{{ path('celcat_management_app_schedulemodification') }}"  >
-                                        Liste des modifications
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('celcat_management_ldap_manager_index') }}"  >
-                                        LDAP
-                                    </a>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span> Modifications calendrier </span><span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ path('celcat_management_app_schedulemodification') }}"  >
+                                                Liste des modifications
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('celcat_management_app_schedulemodification_validation_needed') }}"  >
+                                                Liste à valider
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li>
                                     <a href="{{ path('app_calendar') }}"  >
@@ -82,7 +87,6 @@
 
                 </div>
             {% endblock %}
-            {#			{{ render(controller("LemonnMenuBundle:Navigation:menu")) }}#}
         </header>
         <section id="sectionPrincipale">
             <div id="container" class="container container-principal">
