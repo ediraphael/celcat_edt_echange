@@ -414,8 +414,8 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function canClick() {
         $todayDate = new \DateTime();
-        return ($this->isClickable || $this->isSwapable || $this->isEventSource) ;
-//        return ($this->isClickable || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
+//        return ($this->isClickable || $this->isSwapable || $this->isEventSource) ;
+        return ($this->isClickable || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
     }
 
     public function setCssClass($class) {
