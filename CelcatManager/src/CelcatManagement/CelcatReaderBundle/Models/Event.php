@@ -189,7 +189,9 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
     }
 
     public function isEventCrossed(Event $event) {
-        return $event->getStartDatetime() < $this->getEndDatetime() && $event->getEndDatetime() > $this->getStartDatetime();
+        return $event->getStartDatetime() < $this->getEndDatetime() && $event->getEndDatetime() > $this->getStartDatetime() || 
+             $this->getStartDatetime() < $event->getEndDatetime() && $this->getEndDatetime() > $event->getStartDatetime() 
+                ;
     }
 
     public function getId() {
@@ -412,7 +414,8 @@ class Event extends \ADesigns\CalendarBundle\Entity\EventEntity {
 
     public function canClick() {
         $todayDate = new \DateTime();
-        return ($this->isClickable || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
+        return ($this->isClickable || $this->isSwapable || $this->isEventSource) ;
+//        return ($this->isClickable || $this->isSwapable || $this->isEventSource) && !($this->getStartDatetime() < $todayDate);
     }
 
     public function setCssClass($class) {

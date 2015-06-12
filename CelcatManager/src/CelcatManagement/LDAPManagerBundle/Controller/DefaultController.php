@@ -10,9 +10,16 @@ class DefaultController extends Controller
     {
         $ldapManager = $this->get('ldap_manager');
         /* @var $ldapManager \CelcatManagement\LDAPManagerBundle\LDAP\LDAPManager */
-        //$results = $manager->search(Search::SCOPE_ALL, 'ou=comp,dc=example,dc=com', '(objectclass=*)');
-        $recherche = $ldapManager->search("(uid=gilles.hunault)");
-        
+        //$recherche = $ldapManager->searchUser("adamfouchard");
+        $recherche = $ldapManager->getUserByFullName("ABELARD,Karine");
+//        $recherches = array();
+//        while($recherche->valid()) {
+//            $recherches[] = clone $recherche;
+//            $recherche->next();
+//        }
+//        /* @var $recherche \CelcatManagement\LDAPManagerBundle\LDAP\Core\SearchResult */
+        //CHASLE,Christelle
+        //ADAM FOUCHARD,Frederique
         return $this->render('CelcatManagementLDAPManagerBundle:Default:index.html.twig', 
                 array(
                     'name' => $name,
